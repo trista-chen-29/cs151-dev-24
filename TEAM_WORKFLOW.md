@@ -98,3 +98,8 @@ persist ---┘
 ---
 
 ✅ Follow this guide and everyone can collaborate smoothly without overwriting each other’s work.
+## Part D: JavaFX Hello Test
+<img width="2047" height="1203" alt="image" src="https://github.com/user-attachments/assets/64e86fe4-2288-4ad7-be0a-1e3abaca8385" />
+
+
+
