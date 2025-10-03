@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cs151.application.ProgrammingLanguages.PLController"
+            stylesheets="theme.css"
+            styleClass="canvas"
+            prefWidth="900" prefHeight="600">
+
+    <!-- Top bar -->
+    <top>
+        <BorderPane styleClass="topbar" prefHeight="56">
+            <!-- Left: link-style back/home -->
+            <left>
+                <Button text="Go to Homepage"
+                        onAction="#goToHomepage"
+                        styleClass="toplink"
+                        BorderPane.alignment="CENTER_LEFT"/>
+            </left>
+
+            <!-- Center: title -->
+            <center>
+                <Label text="Programming Languages"
+                       styleClass="h1"
+                       BorderPane.alignment="CENTER"/>
+            </center>
+
+            <!-- Right: product name -->
+            <right>
+                <Label text="Prof-Support"
+                       styleClass="brand"
+                       BorderPane.alignment="CENTER_RIGHT"/>
+            </right>
+        </BorderPane>
+    </top>
+
+    <!-- Main content -->
+    <center>
+        <VBox spacing="18" padding="22">
+            <!-- Input card -->
+            <VBox spacing="12" styleClass="card">
+                <GridPane hgap="12" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="30"/>
+                        <ColumnConstraints percentWidth="70"/>
+                    </columnConstraints>
+
+                    <Label text="Enter Language Name *"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="0"/>
+                    <TextField fx:id="nameField"
+                               promptText="e.g., Python"
+                               GridPane.rowIndex="0"
+                               GridPane.columnIndex="1"/>
+
+                    <!-- Error/status line -->
+                    <Label fx:id="errorLabel"
+                           styleClass="error"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="0"
+                           GridPane.columnSpan="2"/>
+                </GridPane>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="cancelBtn"
+                            text="Cancel"
+                            onAction="#cancel"
+                            cancelButton="true"/>
+                    <Button fx:id="saveBtn"
+                            text="Save"
+                            onAction="#saveForm"
+                            defaultButton="true"/>
+                </HBox>
+            </VBox>
+
+            <!-- Existing languages list -->
+            <VBox spacing="8" styleClass="list-card">
+                <Label fx:id="existingLabel"
+                       text="Existing Languages (0)"
+                       style="-fx-font-weight: bold;
+                       -fx-text-fill: #006400;"/>
+
+                <!-- Fixed height → ListView auto-shows vertical scrollbar when needed -->
+                <ListView fx:id="languagesList" prefHeight="280"/>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>
