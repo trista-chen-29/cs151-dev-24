@@ -1,0 +1,94 @@
+/* ===== Palette =====
+   darker green        #39ac73
+   lighter green       #daf1e6
+   lightest green      #edf8f2
+   dark text           #006400
+   light text on dark  #F0FFFF
+*/
+
+/* === Page canvas with layered rectangles === */
+.canvas {
+    /* 3 background layers (outer → inner) */
+    -fx-background-color: #39ac73, #daf1e6, #edf8f2;
+    -fx-background-insets: 0, 16, 32;      /* spacing between rectangles */
+    -fx-background-radius: 18, 14, 10;     /* rounded corners per layer */
+    -fx-padding: 24;                        /* reveals the layers */
+}
+
+/* === Top bar === */
+.topbar {
+    -fx-background-color: #39ac73;         /* darker green */
+    -fx-padding: 10 16;
+}
+
+/* default: light text for topbar items */
+.topbar .button, .topbar .label {
+    -fx-text-fill: #F0FFFF;
+}
+
+/* special case: homepage button → dark text */
+.home-btn {
+    -fx-text-fill: #006400;   /* dark green text */
+    -fx-background-color: #F0FFFF;  /* light pill background */
+    -fx-background-radius: 6;
+    -fx-padding: 6 10;
+}
+
+.toplink {
+    -fx-background-color: transparent;
+    -fx-text-fill: #F0FFFF;
+    -fx-underline: true;
+    -fx-padding: 6 8;
+}
+
+/* Branding (right side) */
+.brand {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F0FFFF;
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-background-radius: 8;
+    -fx-padding: 6 12;
+}
+
+/* Section title */
+.h1 {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #006400;                 /* dark text on light bg */
+}
+
+/* Card for the form on the lightest panel */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);
+}
+
+/* Save / Cancel buttons inside the card */
+.button {
+    -fx-background-radius: 6;
+    -fx-padding: 6 16;
+}
+.button:default {
+    -fx-background-color: #39ac73;
+    -fx-text-fill: #F0FFFF;
+}
+.button:cancel {
+    -fx-background-color: transparent;
+    -fx-text-fill: #39ac73;
+    -fx-border-color: #39ac73;
+    -fx-border-radius: 6;
+}
+
+/* Error text */
+.error { -fx-text-fill: #c0392b; }
+
+/* List container around ListView (subtle white panel) */
+.list-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12 12 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);
+}
