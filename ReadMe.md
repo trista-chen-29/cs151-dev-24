@@ -36,5 +36,25 @@ D. Build/Packaging + README + QA - Chenying Wang
    ```bash
    mvn clean javafx:run
 
+   **Expected result:** A JavaFX window titled **Hello Chenying Wang** with a button.
+
+## Packaging for submission
+Create a clean zip named **dev-00-0.2.zip** that contains only:
+- `src/`
+- `pom.xml`
+- `ReadMe.md`
+
+Exclude: `.idea/`, `target/`, `out/`, `.git/`, `.mvn/`, `mvnw`, `mvnw.cmd`.
+
+### Windows (PowerShell)
+```powershell
+cd <project-root>
+New-Item -ItemType Directory dev-00-0.2 | Out-Null
+Copy-Item -Recurse -Force .\src .\dev-00-0.2\
+Copy-Item -Force .\pom.xml .\dev-00-0.2\
+Copy-Item -Force .\ReadMe.md .\dev-00-0.2\
+Compress-Archive -Path .\dev-00-0.2 -DestinationPath .\dev-00-0.2.zip -Force
+
+
 
 
