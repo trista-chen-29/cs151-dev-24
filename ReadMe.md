@@ -13,6 +13,8 @@ C. Optional Persistence - Trista Chen & Chenying Wang
 
 
 # D. Build/Packaging + README + QA — Chenying Wang
+<img width="1862" height="1097" alt="image" src="https://github.com/user-attachments/assets/b4d7110d-1319-44d8-b6f8-ba9bdb3a10e6" />
+
 
 ## HelloWorld (CS151 v0.2)
 
