@@ -10,7 +10,7 @@ C. Optional Persistence - Trista Chen & Chenying Wang
 <img width="1857" height="937" alt="image" src="https://github.com/user-attachments/assets/c1c0de57-e3c1-462f-8fb4-9c6596902471" />
 
 
-D. Build/Packaging + README + QA - Chenying Wang
+
 
 # D. Build/Packaging + README + QA — Chenying Wang
 
