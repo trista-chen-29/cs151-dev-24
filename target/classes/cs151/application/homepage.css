@@ -1,0 +1,13 @@
+/* Scope everything to home screen */
+.home-root .subhead        { -fx-text-fill: #006400; -fx-font-weight: 600; }
+.home-root .filters-title  { -fx-text-fill: #006400; -fx-font-weight: 800; }
+.home-root .group-title    { -fx-text-fill: #006400; -fx-font-weight: 700; }
+.home-root .filters-card   { -fx-padding: 16; }
+
+.home-root .home-btn {
+    -fx-text-fill: #006400;     /* dark text */
+    -fx-background-color: #F0FFFF;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10;
+    -fx-font-weight: 700;
+}
