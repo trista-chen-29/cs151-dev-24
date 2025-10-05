@@ -1,51 +1,42 @@
-/* ===== Palette =====
-   darker green        #39ac73
-   lighter green       #daf1e6
-   lightest green      #edf8f2
-   dark text           #006400
-   light text on dark  #F0FFFF
-*/
-
-/* === Page canvas with layered rectangles === */
-.canvas {
-    /* 3 background layers (outer → inner) */
-    -fx-background-color: #39ac73, #daf1e6, #edf8f2;
-    -fx-background-insets: 0, 16, 32;      /* spacing between rectangles */
-    -fx-background-radius: 18, 14, 10;     /* rounded corners per layer */
-    -fx-padding: 24;                        /* reveals the layers */
+/* ===== Global palette as looked-up colors ===== */
+.root {
+    -brand: #39ac73;          /* darker green */
+    -bg-2: #daf1e6;           /* lighter green */
+    -bg-3: #edf8f2;           /* lightest green */
+    -text-dk: #006400;        /* dark text */
+    -text-on-dark: #F0FFFF;   /* light text on dark */
 }
 
-/* === Top bar === */
+/* === Page canvas with layered rectangles (shared) === */
+.canvas {
+    -fx-background-color: -brand, -bg-2, -bg-3;
+    -fx-background-insets: 0, 16, 32;
+    -fx-background-radius: 18, 14, 10;
+    -fx-padding: 24;
+}
+
+/* === Top bar (shared) === */
 .topbar {
-    -fx-background-color: #39ac73;         /* darker green */
+    -fx-background-color: -brand;
     -fx-padding: 10 16;
 }
-
-/* default: light text for topbar items */
-.topbar .button, .topbar .label {
-    -fx-text-fill: #F0FFFF;
+.topbar .button, .topbar .label, .topbar .hyperlink {
+    -fx-text-fill: -text-on-dark;
 }
 
-/* special case: homepage button → dark text */
-.home-btn {
-    -fx-text-fill: #006400;   /* dark green text */
-    -fx-background-color: #F0FFFF;  /* light pill background */
-    -fx-background-radius: 6;
-    -fx-padding: 6 10;
-}
-
+/* Reusable link in top bar */
 .toplink {
     -fx-background-color: transparent;
-    -fx-text-fill: #F0FFFF;
+    -fx-text-fill: -text-on-dark;
     -fx-underline: true;
     -fx-padding: 6 8;
 }
 
-/* Branding (right side) */
+/* Branding badge (right side) */
 .brand {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #F0FFFF;
+    -fx-text-fill: -text-on-dark;
     -fx-background-color: rgba(255,255,255,0.12);
     -fx-background-radius: 8;
     -fx-padding: 6 12;
@@ -55,10 +46,10 @@
 .h1 {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
-    -fx-text-fill: #006400;                 /* dark text on light bg */
+    -fx-text-fill: -text-dk;
 }
 
-/* Card for the form on the lightest panel */
+/* Reusable card */
 .card {
     -fx-background-color: white;
     -fx-background-radius: 8;
@@ -66,26 +57,20 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);
 }
 
-/* Save / Cancel buttons inside the card */
+/* Buttons (shared) */
 .button {
     -fx-background-radius: 6;
     -fx-padding: 6 16;
 }
 .button:default {
-    -fx-background-color: #39ac73;
-    -fx-text-fill: #F0FFFF;
-}
-.button:cancel {
-    -fx-background-color: transparent;
-    -fx-text-fill: #39ac73;
-    -fx-border-color: #39ac73;
-    -fx-border-radius: 6;
+    -fx-background-color: -brand;
+    -fx-text-fill: -text-on-dark;
 }
 
 /* Error text */
 .error { -fx-text-fill: #c0392b; }
 
-/* List container around ListView (subtle white panel) */
+/* List container panel (shared) */
 .list-card {
     -fx-background-color: white;
     -fx-background-radius: 8;
