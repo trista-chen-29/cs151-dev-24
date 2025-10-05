@@ -2,6 +2,14 @@ package cs151.application.HomePage;
 
 import cs151.application.ProgrammingLanguages.Language;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +29,16 @@ public class HomePageController {
 
     public List<Student> search(String query, List<Language> programming_languages, List<String> databases, List<String> prof_interess, boolean blacklisted){
         return searchcontroller.filterstudent(query, programming_languages, databases, prof_interess, blacklisted);
+    }
+
+    public void goToHomePage(ActionEvent event) throws IOException {
+        Parent homePageRoot = FXMLLoader.load(getClass().getResource("home-page.fxml"));
+        Scene homePageScene = new Scene(homePageRoot);
+
+        // Get current stage
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(homePageScene);
+        stage.show();
     }
 
     public List<String> getProgrammingLanguages(){
