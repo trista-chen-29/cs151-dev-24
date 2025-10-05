@@ -43,10 +43,6 @@ public class HomePageController {
         stage.show();
     }
 
-    public List<String> getProgrammingLanguages(){
-        return PLController.getAllLanguages();
-    }
-
 
 
     public List<String> getDatabases(){
