@@ -19,6 +19,60 @@ This page allows the user to input a programming language, creator, year, and a 
 **Result:**  
 When running `mvn javafx:run`, the following JavaFX window appears:
 <img width="1922" height="937" alt="prat C" src="https://github.com/user-attachments/assets/8e9f6988-a62e-4bb6-bc8b-841c1961cbf5" />
+````markdown
+### Part C – Optional Persistence (UI + Controller Integration)
+
+**FXML File:** `hello-view.fxml`  
+**Controller:** `MainController.java`  
+**Main Class:** `Main.java`
+
+#### MainController.java (Excerpt)
+```java
+@FXML
+private TextField nameField;
+@FXML
+private TextField creatorField;
+@FXML
+private TextField yearField;
+@FXML
+private TextArea exampleArea;
+
+@FXML
+private void handleSave(ActionEvent event) {
+    try {
+        String name = nameField.getText();
+        String creator = creatorField.getText();
+        String year = yearField.getText();
+        String example = exampleArea.getText();
+
+        System.out.println("Saved: " + name + " by " + creator + " (" + year + ")");
+        System.out.println("Example:\n" + example);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Data saved successfully!");
+        alert.showAndWait();
+    } catch (Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to save data.");
+        alert.showAndWait();
+    }
+}
+````
+
+#### hello-view.fxml (Excerpt)
+
+```xml
+<GridPane fx:controller="cs151.application.MainController"
+          xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="10" vgap="10">
+    <TextField fx:id="nameField" promptText="Language Name"/>
+    <TextField fx:id="creatorField" promptText="Creator"/>
+    <TextField fx:id="yearField" promptText="Year"/>
+    <TextArea  fx:id="exampleArea" promptText="Hello World Example"/>
+    <Button text="Save" onAction="#handleSave"/>
+</GridPane>
+```
+
+```
+```
+
 
 
 
