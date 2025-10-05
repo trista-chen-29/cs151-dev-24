@@ -7,7 +7,7 @@ A. UI/Navigation - Trista Chen
 B. Define Page Behavior - Jaime Gonzalez & Vraj Mistry
 
 C. Optional Persistence - Trista Chen & Chenying Wang
-<img width="1857" height="937" alt="image" src="https://github.com/user-attachments/assets/c1c0de57-e3c1-462f-8fb4-9c6596902471" />
+
 ## Define Programming Language Page (UI Demo)
 
 This page allows the user to input a programming language, creator, year, and a sample "Hello World" example.
@@ -21,12 +21,12 @@ When running `mvn javafx:run`, the following JavaFX window appears:
 
 ![Define Programming Language Window](./screenshots/define-pl.png)
 
-
+C:\dev\ws_intellij\demo\HelloWorld\screenshots
 
 
 
 # D. Build/Packaging + README + QA — Chenying Wang
-<img width="1862" height="1097" alt="image" src="https://github.com/user-attachments/assets/b4d7110d-1319-44d8-b6f8-ba9bdb3a10e6" />
+C:\dev\ws_intellij\demo\HelloWorld\screenshots
 
 
 ## HelloWorld (CS151 v0.2)
