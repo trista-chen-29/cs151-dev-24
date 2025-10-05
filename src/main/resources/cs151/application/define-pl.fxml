@@ -35,10 +35,9 @@
                     <TextField fx:id="languageField" promptText="e.g., Java"/>
                 </VBox>
 
-                <!-- Buttons -->
+                <!-- Button -->
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Button text="Save" onAction="#saveLanguageName" defaultButton="true"/>
-                    <Button text="Cancel" onAction="#onCancel" cancelButton="true"/>
+                    <Button text="Save" onAction="#onSave" defaultButton="true"/>
                     <Label fx:id="errorLabel" styleClass="error"/>
                 </HBox>
 
