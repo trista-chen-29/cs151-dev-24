@@ -66,12 +66,6 @@
     -fx-background-color: -brand;
     -fx-text-fill: -text-on-dark;
 }
-.button:cancel {
-    -fx-background-color: transparent;
-    -fx-text-fill: -brand;
-    -fx-border-color: -brand;
-    -fx-border-radius: 6;
-}
 
 /* Error text */
 .error { -fx-text-fill: #c0392b; }
