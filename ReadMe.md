@@ -8,6 +8,19 @@ B. Define Page Behavior - Jaime Gonzalez & Vraj Mistry
 
 C. Optional Persistence - Trista Chen & Chenying Wang
 <img width="1857" height="937" alt="image" src="https://github.com/user-attachments/assets/c1c0de57-e3c1-462f-8fb4-9c6596902471" />
+## Define Programming Language Page (UI Demo)
+
+This page allows the user to input a programming language, creator, year, and a sample "Hello World" example.
+
+**FXML File:** `hello-view.fxml`  
+**Controller:** `MainController.java`  
+**Main Class:** `Main.java`
+
+**Result:**  
+When running `mvn javafx:run`, the following JavaFX window appears:
+
+![Define Programming Language Window](./screenshots/define-pl.png)
+
 
 
 
