@@ -1,4 +1,4 @@
-# Name of application: 
+# Name of application:
 # Version: 0.2
 
 # who did what:
@@ -89,9 +89,9 @@ private void handleSave(ActionEvent event) {
 0.2
 
 ### Who Did What
-- **A. UI/Navigation** – Trista Chen  
-- **B. Define Page Behavior** – Jaime Gonzalez & Vraj Mistry  
-- **C. Optional Persistence** – Trista Chen  
+- **A. UI/Navigation** – Trista Chen
+- **B. Define Page Behavior** – Jaime Gonzalez & Vraj Mistry
+- **C. Optional Persistence** – Trista Chen
 - **D. Build/Packaging + README + QA** – Chenying Wang
 
 ### Prerequisites
@@ -105,7 +105,7 @@ private void handleSave(ActionEvent event) {
 - IntelliJ IDEA
 
 ## How to Run
-1. In IntelliJ, set **Project SDK = Zulu JDK 23**.  
+1. In IntelliJ, set **Project SDK = Zulu JDK 23**.
 2. From the project root, run:
    ```bash
    mvn clean javafx:run
@@ -138,5 +138,3 @@ Compress-Archive -Path .\dev-00-0.2 -DestinationPath .\dev-00-0.2.zip -Force
 
 * **Module not found:** ensure `src/main/java/module-info.java` module name matches the **left** side of `<mainClass>` in `pom.xml` (currently `s25.cs151.application/...`). Reload Maven changes and run again.
 * Warnings about native access or terminal digits in the module name can be ignored for v0.2.
-
-
