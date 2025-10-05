@@ -19,14 +19,14 @@ This page allows the user to input a programming language, creator, year, and a 
 **Result:**  
 When running `mvn javafx:run`, the following JavaFX window appears:
 
-![Define Programming Language Window](./screenshots/define-pl.png)
-
-C:\dev\ws_intellij\demo\HelloWorld\screenshots
+### Define Programming Language Page
+![Define Programming Language Window](screenshots/define-pl.png)
 
 
 
 # D. Build/Packaging + README + QA — Chenying Wang
-C:\dev\ws_intellij\demo\HelloWorld\screenshots
+### HelloWorld Window
+![HelloWorld Window](screenshots/hello-window.png)
 
 
 ## HelloWorld (CS151 v0.2)
