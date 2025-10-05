@@ -18,15 +18,15 @@ This page allows the user to input a programming language, creator, year, and a 
 
 **Result:**  
 When running `mvn javafx:run`, the following JavaFX window appears:
+<img width="1922" height="937" alt="prat C" src="https://github.com/user-attachments/assets/8e9f6988-a62e-4bb6-bc8b-841c1961cbf5" />
 
-### Define Programming Language Page
-![Define Programming Language Window](screenshots/define-pl.png)
+
 
 
 
 # D. Build/Packaging + README + QA — Chenying Wang
-### HelloWorld Window
-![HelloWorld Window](screenshots/hello-window.png)
+<img width="2047" height="1213" alt="part D hellow" src="https://github.com/user-attachments/assets/529f6206-3c29-4d3c-b146-cfc6cc262c74" />
+
 
 
 ## HelloWorld (CS151 v0.2)
