@@ -8,7 +8,7 @@ B. Define Page Behavior - Jaime Gonzalez & Vraj Mistry
 
 C. Optional Persistence - Trista Chen & Chenying Wang
 
-## Define Programming Language Page (UI Demo)
+## Define Programming Language Page (UI Demo) - Chenying Wang
 
 This page allows the user to input a programming language, creator, year, and a sample "Hello World" example.
 
