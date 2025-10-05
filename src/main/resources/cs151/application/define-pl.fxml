@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs151.application.ProgrammingLanguages.PLController"
+            stylesheets="define-pl.css"
+            styleClass="canvas pl-root"
+            prefWidth="980" prefHeight="620">
+
+    <!-- Top bar -->
+    <top>
+        <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
+            <Hyperlink text="Go to Homepage" onAction="#onGoHome" styleClass="toplink"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label text="Prof-Support" styleClass="brand"/>
+        </HBox>
+    </top>
+
+    <!-- CONTENT -->
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="18" padding="20">
+            <Label text="Programming Languages" styleClass="h1"/>
+
+            <!-- Card with form + list -->
+            <VBox spacing="12" styleClass="card" maxWidth="640">
+
+                <!-- Input -->
+                <VBox spacing="6">
+                    <Label text="Enter Language name *" styleClass="field-label"/>
+                    <TextField fx:id="languageField" promptText="e.g., Java"/>
+                </VBox>
+
+                <!-- Buttons -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button text="Save" onAction="#saveLanguageName" defaultButton="true"/>
+                    <Button text="Cancel" onAction="#onCancel" cancelButton="true"/>
+                    <Label fx:id="errorLabel" styleClass="error"/>
+                </HBox>
+
+                <!-- Existing list -->
+                <VBox spacing="6">
+                    <Label text="Existing Languages (4)" styleClass="field-label"/>
+                    <ListView fx:id="languageList" prefHeight="180" styleClass="list-card"/>
+                </VBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
