@@ -1,6 +1,7 @@
 package cs151.application.HomePage;
 
 import cs151.application.ProgrammingLanguages.Language;
+import cs151.application.ProgrammingLanguages.PLController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,11 +29,11 @@ public class HomePageController {
         searchcontroller = new SearchController();
     }
 
-    public List<Student> search(String query, List<Language> programming_languages, List<String> databases, List<String> prof_interess, boolean blacklisted){
-        return searchcontroller.filterstudent(query, programming_languages, databases, prof_interess, blacklisted);
+    public List<Student> search(String query, List<String> programming_languages, List<String> databases, List<String> prof_interess, boolean blacklisted, List<Student> Students){
+        return searchcontroller.filterstudents(query, programming_languages, databases, prof_interess, blacklisted, Students);
     }
 
-    public void goToHomePage(ActionEvent event) throws IOException {
+    public void goToHomePage(ActionEvent event) throws IOException, IOException {
         Parent homePageRoot = FXMLLoader.load(getClass().getResource("home-page.fxml"));
         Scene homePageScene = new Scene(homePageRoot);
 
@@ -42,26 +44,10 @@ public class HomePageController {
     }
 
     public List<String> getProgrammingLanguages(){
-        List<String> languages = new ArrayList<>();
-
-        String sql = "SELECT DISTINCT language FROM programming_languages";
-
-        try(Connection conn = DatabaseConnector.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet res = stmt.executeQuery(sql);
-            ){
-
-            while (res.next()){
-                languages.add(res.getString("language"));
-            }
-        }
-
-        catch(SQLException e){
-            e.printStackTrace();
-        }
-
-        return languages;
+        return PLController.getAllLanguages();
     }
+
+
 
     public List<String> getDatabases(){
         List<String> databases = new ArrayList<>();
