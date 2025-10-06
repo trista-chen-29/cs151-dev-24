@@ -5,22 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ef4db1e-9c6d-4c38-bf7b-a7c6a3504b09" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/DatabaseConnector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/DbInit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/HomeController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs151/application/ProgrammingLanguages/ProgrammingLanguagesDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/HomePageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/HomePageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/SearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/SearchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/ProgrammingLanguages/PLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/ProgrammingLanguages/PLController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/cs151/application/define-pl.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cs151/application/define-pl.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/cs151/application/homepage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cs151/application/homepage.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/ProgrammingLanguages/PLController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/ProgrammingLanguages/PLController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/define_pl.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/theme.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/theme.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/define-pl.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/define-pl.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/homepage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/homepage.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,26 +30,26 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="home-page" />
+        <entry key="$PROJECT_DIR$" value="ui" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "trista-chen-29"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;trista-chen-29&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/trista-chen-29/cs151-dev-24.git",
-    "accountId": "4517677b-3db8-4a2d-8774-4a3dc29e2d3c"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/trista-chen-29/cs151-dev-24.git&quot;,
+    &quot;accountId&quot;: &quot;4517677b-3db8-4a2d-8774-4a3dc29e2d3c&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="33cRNAUAfZ9HVqK1b7tBWgX9ksQ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -70,7 +60,7 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "ui",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
@@ -81,6 +71,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "MavenSettings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -101,10 +92,16 @@
       <option name="presentableId" value="Default" />
       <updated>1759614331988</updated>
       <workItem from="1759614333055" duration="17450000" />
+      <workItem from="1759643629353" duration="54000" />
+      <workItem from="1759764667001" duration="446000" />
+      <workItem from="1759767733115" duration="2405000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

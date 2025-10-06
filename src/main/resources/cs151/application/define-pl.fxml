@@ -8,7 +8,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cs151.application.ProgrammingLanguages.PLController"
-            stylesheets="define-pl.css"
+            stylesheets="@define-pl.css"
             styleClass="canvas pl-root"
             prefWidth="980" prefHeight="620">
 
@@ -47,7 +47,7 @@
 
                 <!-- Existing list -->
                 <VBox spacing="6">
-                    <Label text="Existing Languages (4)" styleClass="field-label"/>
+                    <Label text="Existing Languages" styleClass="field-label"/>
                     <ListView fx:id="languageList" prefHeight="180" styleClass="list-card"/>
                 </VBox>
             </VBox>
