@@ -7,7 +7,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cs151.application.HomePage.HomeController"
-            stylesheets="homepage.css"
+            stylesheets="@homepage.css"
             styleClass="canvas home-root"
             prefWidth="980" prefHeight="620">
 
