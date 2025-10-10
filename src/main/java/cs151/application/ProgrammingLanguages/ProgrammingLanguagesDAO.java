@@ -19,7 +19,19 @@ public class ProgrammingLanguagesDAO {
         }
         return out;
     }
-
+    /** Returns a List of Language objects in ascending aphabetical order. */
+    public List<Language> listLanguageObjects(){
+        List<Language> out = new ArrayList<>();
+        String sql = "SELECT name FROM language_catalog ORDER BY LOWER(name) ASC";
+        try (Connection c = DatabaseConnector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) out.add(new Language(rs.getString("name")));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return out;
+    }
     /** Save a name; returns true if inserted, false if it already existed or invalid. */
     public boolean save(String name) {
         if (name == null) return false;

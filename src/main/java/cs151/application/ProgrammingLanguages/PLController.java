@@ -1,37 +1,24 @@
 package cs151.application.ProgrammingLanguages;
 
 import javafx.fxml.FXML;
-<<<<<<< HEAD
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
-import javafx.event.ActionEvent;
-
-public class PLController {
-    // DAO class instance variable would be created here.
-    //private final ProgrammingLanguagesDAO repo = new ProgrammingLanguagesDAO();
-    @FXML private TextField languageField;
-    @FXML private Label errorLabel;
-    @FXML private ListView<String> languageList;
-=======
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
->>>>>>> 12b5da8 (ui: fix .fxml; define-pl&home-page: fix Controller; persist: build SQLite service)
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PLController {
     // --- UI elements from define-pl.fxml ---
     @FXML private TextField languageField;
     @FXML private Label errorLabel;
-    @FXML private ListView<String> languageList;
+    @FXML private TableView<Language> languageList;
+    @FXML private TableColumn<Language,String> nameColumn;
 
     // --- Data access ---
     private final ProgrammingLanguagesDAO repo = new ProgrammingLanguagesDAO();
@@ -41,42 +28,14 @@ public class PLController {
     // Called automatically after FXML loads
     @FXML
     private void initialize() {
+        //Instead of a langauge List of Strings return a TableView with language objects sorted.
         if (languageList != null) {
-            languageList.getItems().setAll(repo.listAll());
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("languageName"));
+            languageList.getItems().setAll(repo.listLanguageObjects());
         }
     }
 
     @FXML
-<<<<<<< HEAD
-    public void onSave(ActionEvent e){
-        String name = languageField.getText().trim();
-
-        //Check if name is just spaces or is empty
-        if(validator(name)){
-            errorLabel.setText("Name is required");
-            return;
-        }
-
-        //check if repo.existsByName(name) sends T or F. checks if it's in languageList for now.
-         if(languageList.getItems().contains(name)){
-            errorLabel.setText("Name already exists");
-            return;
-         }
-
-         //try to persist the name
-         try{
-             //repo.persist(name);
-             Language newLanguage = new Language(name.trim().toLowerCase());
-
-             //Send the language 'name' to 'languageList' (temporary solution)
-             languageList.getItems().add(name);
-             errorLabel.setText("Saved '" + name + "' successfully");
-
-         }catch(Exception ex){
-             errorLabel.setText("Couldn't save. Try Again");
-
-         }
-=======
     private void onGoHome(ActionEvent e) throws Exception {
         // Load the homepage FXML
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/homepage.fxml"));
@@ -108,13 +67,10 @@ public class PLController {
         // success
         clearError();
         if (languageField != null) languageField.clear();
-        if (languageList != null)  languageList.getItems().setAll(repo.listAll());
->>>>>>> 12b5da8 (ui: fix .fxml; define-pl&home-page: fix Controller; persist: build SQLite service)
-    }
-    @FXML
-    public void onGoHome(ActionEvent e){
-
-
+        if (languageList != null) {
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("languageName"));
+            languageList.getItems().setAll(repo.listLanguageObjects());
+        }
     }
 
     // Now it delegates to the DAO so callers still work.
@@ -132,9 +88,6 @@ public class PLController {
         return "Saved " + trimmed + " successfully";
     }
 
-<<<<<<< HEAD
-
-=======
     // helpers
     private void setError(String msg) {
         if (errorLabel != null)
@@ -147,5 +100,4 @@ public class PLController {
     private String showError(String e){
         return "ERROR: " + e;
     }
->>>>>>> 12b5da8 (ui: fix .fxml; define-pl&home-page: fix Controller; persist: build SQLite service)
 }
