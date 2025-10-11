@@ -1,7 +1,6 @@
-package cs151.application.HomePage;
+package cs151.application.homepage;
 
-import cs151.application.HomePage.HomePageController;      // service
-import cs151.application.ProgrammingLanguages.Language;
+import cs151.application.programminglanguages.Language;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +14,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeController {
+public class HomePageController {
     // FXML fields (must match ids in homepage.fxml)
     @FXML private TextField searchField;
 
@@ -29,7 +28,7 @@ public class HomeController {
     @FXML private CheckBox avoidBlacklist;
 
     // Teammate's service (DB/search)
-    private final HomePageController svc = new HomePageController();
+    private final HomePageService svc = new HomePageService();
 
     /* ====== Handlers called from FXML ====== */
     @FXML private void onGoToLanguages(ActionEvent e) throws Exception {

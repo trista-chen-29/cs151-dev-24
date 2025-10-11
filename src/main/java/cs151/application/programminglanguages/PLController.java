@@ -1,5 +1,6 @@
-package cs151.application.ProgrammingLanguages;
+package cs151.application.programminglanguages;
 
+import cs151.application.persistence.ProgrammingLanguagesDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;

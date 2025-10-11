@@ -1,6 +1,7 @@
-package cs151.application.ProgrammingLanguages;
+package cs151.application.persistence;
 
-import cs151.application.HomePage.DatabaseConnector;
+import cs151.application.programminglanguages.Language;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

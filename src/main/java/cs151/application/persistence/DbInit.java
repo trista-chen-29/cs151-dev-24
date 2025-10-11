@@ -1,4 +1,4 @@
-package cs151.application.HomePage;
+package cs151.application.persistence;
 
 import java.sql.Connection;
 import java.sql.Statement;

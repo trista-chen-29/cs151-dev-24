@@ -5,9 +5,10 @@
 <?import javafx.scene.layout.*?>
 
 
+
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="cs151.application.ProgrammingLanguages.PLController"
+            fx:controller="cs151.application.programminglanguages.PLController"
             stylesheets="@define-pl.css"
             styleClass="canvas pl-root"
             prefWidth="980" prefHeight="620">
@@ -47,8 +48,13 @@
 
                 <!-- Existing list -->
                 <VBox spacing="6">
-                    <Label text="Existing Languages" styleClass="field-label"/>
-                    <ListView fx:id="languageList" prefHeight="180" styleClass="list-card"/>
+                    <!-- tableView with language  Column-->
+                    <TableView fx:id="languageList" prefHeight="200" styleClass="field-label">
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                        <columns>
+                            <TableColumn fx:id="nameColumn" text="Existing Languages" prefWidth="400" styleClass="field-label"/>
+                        </columns>
+                    </TableView>
                 </VBox>
             </VBox>
         </VBox>
