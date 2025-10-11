@@ -5,9 +5,25 @@
 .home-root .filters-card   { -fx-padding: 16; }
 
 .home-root .home-btn {
-    -fx-text-fill: #006400;     /* dark text */
-    -fx-background-color: #F0FFFF;
+    -fx-text-fill: #ffffff;     /* dark text */
+    -fx-background-color: #006400;
     -fx-background-radius: 6;
     -fx-padding: 6 10;
     -fx-font-weight: 700;
+}
+
+.pl-button {
+    -fx-background-color: #39ac73;   /* dark green */
+    -fx-text-fill: white;            /* white text for contrast */
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #0b7353;   /* slightly lighter green on hover */
+}
+
+.button:pressed {
+    -fx-background-color: #043f2f;   /* darker when pressed */
 }

@@ -1,6 +1,6 @@
 /* ===== Global palette as looked-up colors ===== */
 .root {
-    -brand: #39ac73;          /* darker green */
+    -brand: #2f8e61;          /* darker green */
     -bg-2: #daf1e6;           /* lighter green */
     -bg-3: #edf8f2;           /* lightest green */
     -text-dk: #006400;        /* dark text */
@@ -20,6 +20,8 @@
     -fx-background-color: -brand;
     -fx-padding: 10 16;
 }
+
+
 .topbar .button, .topbar .label, .topbar .hyperlink {
     -fx-text-fill: -text-on-dark;
 }
@@ -44,7 +46,7 @@
 
 /* Section title */
 .h1 {
-    -fx-font-size: 22px;
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
     -fx-text-fill: -text-dk;
 }
@@ -61,11 +63,21 @@
 .button {
     -fx-background-radius: 6;
     -fx-padding: 6 16;
+    -fx-background-color: #2f9562;   /* dark green */
+    -fx-text-fill: white;            /* white text for contrast */
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
 }
 .button:default {
     -fx-background-color: -brand;
     -fx-text-fill: -text-on-dark;
 }
+
+
+.button:hover {
+    -fx-background-color: #0b7353;   /* slightly lighter green on hover */
+}
+
 
 /* Error text */
 .error { -fx-text-fill: #c0392b; }

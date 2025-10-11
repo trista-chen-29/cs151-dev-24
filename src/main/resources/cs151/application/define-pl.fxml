@@ -15,7 +15,7 @@
     <!-- Top bar -->
     <top>
         <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
-            <Hyperlink text="Go to Homepage" onAction="#onGoHome" styleClass="toplink"/>
+            <Button text="Go to Homepage" onAction="#onGoHome" styleClass="brand"/>
             <Pane HBox.hgrow="ALWAYS"/>
             <Label text="Prof-Support" styleClass="brand"/>
         </HBox>
