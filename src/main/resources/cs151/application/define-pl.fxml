@@ -4,28 +4,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<<<<<<< HEAD
-=======
-
->>>>>>> ea4b9d3ebd278871fad6a73e6191fd858724f58f
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml"
             fx:controller="cs151.application.ProgrammingLanguages.PLController"
             stylesheets="@define-pl.css"
             styleClass="canvas pl-root"
             prefWidth="980" prefHeight="620">
 
-    <!-- Top bar -->
     <top>
         <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
-            <Hyperlink text="Go to Homepage" onAction="#onGoHome" styleClass="toplink"/>
+            <Hyperlink text="Go to Homepage" fx:id="goHomeLink" styleClass="toplink"/>
             <Pane HBox.hgrow="ALWAYS"/>
             <Label text="Prof-Support" styleClass="brand"/>
         </HBox>
     </top>
 
-    <!-- CONTENT -->
     <center>
         <VBox alignment="TOP_CENTER" spacing="18">
             <padding>
@@ -34,36 +27,25 @@
 
             <Label text="Programming Languages" styleClass="h1"/>
 
-            <!-- Card with form + list -->
             <VBox spacing="12" styleClass="card" maxWidth="640">
 
-                <!-- Input -->
                 <VBox spacing="6">
                     <Label text="Enter Language name *" styleClass="field-label"/>
                     <TextField fx:id="languageField" promptText="e.g., Java"/>
                 </VBox>
 
-                <!-- Button -->
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Button text="Save" onAction="#onSave" defaultButton="true"/>
+                    <Button fx:id="saveButton" text="Save" defaultButton="true"/>
+                    <!-- 如果你不需要 UI 的清空鍵，也可以保留但不綁動作 -->
+                    <Button fx:id="clearButton" text="Clear All"/>
                     <Label fx:id="errorLabel" styleClass="error"/>
                 </HBox>
 
-                <!-- Existing list -->
                 <VBox spacing="6">
-<<<<<<< HEAD
                     <Label text="Existing Languages" styleClass="field-label"/>
-                    <ListView fx:id="languageList" prefHeight="180" styleClass="list-card"/>
-=======
-                    <!-- tableView with language  Column-->
-                    <TableView fx:id="languageList" prefHeight="200" styleClass="field-label">
-                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
-                        <columns>
-                            <TableColumn fx:id="nameColumn" text="Existing Languages" prefWidth="400" styleClass="field-label"/>
-                        </columns>
-                    </TableView>
->>>>>>> ea4b9d3ebd278871fad6a73e6191fd858724f58f
+                    <ListView fx:id="languageList" prefHeight="200" styleClass="list-card"/>
                 </VBox>
+
             </VBox>
         </VBox>
     </center>

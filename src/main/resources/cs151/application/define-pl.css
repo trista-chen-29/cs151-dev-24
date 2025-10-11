@@ -1,7 +1,0 @@
-/* Scope to define-language screen */
-.pl-root .field-label { -fx-font-weight: 700; -fx-text-fill: #006400; }
-
-.pl-root .list-card {
-    /* reuses .list-card look from theme.css, just set sizes if needed */
-    -fx-pref-width: 420;
-}
