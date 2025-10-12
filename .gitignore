@@ -14,3 +14,9 @@
 *.iml
 /target/
 .DS_Store
+
+# IDE & build artifacts
+.idea/
+*.iml
+/target/
+.DS_Store

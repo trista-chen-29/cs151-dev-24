@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.*?>
 
 
-
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cs151.application.programminglanguages.PLController"
@@ -16,7 +15,7 @@
     <!-- Top bar -->
     <top>
         <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
-            <Hyperlink text="Go to Homepage" onAction="#onGoHome" styleClass="toplink"/>
+            <Button text="Go to Homepage" onAction="#onGoHome" styleClass="brand"/>
             <Pane HBox.hgrow="ALWAYS"/>
             <Label text="Prof-Support" styleClass="brand"/>
         </HBox>
@@ -46,16 +45,17 @@
                     <Label fx:id="errorLabel" styleClass="error"/>
                 </HBox>
 
-                <!-- Existing list -->
-                <VBox spacing="6">
-                    <!-- tableView with language  Column-->
-                    <TableView fx:id="languageList" prefHeight="200" styleClass="field-label">
-                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
-                        <columns>
-                            <TableColumn fx:id="nameColumn" text="Existing Languages" prefWidth="400" styleClass="field-label"/>
-                        </columns>
-                    </TableView>
-                </VBox>
+                <!-- Table View -->
+                <TableView fx:id="languagesTable"
+                           prefHeight="220"
+                           styleClass="list-card">
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="nameColumn" text="Name"/>
+                    </columns>
+                </TableView>
             </VBox>
         </VBox>
     </center>

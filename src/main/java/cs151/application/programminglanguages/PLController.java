@@ -18,8 +18,8 @@ public class PLController {
     // --- UI elements from define-pl.fxml ---
     @FXML private TextField languageField;
     @FXML private Label errorLabel;
-    @FXML private TableView<Language> languageList;
-    @FXML private TableColumn<Language,String> nameColumn;
+    @FXML private TableView<Language> languagesTable;
+    @FXML private TableColumn<Language, String> nameColumn;
 
     // --- Data access ---
     private final ProgrammingLanguagesDAO repo = new ProgrammingLanguagesDAO();
@@ -29,10 +29,13 @@ public class PLController {
     // Called automatically after FXML loads
     @FXML
     private void initialize() {
-        //Instead of a langauge List of Strings return a TableView with language objects sorted.
-        if (languageList != null) {
+        if (languagesTable != null) {
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("languageName"));
-            languageList.getItems().setAll(repo.listLanguageObjects());
+            languagesTable.getItems().setAll(repo.listLanguageObjects());
+            // show sort arrow A→Z
+            nameColumn.setSortType(TableColumn.SortType.ASCENDING);
+            languagesTable.getSortOrder().setAll(nameColumn);
+            languagesTable.sort();
         }
     }
 
@@ -68,9 +71,9 @@ public class PLController {
         // success
         clearError();
         if (languageField != null) languageField.clear();
-        if (languageList != null) {
+        if (languagesTable != null) {
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("languageName"));
-            languageList.getItems().setAll(repo.listLanguageObjects());
+            languagesTable.getItems().setAll(repo.listLanguageObjects());
         }
     }
 
