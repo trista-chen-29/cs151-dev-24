@@ -79,14 +79,4 @@ public class ProgrammingLanguagesDAO {
         for (String s : listAll()) out.add(new Language(s));
         return out;
     }
-
-    /** Optional: convenience for your "Clear" test button. */
-    public void clearAll() {
-        try (Connection c = DatabaseConnector.getConnection();
-             Statement st = c.createStatement()) {
-            st.executeUpdate("DELETE FROM language_catalog");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
