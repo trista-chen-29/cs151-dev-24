@@ -1,6 +1,5 @@
-package cs151.application;
+package cs151.application.studentprofile;
 
-import cs151.application.ProgrammingLanguages.Language;
 import java.util.List;
 
 public class Student {

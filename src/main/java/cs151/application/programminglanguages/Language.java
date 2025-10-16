@@ -1,4 +1,4 @@
-package cs151.application.ProgrammingLanguages;
+package cs151.application.programminglanguages;
 
 public class Language {
     private String languageName;

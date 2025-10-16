@@ -1,20 +1,19 @@
-package cs151.application.HomePage;
+package cs151.application.homepage;
 
-import cs151.application.ProgrammingLanguages.Language;
-import cs151.application.Student;
+import cs151.application.persistence.DatabaseConnector;
+import cs151.application.programminglanguages.Language;
+import cs151.application.studentprofile.Student;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.io.IOException;
 
+public class HomePageService {
+    private final SearchService searchService;
 
-public class HomePageController {
-    private final SearchController searchcontroller;
-
-    public HomePageController(){
-        searchcontroller = new SearchController();
+    public HomePageService(){
+        searchService = new SearchService();
     }
 
     public List<Student> search(String query,
@@ -22,7 +21,7 @@ public class HomePageController {
                                 List<String> databases,
                                 List<String> prof_interest,
                                 boolean blacklistedAllowed) {
-        return searchcontroller.filterstudent(query, programming_languages, databases, prof_interest, blacklistedAllowed);
+        return searchService.filterstudent(query, programming_languages, databases, prof_interest, blacklistedAllowed);
     }
 
     public List<String> getProgrammingLanguages() {

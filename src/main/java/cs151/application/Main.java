@@ -1,18 +1,17 @@
 package cs151.application;
 
+import cs151.application.persistence.DbInit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         // Create tables if you're using SQLite (safe to call repeatedly)
         try {
-            cs151.application.HomePage.DbInit.ensureSchema();
+            DbInit.ensureSchema();
         } catch (Throwable t) {
             // Don't crash the UI if DB init fails during early dev
             t.printStackTrace();

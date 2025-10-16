@@ -1,13 +1,14 @@
-package cs151.application.HomePage;
+package cs151.application.homepage;
 
-import cs151.application.ProgrammingLanguages.Language;
-import cs151.application.Student;
+import cs151.application.persistence.DatabaseConnector;
+import cs151.application.programminglanguages.Language;
+import cs151.application.studentprofile.Student;
 
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SearchController {
+public class SearchService {
     /**
      * Filters students by name, languages, databases, interests.
      * @param blacklistedAllowed true = include blacklisted students; false = exclude them

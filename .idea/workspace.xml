@@ -6,9 +6,25 @@
   <component name="ChangeListManager">
     <list default="true" id="6ef4db1e-9c6d-4c38-bf7b-a7c6a3504b09" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReadMe.md" beforeDir="false" afterPath="$PROJECT_DIR$/ReadMe.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/persistence/DatabaseConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/DbInit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/persistence/DbInit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/homepage/HomePageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/HomePageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/homepage/HomePageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/HomePage/SearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/homepage/SearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/MainController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/ProgrammingLanguages/Language.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/programminglanguages/Language.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/ProgrammingLanguages/PLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/programminglanguages/PLController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/ProgrammingLanguages/ProgrammingLanguagesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/persistence/ProgrammingLanguagesDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs151/application/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs151/application/studentprofile/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/cs151/application/define-pl.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cs151/application/define-pl.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/cs151/application/hello-view.fxml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/cs151/application/homepage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cs151/application/homepage.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/ProgrammingLanguages/Language.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/ProgrammingLanguages/Language.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/ProgrammingLanguages/PLController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/ProgrammingLanguages/PLController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/ProgrammingLanguages/ProgrammingLanguagesDAO.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/define-pl.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/define-pl.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cs151/application/homepage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs151/application/homepage.fxml" afterDir="false" />
     </list>
@@ -60,7 +76,7 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "persist",
     "kotlin-language-version-configured": "true",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",

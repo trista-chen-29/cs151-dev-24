@@ -1,23 +1,25 @@
-package cs151.application.ProgrammingLanguages;
+package cs151.application.programminglanguages;
 
+import cs151.application.persistence.ProgrammingLanguagesDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PLController {
     // --- UI elements from define-pl.fxml ---
     @FXML private TextField languageField;
     @FXML private Label errorLabel;
-    @FXML private ListView<String> languageList;
+    @FXML private TableView<Language> languagesTable;
+    @FXML private TableColumn<Language, String> nameColumn;
 
     // --- Data access ---
     private final ProgrammingLanguagesDAO repo = new ProgrammingLanguagesDAO();
@@ -27,8 +29,13 @@ public class PLController {
     // Called automatically after FXML loads
     @FXML
     private void initialize() {
-        if (languageList != null) {
-            languageList.getItems().setAll(repo.listAll());
+        if (languagesTable != null) {
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("languageName"));
+            languagesTable.getItems().setAll(repo.listLanguageObjects());
+            // show sort arrow A→Z
+            nameColumn.setSortType(TableColumn.SortType.ASCENDING);
+            languagesTable.getSortOrder().setAll(nameColumn);
+            languagesTable.sort();
         }
     }
 
@@ -64,7 +71,10 @@ public class PLController {
         // success
         clearError();
         if (languageField != null) languageField.clear();
-        if (languageList != null)  languageList.getItems().setAll(repo.listAll());
+        if (languagesTable != null) {
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("languageName"));
+            languagesTable.getItems().setAll(repo.listLanguageObjects());
+        }
     }
 
     // Now it delegates to the DAO so callers still work.
