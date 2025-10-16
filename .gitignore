@@ -20,3 +20,9 @@
 *.iml
 /target/
 .DS_Store
+
+# IDE & build
+.idea/
+*.iml
+/target/
+.DS_Store
