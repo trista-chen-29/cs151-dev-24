@@ -71,6 +71,12 @@
                 <configuration>
                     <source>23</source>
                     <target>23</target>
+<<<<<<< HEAD
+=======
+                    <!-- 可選：避免警告
+                    <release>23</release>
+                    -->
+>>>>>>> f03f6f4 (Initial commit: JavaFX project with ignore rules)
                 </configuration>
             </plugin>
             <plugin>
@@ -79,11 +85,18 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
+<<<<<<< HEAD
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
                             <!-- moduleName / fully-qualified Main -->
                             <mainClass>cs151.helloworld/cs151.application.Main</mainClass>
+=======
+                        <id>default-cli</id>
+                        <configuration>
+                            <!-- 正確的 module/class -->
+                            <mainClass>cs151.application/cs151.application.Main</mainClass>
+>>>>>>> f03f6f4 (Initial commit: JavaFX project with ignore rules)
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
@@ -96,4 +109,8 @@
             </plugin>
         </plugins>
     </build>
+<<<<<<< HEAD
 </project>
+=======
+</project>
+>>>>>>> f03f6f4 (Initial commit: JavaFX project with ignore rules)

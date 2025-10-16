@@ -88,7 +88,11 @@
 
                     <CheckBox text="Avoid Blacklists" fx:id="avoidBlacklist"/>
                     <HBox alignment="CENTER_RIGHT">
+<<<<<<< HEAD
                         <Button text="Add Student" onAction="#onAddStudent"/>
+=======
+                        <Button text="Add Student" onAction="#onOpenStudentProfile"/>
+>>>>>>> f03f6f4 (Initial commit: JavaFX project with ignore rules)
                         <Pane HBox.hgrow="ALWAYS"/>
                         <Button text="Apply Filters" onAction="#onApplyFilters"/>
                     </HBox>
