@@ -15,10 +15,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
-import javafx.util.Callback;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -27,8 +27,9 @@ import java.util.*;
 
 public class StudentProfileController {
 
-    private static final String HOMEPAGE_CONTENT_FXML = "/cs151/application/homepage.fxml"; // inner content (no shell)
-    private static final String CSS_PATH = "/cs151/application/style.css";
+    // Use the SAME resources you load in Main.java
+    private static final String HOMEPAGE_FXML = "/cs151/application/homepage.fxml";
+    private static final String THEME_CSS     = "/cs151/application/theme.css";
 
     @FXML private ImageView ivPhoto;
     @FXML private Button btnUpdatePhoto;
@@ -218,29 +219,31 @@ public class StudentProfileController {
     }
 
     /**
-     * Go back to homepage content inside the existing shell BorderPane.
-     * Keeps the green header and window chrome intact.
+     * Go back to the homepage by replacing the ENTIRE scene.
+     * This prevents the Student Profile top bar from lingering.
      */
     @FXML
     private void onGoBackHome(ActionEvent e) {
         try {
-            Scene scene = ((Node) e.getSource()).getScene();
-            BorderPane shell = (BorderPane) scene.getRoot();  // the root that holds the header in Top
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(HOMEPAGE_FXML));
+            Parent homeRoot = loader.load();
 
-            Parent homeContent = FXMLLoader.load(getClass().getResource(HOMEPAGE_CONTENT_FXML));
-            shell.setCenter(homeContent);
+            Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            Scene scene = new Scene(homeRoot);
 
-            if (scene.getStylesheets().stream().noneMatch(s -> s.endsWith("style.css"))) {
-                var url = getClass().getResource(CSS_PATH);
-                if (url != null) scene.getStylesheets().add(url.toExternalForm());
-            }
+            var cssUrl = getClass().getResource(THEME_CSS);
+            if (cssUrl != null) scene.getStylesheets().add(cssUrl.toExternalForm());
+
+            stage.setScene(scene);
+            stage.show();
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Unable to load Homepage content: " + ex.getMessage()).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Unable to load Homepage: " + ex.getMessage()).showAndWait();
         }
     }
 
-    // ---- helpers ----
+    // ---------- helpers ----------
 
     private List<String> checkedItems(Map<String, BooleanProperty> state) {
         List<String> r = new ArrayList<>();
@@ -281,5 +284,3 @@ public class StudentProfileController {
         }catch(Exception ignored){}
     }
 }
-
-
