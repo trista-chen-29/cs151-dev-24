@@ -1,173 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="cs151.application.studentprofile.StudentProfileController">
+<BorderPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs151.application.studentprofile.StudentProfileController"
+            prefWidth="1100" prefHeight="680">
 
+    <!-- Non-Node definitions -->
     <fx:define>
         <ToggleGroup fx:id="tgJob"/>
     </fx:define>
 
-    <!-- Header -->
+    <!-- Top bar -->
     <top>
-        <HBox spacing="12" style="-fx-background-color: derive(#e9ecef, 0%); -fx-padding: 14 16;">
-            <children>
-                <Label text="Student Profile" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
-                <Pane HBox.hgrow="ALWAYS"/>
-                <Button fx:id="btnGoHome"
-                        text="Go Back To Homepage"
-                        onAction="#onGoBackHome"
-                        mnemonicParsing="false"
-                        style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;
-                               -fx-background-color: #34a853; -fx-background-radius: 8; -fx-padding: 8 14;"/>
-            </children>
+        <HBox spacing="12">
+            <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+            <Label text="Student Profile"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnGoHome" text="Go Back To Homepage" onAction="#onGoBackHome"/>
         </HBox>
     </top>
 
-    <!-- Content -->
+    <!-- Main content -->
     <center>
-        <GridPane hgap="16" vgap="14" style="-fx-padding: 16;">
+        <GridPane hgap="16" vgap="14">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
             <columnConstraints>
-                <!-- left column -->
                 <ColumnConstraints minWidth="320" hgrow="NEVER"/>
-                <!-- right column grows -->
                 <ColumnConstraints minWidth="520" hgrow="ALWAYS"/>
             </columnConstraints>
 
             <!-- Left panel -->
-            <VBox spacing="12" GridPane.columnIndex="0">
-                <children>
-                    <VBox spacing="8" style="-fx-alignment: CENTER;">
-                        <children>
-                            <ImageView fx:id="ivPhoto" fitWidth="140" fitHeight="140" preserveRatio="true"
-                                       style="-fx-background-color: #f1f3f5; -fx-border-color: #ced4da; -fx-border-radius: 8; -fx-background-radius: 8;"/>
-                            <Button fx:id="btnUpdatePhoto" text="Update Photo" onAction="#onUpdatePhoto"/>
-                        </children>
-                    </VBox>
+            <VBox spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <VBox spacing="8" alignment="CENTER">
+                    <ImageView fx:id="ivPhoto" fitWidth="140" fitHeight="140" preserveRatio="true"/>
+                    <Button fx:id="btnUpdatePhoto" text="Update Photo" onAction="#onUpdatePhoto"/>
+                </VBox>
 
-                    <GridPane hgap="10" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints minWidth="120"/>
-                            <ColumnConstraints hgrow="ALWAYS"/>
-                        </columnConstraints>
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="120"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
 
-                        <Label text="Full Name" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <TextField fx:id="tfFullName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Full Name" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfFullName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                        <Label text="Academic Status" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="cbAcademicStatus" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Academic Status" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="cbAcademicStatus" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                        <Label text="Current Job Status" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                        <HBox spacing="12" GridPane.rowIndex="2" GridPane.columnIndex="1">
-                            <children>
-                                <RadioButton fx:id="rbEmployed" text="Employed" toggleGroup="$tgJob"/>
-                                <RadioButton fx:id="rbUnemployed" text="Not Employed" toggleGroup="$tgJob"/>
-                            </children>
-                        </HBox>
+                    <Label text="Current Job Status" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <HBox spacing="12" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                        <RadioButton fx:id="rbEmployed" text="Employed" toggleGroup="$tgJob"/>
+                        <RadioButton fx:id="rbUnemployed" text="Not Employed" toggleGroup="$tgJob"/>
+                    </HBox>
 
-                        <Label text="Job Details" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <TextArea fx:id="taJobDetails" GridPane.rowIndex="3" GridPane.columnIndex="1"
-                                  prefRowCount="5" promptText="Required If Employed"/>
+                    <Label text="Job Details" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="taJobDetails" GridPane.rowIndex="3" GridPane.columnIndex="1" prefRowCount="5"/>
 
-                        <HBox spacing="20" GridPane.rowIndex="4" GridPane.columnIndex="1">
-                            <children>
-                                <CheckBox fx:id="cbWhitelist" text="Whitelist"/>
-                                <CheckBox fx:id="cbBlacklist" text="Blacklist"/>
-                            </children>
-                        </HBox>
-                    </GridPane>
-                </children>
+                    <HBox spacing="20" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                        <CheckBox fx:id="cbWhitelist" text="Whitelist"/>
+                        <CheckBox fx:id="cbBlacklist" text="Blacklist"/>
+                    </HBox>
+                </GridPane>
             </VBox>
 
             <!-- Right panel -->
-            <VBox spacing="16" GridPane.columnIndex="1">
-                <children>
+            <VBox spacing="16" GridPane.columnIndex="1" GridPane.rowIndex="0">
 
-                    <!-- Skills two-column grid -->
-                    <GridPane hgap="16" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
-                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
-                        </columnConstraints>
+                <!-- Skills -->
+                <GridPane hgap="16" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                        <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                    </columnConstraints>
 
-                        <!-- Programming Languages (left cell) -->
-                        <VBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
-                            <children>
-                                <Label text="Programming Languages Known"/>
-                                <ListView fx:id="lvProgLangs" prefHeight="130"/>
-                                <HBox spacing="8">
-                                    <children>
-                                        <TextField fx:id="tfNewLang" promptText="Other..." HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                        <Button fx:id="btnAddLang" text="Add" onAction="#onAddLang" minWidth="64"/>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
+                    <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Programming Languages Known"/>
+                        <ListView fx:id="lvProgLangs" prefHeight="130"/>
+                    </VBox>
 
-                        <!-- Databases (right cell) -->
-                        <VBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="1">
-                            <children>
-                                <Label text="Databases Known"/>
-                                <ListView fx:id="lvDatabases" prefHeight="130"/>
-                                <HBox spacing="8">
-                                    <children>
-                                        <TextField fx:id="tfNewDb" promptText="Other..." HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                        <Button fx:id="btnAddDb" text="Add" onAction="#onAddDb" minWidth="64"/>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
-                    </GridPane>
+                    <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Databases Known"/>
+                        <ListView fx:id="lvDatabases" prefHeight="130"/>
+                    </VBox>
+                </GridPane>
 
-                    <!-- Preferred Role with add-other in the same row -->
-                    <GridPane hgap="10" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints minWidth="220"/>
-                            <ColumnConstraints hgrow="ALWAYS"/>
-                        </columnConstraints>
+                <!-- Preferred Role -->
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="220"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
 
-                        <Label text="Preferred Professional Role" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <HBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="1">
-                            <children>
-                                <ComboBox fx:id="cbRole" editable="true" promptText="Select Or Type" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                                <TextField fx:id="tfNewRole" promptText="Other..." prefWidth="180"/>
-                                <Button fx:id="btnAddRole" text="Add" onAction="#onAddRole" minWidth="64"/>
-                            </children>
-                        </HBox>
-                    </GridPane>
+                    <Label text="Preferred Professional Role" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="cbRole" promptText="Select a role"
+                              GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="260"/>
+                </GridPane>
 
-                    <!-- Comments -->
-                    <GridPane hgap="10" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints minWidth="120"/>
-                            <ColumnConstraints hgrow="ALWAYS"/>
-                            <ColumnConstraints minWidth="140"/>
-                        </columnConstraints>
+                <!-- Comments -->
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="120"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints minWidth="140"/>
+                    </columnConstraints>
 
-                        <Label text="New Comment" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <TextArea fx:id="taNewComment" GridPane.rowIndex="0" GridPane.columnIndex="1" prefRowCount="3"
-                                  promptText="Ctrl+Enter To Add" maxWidth="Infinity"/>
-                        <Button fx:id="btnAddComment" text="Add Comment" onAction="#onAddComment"
-                                GridPane.rowIndex="0" GridPane.columnIndex="2" minWidth="120"/>
-                    </GridPane>
+                    <Label text="New Comment" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextArea fx:id="taNewComment" GridPane.columnIndex="1" GridPane.rowIndex="0" prefRowCount="3"/>
+                    <Button text="Add Comment" onAction="#onAddComment"
+                            GridPane.columnIndex="2" GridPane.rowIndex="0" minWidth="120"/>
+                </GridPane>
 
-                    <Label text="Comments"/>
-                    <ListView fx:id="lvComments" prefHeight="140"/>
+                <Label text="Comments"/>
+                <ListView fx:id="lvComments" prefHeight="140"/>
 
-                    <HBox spacing="10" style="-fx-alignment: CENTER_RIGHT; -fx-padding: 6 0 0 0;">
-                        <children>
-                            <Button fx:id="btnClear" text="Clear" onAction="#onClear" minWidth="96"/>
-                            <Button fx:id="btnSave"  text="Save"  onAction="#onSave"  minWidth="96"/>
-                        </children>
-                    </HBox>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="Clear" onAction="#onClear" minWidth="96"/>
+                    <Button text="Save"  onAction="#onSave"  minWidth="96"/>
+                </HBox>
 
-                    <Label fx:id="lbError" style="-fx-text-fill: crimson;"/>
-                </children>
+                <Label fx:id="lbError"/>
             </VBox>
         </GridPane>
     </center>
 </BorderPane>
-
