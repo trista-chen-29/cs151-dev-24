@@ -8,67 +8,50 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 public class HomePageController {
-
-    // Use the same resources as Main.java
     private static final String THEME_CSS = "/cs151/application/theme.css";
 
-    // ---------- Navigation from Home ----------
+    @FXML private TextField searchField;
 
     @FXML
     private void onGoToLanguages(ActionEvent event) {
-        String[] candidates = new String[] {
+        String[] candidates = {
                 "/cs151/application/define-pl.fxml",
                 "/cs151/application/programminglanguages/define-pl.fxml"
         };
-        switchSceneKeepingStyles(event, candidates, "Cannot open Programming Languages");
+        switchScene(event, candidates, "Cannot open Programming Languages");
     }
 
     @FXML
     private void onGoToStudentProfile(ActionEvent event) {
-        String[] candidates = new String[] {
-                "/cs151/application/studentprofile.fxml",
-                "/cs151/application/studentprofile/studentprofile.fxml"
-        };
-        switchSceneKeepingStyles(event, candidates, "Cannot open Student Profile");
+        String[] candidates = { "/cs151/application/studentprofile.fxml" };
+        switchScene(event, candidates, "Cannot open Student Profile");
     }
-
-    // ---------- Optional handlers used by homepage.fxml ----------
 
     @FXML
     private void onSearch(ActionEvent event) {
-        // TODO implement search later
+        String q = (searchField == null || searchField.getText() == null) ? "" : searchField.getText().trim();
+        System.out.println("Search: " + q);
     }
 
     @FXML
     private void onApplyFilters(ActionEvent event) {
-        // TODO implement filters later
+        System.out.println("Apply Filters clicked.");
     }
 
-    // ---------- Shared “Go Home” helpers (used by other controllers) ----------
-    // IMPORTANT: do NOT create a new Scene here; reuse and keep CSS.
-
-    /** Allow any controller to return to Home using a Node (e.g., Button). */
     public static void goHomeFrom(Node source) {
         setRootKeepingStyles("/cs151/application/homepage.fxml", source);
     }
-
-    /** Overload for convenience — matches goHomeFrom(Button) calls. */
-    public static void goHomeFrom(Button source) {
-        goHomeFrom((Node) source);
-    }
-
-    // ---------- Internal utilities ----------
+    public static void goHomeFrom(Button source) { goHomeFrom((Node) source); }
 
     private static void setRootKeepingStyles(String resource, Node source) {
         try {
             Parent root = FXMLLoader.load(HomePageController.class.getResource(resource));
+            Scene scene = source.getScene();
+            scene.setRoot(root);
 
-            Scene scene = source.getScene();                 // reuse existing Scene
-            scene.setRoot(root);                             // swap content, keep size/title
-
-            // Ensure theme.css is attached (same as Main.java)
             boolean hasTheme = scene.getStylesheets().stream().anyMatch(s -> s.endsWith("theme.css"));
             if (!hasTheme) {
                 var url = HomePageController.class.getResource(THEME_CSS);
@@ -79,13 +62,12 @@ public class HomePageController {
         }
     }
 
-    private void switchSceneKeepingStyles(ActionEvent event, String[] resourceCandidates, String errorHeader) {
+    private void switchScene(ActionEvent event, String[] resourceCandidates, String errorHeader) {
         Exception lastError = null;
         for (String res : resourceCandidates) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource(res));
-
-                Scene scene = ((Node) event.getSource()).getScene(); // reuse Scene
+                Scene scene = ((Node) event.getSource()).getScene();
                 scene.setRoot(root);
 
                 boolean hasTheme = scene.getStylesheets().stream().anyMatch(s -> s.endsWith("theme.css"));
@@ -93,9 +75,9 @@ public class HomePageController {
                     var url = getClass().getResource(THEME_CSS);
                     if (url != null) scene.getStylesheets().add(url.toExternalForm());
                 }
-                return; // success
+                return;
             } catch (Exception ex) {
-                lastError = ex; // try next candidate
+                lastError = ex;
             }
         }
         showError(errorHeader, lastError);
