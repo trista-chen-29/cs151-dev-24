@@ -81,10 +81,8 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <configuration>
-                   <mainClass>cs151.application.Main</mainClass>
-          <jvmArgs>
-            <jvmArg>--enable-native-access=javafx.graphics,org.xerial.sqlitejdbc</jvmArg>
-          </jvmArgs>
+          <!-- module/mainClass format because you have module-info.java -->
+          <mainClass>cs151.application/cs151.application.Main</mainClass>
         </configuration>
       </plugin>
     </plugins>

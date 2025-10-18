@@ -1,4 +1,64 @@
 # Name of application: Prof-Support
+
+**Version: 0.5 (Student Profile Final Fix)**
+
+---
+
+## 📘 Overview
+Prof-Support helps faculty (professors) manage students’ profile data, academic skills, and programming-language knowledge.
+
+**This milestone (v0.5)** finalizes the Student Profile module, refines the navigation between pages, and unifies the JavaFX theme.
+
+### ✅ New in v0.5
+- Removed legacy **“Other”** option from `studentprofile.fxml`
+- Added new `student-profile.css` for modular UI styling
+- Verified `HomePageController` navigation for full-scene switch
+- Attached both `theme.css` and `student-profile.css` in FXML
+- Maven build tested successfully with **Zulu JDK 23**
+
+### 🔍 Local Verification
+| Test | Command | Expected | Result |
+|------|----------|-----------|---------|
+| FXML check | `Select-String -Path "studentprofile.fxml" -Pattern "Other" -Quiet` | False | ✅ Pass |
+| CSS exists | `Test-Path "student-profile.css"` | True | ✅ Pass |
+| Build run | `mvn clean javafx:run` | BUILD SUCCESS | ✅ Pass |
+
+---
+
+## 🧠 Feature Summary
+- Navigate between **Home**, **Programming Languages**, and **Student Profile**
+- Store and retrieve data from **SQLite**
+- Maintain consistent **JavaFX styling** across all scenes
+- Implement modular controllers and verified navigation logic
+
+---
+
+## 👥 Who did what
+| Member | Contribution |
+|---------|---------------|
+| **Trista Chen** | Organized packages, cleaned files, wrote README, handled packaging/zip for submission |
+| **Jaime Gonzalez** | Converted Define-PL to TableView (from ListView) |
+| **Vraj Mistry** | Refreshed HomePage UI and clarified *Add Programming Languages* navigation |
+| **Chenying Wang** | Implemented and verified **Student Profile UI v2**, removed legacy *Other*, added CSS linking, and validated navigation functionality |
+
+---
+
+## 🧰 Tech Stack
+- Java 23 (Zulu 23)
+- JavaFX 23 with Maven (`javafx-maven-plugin 0.0.8`)
+- SQLite JDBC (3.46.1.0)
+- SceneBuilder / FXML
+- CSS for UI styling
+
+---
+
+## 🧾 Build Instructions
+```bash
+# Run from project root
+mvn clean javafx:run
+
+
+# Name of application: Prof-Support
 ---
 ### Version: 0.3
 ---
