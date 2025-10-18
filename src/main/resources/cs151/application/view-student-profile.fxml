@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs151.application.studentprofile.ViewStudentProfileController"
+            stylesheets="@view-student-profile.css">
+
+    <!-- TOP BAR (Back button, search, segmented filter, refresh) -->
+    <top>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar">
+            <fx:define>
+                <ToggleGroup fx:id="tgShow"/>
+            </fx:define>
+
+                <Button text="Go To Homepage" onAction="#onBackHome" />
+            <TextField fx:id="tfSearch"
+                       promptText="Search name, language, database"
+                       HBox.hgrow="ALWAYS"
+                       styleClass="search"/>
+
+            <HBox spacing="6">
+                <ToggleButton fx:id="tbAll"        text="All"              toggleGroup="$tgShow" selected="true"/>
+                <ToggleButton fx:id="tbWhitelist"  text="Whitelist only"   toggleGroup="$tgShow"/>
+                <ToggleButton fx:id="tbBlacklist"  text="Blacklisted only" toggleGroup="$tgShow"/>
+            </HBox>
+
+            <Button text="Refresh" onAction="#onRefresh"/>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.45">
+            <!-- LEFT: TABLE -->
+            <VBox spacing="8">
+                <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                <Label text="All Students" styleClass="section-title"/>
+                <TableView fx:id="tvStudents" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colName"       text="NAME"       prefWidth="170"/>
+                        <TableColumn fx:id="colStatus"     text="STATUS"     prefWidth="110"/>
+                        <TableColumn fx:id="colEmployed"   text="EMPL."      prefWidth="70"/>
+                        <TableColumn fx:id="colRole"       text="ROLE"       prefWidth="180"/>
+                        <TableColumn fx:id="colLanguages"  text="LANGUAGES"  prefWidth="220"/>
+                        <TableColumn fx:id="colDatabases"  text="DATABASES"  prefWidth="190"/>
+                        <TableColumn fx:id="colWL"         text="WL"         prefWidth="60"/>
+                        <TableColumn fx:id="colBL"         text="BL"         prefWidth="60"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- RIGHT: DETAILS -->
+            <VBox spacing="12" styleClass="detail-card">
+                <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+
+                <Label fx:id="lbName" styleClass="detail-name"/>
+                <HBox spacing="8">
+                    <Label fx:id="badgeBlacklisted" text="Blacklisted" visible="false" managed="false" styleClass="badge-danger"/>
+                    <Label fx:id="badgeWhitelist"   text="Whitelisted" visible="false" managed="false" styleClass="badge-success"/>
+                </HBox>
+
+                <TitledPane text="Profile" expanded="true">
+                    <GridPane hgap="12" vgap="6">
+                        <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="130"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <Label text="Academic Status:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="lbStatus"        GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Employment:"      GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Label fx:id="lbEmployment"    GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Job Details:"      GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <Label fx:id="lbJob"            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Preferred Role:"   GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <Label fx:id="lbRole"           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </TitledPane>
+
+                <TitledPane text="Skills" expanded="true">
+                    <VBox spacing="8">
+                        <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                        <HBox spacing="8" alignment="TOP_LEFT">
+                            <Label text="Programming Languages:"/>
+                            <FlowPane fx:id="fpLangs" hgap="6" vgap="6"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="TOP_LEFT">
+                            <Label text="Databases:"/>
+                            <FlowPane fx:id="fpDbs" hgap="6" vgap="6"/>
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+
+                <TitledPane text="Comments" expanded="true" VBox.vgrow="ALWAYS">
+                    <VBox spacing="8" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                        <ListView fx:id="lvComments" VBox.vgrow="ALWAYS"/>
+                        <HBox spacing="8" alignment="CENTER_RIGHT">
+                            <TextField fx:id="tfNewComment" promptText="Add a comment..." HBox.hgrow="ALWAYS"/>
+                            <Button text="Post" onAction="#onPostComment"/>
+                        </HBox>
+                        <Label text="Tip: Press Cmd/Ctrl + Enter to post" styleClass="tip"/>
+                    </VBox>
+                </TitledPane>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>

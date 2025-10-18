@@ -1,97 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cs151.application.homepage.HomePageController"
             stylesheets="@homepage.css"
-            styleClass="canvas home-root"
-            prefWidth="980" prefHeight="620">
+            prefWidth="1100" prefHeight="680">
 
-    <!-- TOP BAR -->
+    <!-- ── Top bar ─────────────────────────────────────────────────────────── -->
     <top>
-        <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
-            <Button text="Add Programming Languages" onAction="#onGoToLanguages"/>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="topbar">
+            <padding>
+                <Insets top="10" right="16" bottom="10" left="16"/>
+            </padding>
+
+            <!-- keep this on the LEFT -->
+            <Button fx:id="btnGoLanguages"
+                    text="Define Programming Languages"
+                    onAction="#onGoToLanguages"
+                    styleClass="pill"/>
+
             <Pane HBox.hgrow="ALWAYS"/>
+
+            <!-- keep the brand on the RIGHT -->
             <Label text="Prof-Support" styleClass="brand"/>
         </HBox>
     </top>
 
-    <!-- CENTER CONTENT -->
+    <fx:define>
+        <ToggleGroup fx:id="tgShow"/>
+    </fx:define>
+
+    <!-- ── Center content ──────────────────────────────────────────────────── -->
     <center>
-        <VBox alignment="TOP_CENTER" spacing="18">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+        <VBox spacing="18" alignment="TOP_CENTER">
+            <padding><Insets top="24" left="24" right="24" bottom="24"/></padding>
 
-            <Label text="Welcome Back Professor!" styleClass="h1"/>
+            <!-- Centered page title -->
+            <Label text="Welcome back, Professor!" styleClass="h1"/>
 
-            <VBox spacing="12" styleClass="card" maxWidth="640">
-                <!-- Search -->
-                <VBox spacing="8" maxWidth="760">
-                    <Label text="Need to find a student?" styleClass="subhead"/>
-                    <HBox spacing="8">
-                        <TextField fx:id="searchField"
-                                   promptText="Search by name, email, skills…"
-                                   HBox.hgrow="ALWAYS"/>
-                        <Button text="🔍" onAction="#onSearch" minWidth="44"/>
+            <!-- Primary actions: two cards -->
+            <HBox spacing="16" alignment="CENTER">
+                <!-- Card: Define Student Profile -->
+                <VBox styleClass="action-card" spacing="10" prefWidth="480">
+                    <Label text="Define Student Profile" styleClass="card-title"/>
+                    <Label text="Create a new student profile or update an existing one."
+                           styleClass="card-sub"/>
+                    <HBox alignment="CENTER_LEFT">
+                        <Button text="Add / Edit Student" onAction="#onGoToStudentProfile" styleClass="primary"/>
                     </HBox>
                 </VBox>
 
-                <!-- Filters card -->
-                <VBox maxWidth="760" spacing="12" styleClass="card filters-card">
-                    <padding>
-                        <Insets top="16" right="16" bottom="16" left="16"/>
-                    </padding>
-
-                    <Label text="Filters:" styleClass="filters-title"/>
-
-                    <GridPane hgap="30" vgap="8">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="33"/>
-                            <ColumnConstraints percentWidth="33"/>
-                            <ColumnConstraints percentWidth="34"/>
-                        </columnConstraints>
-
-                        <!-- Programming Languages -->
-                        <VBox spacing="7" GridPane.columnIndex="0">
-                            <Label text="Programming languages" styleClass="group-title"/>
-                            <CheckBox text="C++"        fx:id="plCpp"/>
-                            <CheckBox text="Java"       fx:id="plJava"/>
-                            <CheckBox text="Python"     fx:id="plPython"/>
-                            <CheckBox text="Javascript" fx:id="plJs"/>
-                        </VBox>
-
-                        <!-- Databases -->
-                        <VBox spacing="7" GridPane.columnIndex="1">
-                            <Label text="Databases" styleClass="group-title"/>
-                            <CheckBox text="MySQL"       fx:id="dbMysql"/>
-                            <CheckBox text="PostgreSQL"  fx:id="dbPostgreSQL"/>
-                            <CheckBox text="MongoDB"     fx:id="dbMongo"/>
-                            <CheckBox text="SQLite"      fx:id="dbSqlite"/>
-                        </VBox>
-
-                        <!-- Interests -->
-                        <VBox spacing="7" GridPane.columnIndex="2">
-                            <Label text="Professional Interests" styleClass="group-title"/>
-                            <CheckBox text="Fullstack Engineer" fx:id="intFullstack"/>
-                            <CheckBox text="Software Engineer"  fx:id="intSWE"/>
-                            <CheckBox text="AI/ML Engineer"     fx:id="intAIML"/>
-                            <CheckBox text="Data Scientist"     fx:id="intDS"/>
-                        </VBox>
-                    </GridPane>
-
-                    <CheckBox text="Avoid Blacklists" fx:id="avoidBlacklist"/>
-
-                    <HBox alignment="CENTER_RIGHT">
-                        <Button text="Add Student" onAction="#onGoToStudentProfile"/>
-                        <Pane HBox.hgrow="ALWAYS"/>
-                        <Button text="Apply Filters" onAction="#onApplyFilters"/>
+                <!-- Card: View Student Profiles -->
+                <VBox styleClass="action-card" spacing="10" prefWidth="480">
+                    <Label text="View Student Profiles" styleClass="card-title"/>
+                    <Label text="Search, filter, and review saved profiles." styleClass="card-sub"/>
+                    <HBox alignment="CENTER_LEFT">
+                        <Button text="Open Directory" onAction="#onOpenDirectory" styleClass="primary"/>
                     </HBox>
                 </VBox>
+            </HBox>
+
+            <!-- Search & Filters panel -->
+            <VBox styleClass="card" spacing="14" maxWidth="1000">
+                <!-- Search row -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="tfSearch"
+                               promptText="Search by name, language, database…"
+                               HBox.hgrow="ALWAYS"/>
+                    <Label text="Show:" styleClass="muted"/>
+                    <ToggleButton fx:id="tbAll" text="All" toggleGroup="$tgShow" selected="true" styleClass="seg"/>
+                    <ToggleButton fx:id="tbWhitelist" text="Whitelist" toggleGroup="$tgShow" styleClass="seg"/>
+                    <ToggleButton fx:id="tbBlacklist" text="Blacklist" toggleGroup="$tgShow" styleClass="seg"/>
+                    <Button text="Refresh" onAction="#onRefresh" styleClass="ghost"/>
+                </HBox>
+
+                <!-- Three filter columns -->
+                <GridPane hgap="40" vgap="6">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="34"/>
+                    </columnConstraints>
+
+                    <!-- Programming Languages (dynamic from DB) -->
+                    <VBox spacing="7" GridPane.columnIndex="0">
+                        <Label text="Programming Languages" styleClass="group-title"/>
+                        <Hyperlink text="Manage list" onAction="#onGoToLanguages"/>
+                        <VBox fx:id="boxLangFilters" spacing="6"/>
+                    </VBox>
+
+                    <!-- Databases -->
+                    <VBox spacing="6" GridPane.columnIndex="1">
+                        <Label text="Databases" styleClass="group-title"/>
+                        <CheckBox text="MySQL"       fx:id="dbMysql"/>
+                        <CheckBox text="PostgreSQL"  fx:id="dbPostgres"/>
+                        <CheckBox text="MongoDB"     fx:id="dbMongo"/>
+                    </VBox>
+
+                    <!-- Preferred Roles -->
+                    <VBox spacing="6" GridPane.columnIndex="2">
+                        <Label text="Preferred Roles" styleClass="group-title"/>
+                        <CheckBox text="Front-End"  fx:id="roleFE"/>
+                        <CheckBox text="Back-End"   fx:id="roleBE"/>
+                        <CheckBox text="Full-Stack" fx:id="roleFS"/>
+                        <CheckBox text="Data"       fx:id="roleData"/>
+                        <CheckBox text="Other"      fx:id="roleOther"/>
+                    </VBox>
+                </GridPane>
+
+                <!-- Panel footer -->
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <Button text="Clear" onAction="#onClearFilters" styleClass="ghost"/>
+                    <Button text="Apply Filters" onAction="#onApplyFilters" styleClass="primary"/>
+                </HBox>
             </VBox>
         </VBox>
     </center>

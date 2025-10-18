@@ -159,10 +159,11 @@ public class StudentProfileDAO {
     /** Returns rows pre-shaped for the JavaFX TableView, sorted A→Z case-insensitive by name. */
     public List<StudentRow> listAllForTable() {
         String sql = """
-            SELECT id, name, isBlacklisted, languages, databases, commentsCount, lastComment
-            FROM student_profile_view
-            ORDER BY name COLLATE NOCASE ASC, id ASC
-        """;
+        SELECT id, name, academic_status, employed, preferred_role, whitelist, isBlacklisted,
+               languages, databases, commentsCount, lastComment
+        FROM student_profile_view
+        ORDER BY name COLLATE NOCASE ASC, id ASC
+    """;
         List<StudentRow> out = new ArrayList<>();
         try (Connection c = DatabaseConnector.getConnection();
              PreparedStatement ps = c.prepareStatement(sql);
@@ -171,11 +172,15 @@ public class StudentProfileDAO {
                 out.add(new StudentRow(
                         rs.getLong("id"),
                         rs.getString("name"),
+                        rs.getString("academic_status"),
+                        rs.getInt("employed") == 1,
+                        rs.getString("preferred_role"),
+                        rs.getInt("whitelist") == 1,
                         rs.getInt("isBlacklisted") == 1,
-                        nvl(rs.getString("languages")),
-                        nvl(rs.getString("databases")),
+                        rs.getString("languages"),
+                        rs.getString("databases"),
                         rs.getInt("commentsCount"),
-                        nvl(rs.getString("lastComment"))
+                        rs.getString("lastComment")
                 ));
             }
         } catch (SQLException ex) {

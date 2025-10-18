@@ -74,6 +74,8 @@ public class DbInit {
                       name TEXT NOT NULL COLLATE NOCASE UNIQUE
                     )
                 """);
+                seedDefaultLanguages(s);
+                seedLanguageCatalogIfEmpty(c);
 
                 // --- Upgrades for older DBs (no IF NOT EXISTS in ALTER) ---
                 ensureColumn(c, "student", "academic_status",
@@ -112,7 +114,6 @@ public class DbInit {
                     s.name,
                     s.academic_status,
                     s.employed,
-                    s.job_details,
                     s.preferred_role,
                     s.whitelist,
                     s.isBlacklisted,
@@ -167,6 +168,30 @@ public class DbInit {
                 if (column.equalsIgnoreCase(name)) return true;
             }
             return false;
+        }
+    }
+
+    private static void seedDefaultLanguages(Statement s) throws SQLException {
+        // Will not duplicate thanks to UNIQUE NOCASE on name
+        s.execute("""
+        INSERT OR IGNORE INTO language_catalog(name) VALUES
+        ('C++'), ('Java'), ('Python')
+    """);
+    }
+
+    private static void seedLanguageCatalogIfEmpty(Connection c) throws SQLException {
+        try (Statement s = c.createStatement();
+             ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM language_catalog")) {
+            int n = rs.next() ? rs.getInt(1) : 0;
+            if (n == 0) {
+                try (PreparedStatement ps = c.prepareStatement(
+                        "INSERT INTO language_catalog(name) VALUES (?), (?), (?)")) {
+                    ps.setString(1, "Java");
+                    ps.setString(2, "Python");
+                    ps.setString(3, "C++");
+                    ps.executeUpdate();
+                }
+            }
         }
     }
 }
