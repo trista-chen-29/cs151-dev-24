@@ -16,7 +16,6 @@ public class Main extends Application {
             // Don't crash the UI if DB init fails during early dev
             t.printStackTrace();
         }
-
         // Load new home screen (match resource path)
         FXMLLoader fxml = new FXMLLoader(
                 getClass().getResource("/cs151/application/homepage.fxml")
