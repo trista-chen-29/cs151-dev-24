@@ -55,18 +55,11 @@ public class ProgrammingLanguagesDAO {
     /** Return names sorted A→Z (case-insensitive), lowercase first when only case differs. */
     public List<String> listAll() {
         List<String> out = new ArrayList<>();
-        String sql = """
-            SELECT name
-            FROM language_catalog
-            ORDER BY
-              LOWER(name) ASC,
-              CASE WHEN name = LOWER(name) THEN 0 ELSE 1 END,
-              name ASC
-        """;
+        String sql = "SELECT name FROM language_catalog ORDER BY name COLLATE NOCASE ASC";
         try (Connection c = DatabaseConnector.getConnection();
-             Statement st = c.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) out.add(rs.getString("name"));
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) out.add(rs.getString(1));
         } catch (SQLException e) {
             e.printStackTrace();
         }

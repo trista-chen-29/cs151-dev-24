@@ -25,11 +25,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import cs151.application.persistence.StudentProfileDAO;
+import java.util.Collections;
+
 public class StudentProfileController {
 
-    // Use the SAME resources you load in Main.java
+    // Use the SAME resources loaded in Main.java
     private static final String HOMEPAGE_FXML = "/cs151/application/homepage.fxml";
     private static final String THEME_CSS     = "/cs151/application/theme.css";
+
+    private final StudentProfileDAO studentRepo = new StudentProfileDAO();
 
     @FXML private ImageView ivPhoto;
     @FXML private Button btnUpdatePhoto;
@@ -255,32 +260,38 @@ public class StudentProfileController {
 
     private void fail(String msg){ lbError.setText(msg); }
 
-    @SuppressWarnings("unchecked")
     private boolean existsStudentByFullName(String trimmedFullName){
-        try{
-            Class<?> daoClass = Class.forName("cs151.application.studentprofile.StudentDAO");
-            Object r = daoClass.getMethod("existsByFullName", String.class).invoke(null, trimmedFullName);
-            if (r instanceof Boolean) return (Boolean) r;
-        }catch(Exception ignored){}
-        return false;
+        if (trimmedFullName == null) return false;
+        return studentRepo.existsByName(trimmedFullName.trim());
     }
 
-    @SuppressWarnings("unchecked")
     private void saveProfile(String name, String status, boolean employed,
                              String jobDetails, List<String> langs, List<String> dbs,
                              String role, List<String> comments,
-                             boolean whitelist, boolean blacklist){
-        try{
-            Class<?> daoClass = Class.forName("cs151.application.studentprofile.StudentDAO");
-            daoClass.getMethod("saveFromUI",
-                    String.class, String.class, boolean.class, String.class,
-                    List.class, List.class, String.class, List.class,
-                    boolean.class, boolean.class
-            ).invoke(null,
-                    name, status, employed, jobDetails,
-                    langs, dbs, role, comments,
-                    whitelist, blacklist
-            );
-        }catch(Exception ignored){}
+                             boolean whitelist, boolean blacklist) {
+
+        if (langs == null)     langs = Collections.emptyList();
+        if (dbs == null)       dbs = Collections.emptyList();
+        if (comments == null)  comments = Collections.emptyList();
+        if (role == null || role.isBlank())       role = "Other";
+        if (status == null || status.isBlank())   status = "Freshman";
+        if (jobDetails == null)                   jobDetails = "";
+
+        long id = studentRepo.insert(
+                name.trim(),
+                status,
+                employed,
+                jobDetails.trim(),
+                role,
+                whitelist,
+                blacklist,
+                langs,          // << use the parameters, not chosenPL/chosenDB
+                dbs,
+                comments
+        );
+
+        if (id < 0 && lbError != null) {
+            lbError.setText("Failed to save student profile.");
+        }
     }
 }
