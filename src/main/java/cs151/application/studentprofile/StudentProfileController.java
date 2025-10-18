@@ -1,297 +1,177 @@
 package cs151.application.studentprofile;
 
+import cs151.application.homepage.HomePageController;
+import cs151.application.programminglanguages.Language;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.util.Callback;
+import javafx.scene.image.ImageView;
+import cs151.application.persistence.*;
 
-import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-import cs151.application.persistence.StudentProfileDAO;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StudentProfileController {
 
-    // Use the SAME resources loaded in Main.java
-    private static final String HOMEPAGE_FXML = "/cs151/application/homepage.fxml";
-    private static final String THEME_CSS     = "/cs151/application/theme.css";
-
-    private final StudentProfileDAO studentRepo = new StudentProfileDAO();
-
-    @FXML private ImageView ivPhoto;
-    @FXML private Button btnUpdatePhoto;
-
     @FXML private TextField tfFullName;
     @FXML private ComboBox<String> cbAcademicStatus;
+    @FXML private RadioButton rbEmployed, rbUnemployed;
     @FXML private ToggleGroup tgJob;
-    @FXML private RadioButton rbEmployed;
-    @FXML private RadioButton rbUnemployed;
     @FXML private TextArea taJobDetails;
 
     @FXML private ListView<String> lvProgLangs;
     @FXML private ListView<String> lvDatabases;
-    @FXML private TextField tfNewLang;
-    @FXML private Button btnAddLang;
-    @FXML private TextField tfNewDb;
-    @FXML private Button btnAddDb;
 
     @FXML private ComboBox<String> cbRole;
-    @FXML private TextField tfNewRole;
-    @FXML private Button btnAddRole;
 
     @FXML private TextArea taNewComment;
     @FXML private ListView<String> lvComments;
-    @FXML private Button btnAddComment;
 
-    @FXML private CheckBox cbWhitelist;
-    @FXML private CheckBox cbBlacklist;
+    @FXML private CheckBox cbWhitelist, cbBlacklist;
+    @FXML private Label lbError;
 
-    @FXML private Button btnSave;
-    @FXML private Button btnClear;
-    @FXML private Button btnGoHome;
-    @FXML private Label  lbError;
+    @FXML private ImageView ivPhoto;
+
 
     private final Map<String, BooleanProperty> progLangState = new HashMap<>();
-    private final Map<String, BooleanProperty> dbState = new HashMap<>();
-
+    private final Map<String, BooleanProperty> Dbstate = new HashMap<>();
+    private final ProgrammingLanguagesDAO languages = new ProgrammingLanguagesDAO();
     @FXML
     private void initialize() {
-        cbAcademicStatus.setItems(FXCollections.observableArrayList(
-                "Freshman", "Sophomore", "Junior", "Senior", "Graduate"
-        ));
+        ObservableList<String> langs = FXCollections.observableArrayList(languages.listAll());
+        lvProgLangs.setItems(langs);
+        lvProgLangs.setCellFactory(lv -> new CheckBoxListCell<>(item -> {
+            return progLangState.computeIfAbsent(item, k -> new SimpleBooleanProperty(false));
+        }));
 
-        ObservableList<String> plItems = FXCollections.observableArrayList("Python","C++","Java","Javascript","Sql");
-        ObservableList<String> dbItems = FXCollections.observableArrayList("MySQL","MongoDB","Sql Server","Oracle");
-        lvProgLangs.setItems(plItems);
-        lvDatabases.setItems(dbItems);
-        lvProgLangs.setCellFactory(checkCellFactory(progLangState));
-        lvDatabases.setCellFactory(checkCellFactory(dbState));
+        lvDatabases.getItems().setAll("MySQL","Postgres","MongoDB");
+        lvDatabases.setCellFactory(lv -> new CheckBoxListCell<>(item -> {
+            return Dbstate.computeIfAbsent(item, k -> new SimpleBooleanProperty(false));
+        }));
 
-        cbRole.setItems(FXCollections.observableArrayList(
-                "Data Scientist","Data Analyst","Ai Engineer","Software Engineer","Cybersecurity Analyst","Backend Developer"));
-        cbRole.setEditable(true);
 
-        tgJob.selectedToggleProperty().addListener((obs,o,n)->{
-            boolean employed = (n == rbEmployed);
-            taJobDetails.setDisable(!employed);
-            if (!employed) taJobDetails.clear();
-        });
-        rbUnemployed.setSelected(true);
+        // Displays all DBs,preferred professional roles, and academic Status from problem statement.
+        //it would be best to persist these in SQLite on start up and call a listALL() method like in ProgrammingLanguagesDAO.
+        cbRole.getItems().setAll("Front-End","Back-End","Full-Stack","Data");
+        cbAcademicStatus.getItems().setAll("Freshman", "Sophomore", "Junior", "Senior", "Graduate");
 
-        taNewComment.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (e.isControlDown() && e.getCode()== KeyCode.ENTER) onAddComment(null);
-        });
-
-        cbWhitelist.selectedProperty().addListener((o,ov,nv)->{ if(nv) cbBlacklist.setSelected(false);});
-        cbBlacklist.selectedProperty().addListener((o,ov,nv)->{ if(nv) cbWhitelist.setSelected(false);});
+        cbWhitelist.selectedProperty().addListener((o,ov,nv) -> {if(nv) cbBlacklist.setSelected(false);});
+        cbBlacklist.selectedProperty().addListener((o,ov,nv) -> {if(nv) cbWhitelist.setSelected(false);});
+        // Job details enabled only when Employed
+        rbEmployed.selectedProperty().addListener((o, ov, nv) -> taJobDetails.setDisable(!nv));
+        taJobDetails.setDisable(true); // default disabled
     }
 
-    private Callback<javafx.scene.control.ListView<String>, ListCell<String>> checkCellFactory(Map<String, BooleanProperty> stateMap) {
-        return CheckBoxListCell.forListView(item -> stateMap.computeIfAbsent(item, k -> new SimpleBooleanProperty(false)));
-    }
-
-    private String toTitleCaseEachWord(String s) {
-        if (s == null) return "";
-        String t = s.trim().toLowerCase(Locale.ROOT).replaceAll("\\s+"," ");
-        if (t.isEmpty()) return "";
-        StringBuilder b = new StringBuilder();
-        for (String p : t.split(" ")) {
-            if (p.isEmpty()) continue;
-            b.append(Character.toUpperCase(p.charAt(0)));
-            if (p.length()>1) b.append(p.substring(1));
-            b.append(" ");
-        }
-        return b.toString().trim();
-    }
-
-    private boolean containsIgnoreCase(ObservableList<String> items, String value) {
-        for (String s : items) if (s.equalsIgnoreCase(value)) return true;
-        return false;
-    }
-
-    @FXML private void onAddLang(ActionEvent e){
-        String norm = toTitleCaseEachWord(tfNewLang.getText());
-        if (norm.isEmpty()) return;
-        if (!containsIgnoreCase(lvProgLangs.getItems(), norm)) lvProgLangs.getItems().add(norm);
-        progLangState.computeIfAbsent(norm,k->new SimpleBooleanProperty(true)).set(true);
-        lvProgLangs.refresh(); tfNewLang.clear();
-    }
-
-    @FXML private void onAddDb(ActionEvent e){
-        String norm = toTitleCaseEachWord(tfNewDb.getText());
-        if (norm.isEmpty()) return;
-        if (!containsIgnoreCase(lvDatabases.getItems(), norm)) lvDatabases.getItems().add(norm);
-        dbState.computeIfAbsent(norm,k->new SimpleBooleanProperty(true)).set(true);
-        lvDatabases.refresh(); tfNewDb.clear();
-    }
-
-    @FXML private void onAddRole(ActionEvent e){
-        String norm = toTitleCaseEachWord(tfNewRole.getText());
-        if (norm.isEmpty()) return;
-        if (!containsIgnoreCase(cbRole.getItems(), norm)) cbRole.getItems().add(norm);
-        cbRole.setValue(norm);
-        tfNewRole.clear();
-    }
-
-    @FXML private void onUpdatePhoto(ActionEvent e){
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Select Photo");
-        fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files","*.png","*.jpg","*.jpeg","*.gif","*.bmp"));
-        File f = fc.showOpenDialog(btnUpdatePhoto.getScene().getWindow());
-        if (f != null) {
-            Image img = new Image(f.toURI().toString(),140,140,true,true);
-            ivPhoto.setImage(img);
-        }
-    }
-
-    @FXML private void onAddComment(ActionEvent e){
-        String text = taNewComment.getText()==null? "": taNewComment.getText().trim();
-        if (text.isEmpty()) return;
-        String ts = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        lvComments.getItems().add(ts + " - " + text);
-        taNewComment.clear();
-    }
-
-    @FXML private void onClear(ActionEvent e){
-        tfFullName.clear();
-        cbAcademicStatus.getSelectionModel().clearSelection();
-        rbUnemployed.setSelected(true);
-        taJobDetails.clear(); taJobDetails.setDisable(true);
-        progLangState.values().forEach(p->p.set(false));
-        dbState.values().forEach(p->p.set(false));
-        cbRole.getSelectionModel().clearSelection(); cbRole.getEditor().clear();
-        tfNewRole.clear(); tfNewLang.clear(); tfNewDb.clear();
-        taNewComment.clear(); lvComments.getItems().clear();
-        cbWhitelist.setSelected(false); cbBlacklist.setSelected(false);
-        lbError.setText(""); ivPhoto.setImage(null);
-    }
-
-    @FXML private void onSave(ActionEvent e){
-        lbError.setText("");
-        String name = tfFullName.getText()==null? "": tfFullName.getText().trim();
-        if (name.isEmpty()) { fail("Full Name is required."); return; }
-        if (cbAcademicStatus.getValue()==null){ fail("Academic Status is required."); return; }
-        boolean employed = rbEmployed.isSelected();
-        if (!employed && !rbUnemployed.isSelected()){ fail("Current Job Status is required."); return; }
-        if (employed){
-            String jd = taJobDetails.getText()==null? "": taJobDetails.getText().trim();
-            if (jd.isEmpty()){ fail("Job Details are required for employed students."); return; }
-        }
-        var chosenPL = checkedItems(progLangState);
-        var chosenDB = checkedItems(dbState);
-        if (chosenPL.isEmpty()){ fail("Select at least one Programming Language."); return; }
-        if (chosenDB.isEmpty()){ fail("Select at least one Database."); return; }
-
-        String role = cbRole.getValue();
-        if (role==null || role.trim().isEmpty())
-            role = cbRole.getEditor().getText()==null? "": cbRole.getEditor().getText().trim();
-        role = toTitleCaseEachWord(role);
-        if (role.isEmpty()){ fail("Preferred Role is required."); return; }
-        cbRole.setValue(role);
-
-        if (cbWhitelist.isSelected() && cbBlacklist.isSelected()){
-            fail("Whitelist and Blacklist cannot both be selected."); return;
-        }
-        if (existsStudentByFullName(name)){
-            fail("Duplicate entry for trimmed full name."); return;
-        }
-
-        saveProfile(name, cbAcademicStatus.getValue(), employed,
-                taJobDetails.getText(), chosenPL, chosenDB, role,
-                new ArrayList<>(lvComments.getItems()),
-                cbWhitelist.isSelected(), cbBlacklist.isSelected());
-
-        new Alert(Alert.AlertType.INFORMATION, "Saved.").showAndWait();
-    }
-
-    /**
-     * Go back to the homepage by replacing the ENTIRE scene.
-     * This prevents the Student Profile top bar from lingering.
-     */
     @FXML
     private void onGoBackHome(ActionEvent e) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(HOMEPAGE_FXML));
-            Parent homeRoot = loader.load();
+        // Reuse existing shared helper (keeps Scene & CSS)
+        HomePageController.goHomeFrom((Button) e.getSource());
+    }
 
-            Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-            Scene scene = new Scene(homeRoot);
+    @FXML
+    private void onUpdatePhoto(ActionEvent e) {
+        new Alert(Alert.AlertType.INFORMATION, "Update photo will be implemented later.").showAndWait();
+    }
 
-            var cssUrl = getClass().getResource(THEME_CSS);
-            if (cssUrl != null) scene.getStylesheets().add(cssUrl.toExternalForm());
-
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Unable to load Homepage: " + ex.getMessage()).showAndWait();
+    @FXML
+    private void onAddComment(ActionEvent e) {
+        String text = taNewComment.getText();
+        if (text != null && !text.trim().isEmpty()) {
+            lvComments.getItems().add(text.trim());
+            taNewComment.clear();
         }
     }
 
-    // ---------- helpers ----------
+    @FXML
+    private void onClear(ActionEvent e) {
+        tfFullName.clear();
+        cbAcademicStatus.getSelectionModel().clearSelection();
+        rbEmployed.setSelected(false);
+        rbUnemployed.setSelected(false);
+        taJobDetails.clear();
+        taJobDetails.setDisable(true);
 
-    private List<String> checkedItems(Map<String, BooleanProperty> state) {
-        List<String> r = new ArrayList<>();
-        for (Map.Entry<String, BooleanProperty> e : state.entrySet()) {
-            if (e.getValue().get()) r.add(e.getKey());
+        lvDatabases.getSelectionModel().clearSelection();
+
+        progLangState.values().forEach(p -> p.set(false));
+        Dbstate.values().forEach(p -> p.set(false));
+
+        cbRole.getSelectionModel().clearSelection();
+        taNewComment.clear();
+        lvComments.getItems().clear();
+
+        cbWhitelist.setSelected(false);
+        cbBlacklist.setSelected(false);
+
+        lbError.setText("");
+    }
+
+    //instantiates StudentService/Validator and returns caught errors. if error free persist using DAO
+    @FXML
+    private void onSave(ActionEvent e) {
+        //StudentService val = new StudentService();
+
+      Student inStudent = compileInput();
+      //String error = val.validate(inStudent);
+
+        //check if error returned an error. false for now
+        if(false){
+            setError("Error");
         }
-        return r;
+
+        printStudent(inStudent);
     }
 
-    private void fail(String msg){ lbError.setText(msg); }
+    // HELPERS
 
-    private boolean existsStudentByFullName(String trimmedFullName){
-        if (trimmedFullName == null) return false;
-        return studentRepo.existsByName(trimmedFullName.trim());
+    /** returns a List of checked items */
+    private static List<String> getCheckedItemsList(Map<String,BooleanProperty> map){
+        List<String> checked = new ArrayList<>();
+        map.forEach((k,p) -> {if(p.get()) checked.add(k);});
+        return checked;
     }
 
-    private void saveProfile(String name, String status, boolean employed,
-                             String jobDetails, List<String> langs, List<String> dbs,
-                             String role, List<String> comments,
-                             boolean whitelist, boolean blacklist) {
-
-        if (langs == null)     langs = Collections.emptyList();
-        if (dbs == null)       dbs = Collections.emptyList();
-        if (comments == null)  comments = Collections.emptyList();
-        if (role == null || role.isBlank())       role = "Other";
-        if (status == null || status.isBlank())   status = "Freshman";
-        if (jobDetails == null)                   jobDetails = "";
-
-        long id = studentRepo.insert(
-                name.trim(),
-                status,
-                employed,
-                jobDetails.trim(),
-                role,
-                whitelist,
-                blacklist,
-                langs,          // << use the parameters, not chosenPL/chosenDB
-                dbs,
-                comments
+    /** Creates a student object for validator */
+    private Student compileInput(){
+       Student in = new Student(
+               tfFullName.getText(),
+               cbRole.getValue(),
+               cbAcademicStatus.getValue(),
+               taJobDetails.getText(),
+               cbBlacklist.selectedProperty().get(),
+               cbWhitelist.selectedProperty().get(),
+               rbEmployed.selectedProperty().get(),
+               getCheckedItemsList(progLangState),
+               getCheckedItemsList(Dbstate),
+               new ArrayList<>(lvComments.getItems())
         );
 
-        if (id < 0 && lbError != null) {
-            lbError.setText("Failed to save student profile.");
-        }
+        return in;
+    }
+
+    //Testing Method to see if Student is stored properly.
+    private void printStudent(Student s){
+       System.out.println( "Student{" +
+                "fullName='" + s.getName() + "'\n" +
+                " academicStatus='" + s.getAcademicStatus() + "'\n" +
+                " employed=" + s.getEmploymentStatus() +"\n" +
+                " jobDetails='" + s.getJobDetails()  + "'\n" +
+                " preferredRole='" + s.getProfessionalRole() + "'\n" +
+                " whitelist=" + s.getWhiteList() +"\n"+
+                " blacklist=" + s.getBlackList() +"\n"+
+                " languages=" + s.getLanguages() +"\n"+
+                " databases=" + s.getStudentDbs() +"\n"+
+                " comments=" + s.getComments() + "\n"+
+                '}');
+    }
+    private void setError(String error){
+        lbError.setText(error);
     }
 }
