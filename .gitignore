@@ -1,16 +1,12 @@
-<<<<<<< HEAD
 # Default ignored files
 /shelf/
 /workspace.xml
-# Editor-based HTTP Client requests
 /httpRequests/
-# Environment-dependent path to Maven home directory
 /mavenHomeManager.xml
-# Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
 
-# database
+# Database
 /database/profsupport.db
 
 # IDE & build artifacts
@@ -19,37 +15,28 @@
 /target/
 .DS_Store
 
-# IDE & build artifacts
-.idea/
-*.iml
-/target/
-.DS_Store
-
-# IDE & build
-.idea/
-*.iml
-/target/
-.DS_Store
-
-# build output
-/target/
-=======
-target/
+# Maven wrapper
 !.mvn/wrapper/maven-wrapper.jar
+
+# Include build dirs in src/main and src/test
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Kotlin
 .kotlin
 
-### IntelliJ IDEA ###
+### IDE-specific ###
+# IntelliJ IDEA
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
 *.iws
-*.iml
 *.ipr
 
-### Eclipse ###
+# Eclipse
 .apt_generated
 .classpath
 .factorypath
@@ -58,19 +45,16 @@ target/
 .springBeans
 .sts4-cache
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# VS Code
 .vscode/
 
-### Mac OS ###
+# Mac OS
 .DS_Store
->>>>>>> f03f6f4 (Initial commit: JavaFX project with ignore rules)

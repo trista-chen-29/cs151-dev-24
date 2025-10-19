@@ -1,49 +1,33 @@
 # Name of application: Prof-Support
 
-**Version: 0.5 (Student Profile Final Fix)**
+**Version: 0.5**
 
 ---
 
-## 📘 Overview
+## Overview
 Prof-Support helps faculty (professors) manage students’ profile data, academic skills, and programming-language knowledge.
 
-**This milestone (v0.5)** finalizes the Student Profile module, refines the navigation between pages, and unifies the JavaFX theme.
+**This milestone (v0.5)** add "define student profile" and "View Student Profile" pages.
 
-### ✅ New in v0.5
-- Removed legacy **“Other”** option from `studentprofile.fxml`
-- Added new `student-profile.css` for modular UI styling
-- Verified `HomePageController` navigation for full-scene switch
-- Attached both `theme.css` and `student-profile.css` in FXML
-- Maven build tested successfully with **Zulu JDK 23**
-
-### 🔍 Local Verification
-| Test | Command | Expected | Result |
-|------|----------|-----------|---------|
-| FXML check | `Select-String -Path "studentprofile.fxml" -Pattern "Other" -Quiet` | False | ✅ Pass |
-| CSS exists | `Test-Path "student-profile.css"` | True | ✅ Pass |
-| Build run | `mvn clean javafx:run` | BUILD SUCCESS | ✅ Pass |
+### New in v0.5
+- Added "Define Student Profile" page
+- Added "View Student Profile" page (with tableview)
+- Added persistence for student profiles
+- Updated HomePage UI
 
 ---
 
-## 🧠 Feature Summary
-- Navigate between **Home**, **Programming Languages**, and **Student Profile**
-- Store and retrieve data from **SQLite**
-- Maintain consistent **JavaFX styling** across all scenes
-- Implement modular controllers and verified navigation logic
-
----
-
-## 👥 Who did what
+## Who did what
 | Member | Contribution |
 |---------|---------------|
-| **Trista Chen** | Organized packages, cleaned files, wrote README, handled packaging/zip for submission |
-| **Jaime Gonzalez** | Converted Define-PL to TableView (from ListView) |
-| **Vraj Mistry** | Refreshed HomePage UI and clarified *Add Programming Languages* navigation |
+| **Trista Chen** | Created FXML and Controller for "View Student Profiles" page, created DAO for controllers |
+| **Jaime Gonzalez** | Implemented "StudentProfileController", verified ViewStudentProfileController, updated ReadMe |
+| **Vraj Mistry** | Implemented StudentService, changed location of database, cleaned and zipped files for submission |
 | **Chenying Wang** | Implemented and verified **Student Profile UI v2**, removed legacy *Other*, added CSS linking, and validated navigation functionality |
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 - Java 23 (Zulu 23)
 - JavaFX 23 with Maven (`javafx-maven-plugin 0.0.8`)
 - SQLite JDBC (3.46.1.0)
@@ -52,12 +36,39 @@ Prof-Support helps faculty (professors) manage students’ profile data, academi
 
 ---
 
-## 🧾 Build Instructions
+## Build Instructions
 ```bash
 # Run from project root
 mvn clean javafx:run
+```
+## Using the app (v0.5)
+- Define Students Profile:
+  - Navigate to Define Students Profile page through HomePage
+  - Input all required fields as per the problem statement
+  - On clicking save: app verifies all required fields are inputted and persists student profile in SQLite database.
+  - App shows errors if there are missing inputs
+- View Student Profile:
+  - Navigate to "View Student Profiles" page through HomePage
+  - Left of UI shows a TableView of all defined students
+  - On clicking a desired student in the TableView right of UI will show all other details of student
+  - You can optionally sort the students by whitelist blacklist or all.
+---
+
+## Known limitations (v0.5)
+- Home search/filters are stubbed; full backend hookup is planned for the next milestone.
+- Adding a student photo does nothing.
+
+## Where data is stored
+SQLite DB file has moved from:
+
+~/.profsupport/profsupport.db
+to
+./profsupport.db
+
+To reset the data, close the app and delete that file.
 
 
+---- Older Versions ReadMe ----
 # Name of application: Prof-Support
 ---
 ### Version: 0.3
