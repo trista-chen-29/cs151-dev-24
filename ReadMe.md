@@ -20,9 +20,9 @@ Prof-Support helps faculty (professors) manage students’ profile data, academi
 ## Who did what
 | Member | Contribution |
 |---------|---------------|
-| **Trista Chen** | Organized packages, cleaned files, wrote README, handled packaging/zip for submission |
-| **Jaime Gonzalez** | Converted Define-PL to TableView (from ListView) |
-| **Vraj Mistry** | Refreshed HomePage UI and clarified *Add Programming Languages* navigation |
+| **Trista Chen** | Created FXML and Controller for "View Student Profiles" page, created DAO for controllers |
+| **Jaime Gonzalez** | Implemented "StudentProfileController", verified ViewStudentProfileController, updated ReadMe |
+| **Vraj Mistry** | Implemented StudentService, changed location of database, cleaned and zipped files for submission |
 | **Chenying Wang** | Implemented and verified **Student Profile UI v2**, removed legacy *Other*, added CSS linking, and validated navigation functionality |
 
 ---
