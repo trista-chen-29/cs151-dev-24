@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public final class DatabaseConnector {
-    private static final String DEFAULT_DIR = ".";
+    private static final String DEFAULT_DIR = "./cs151-dev-24/database";
     private static final String DB_FILE_NAME = "profsupport.db";
 
     private DatabaseConnector() {}
