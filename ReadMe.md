@@ -40,7 +40,7 @@ Prof-Support helps faculty (professors) manage students’ profile data, academi
 ```bash
 # Run from project root
 mvn clean javafx:run
-
+```
 ## Using the app (v0.5)
 - Define Students Profile:
   - Navigate to Define Students Profile page through HomePage
