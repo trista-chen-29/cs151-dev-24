@@ -63,7 +63,7 @@ SQLite DB file has moved from:
 
 ~/.profsupport/profsupport.db
 to
-dev-24-0.5/profsupport.db
+./profsupport.db
 
 To reset the data, close the app and delete that file.
 
