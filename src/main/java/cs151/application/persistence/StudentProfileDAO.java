@@ -8,16 +8,16 @@ import java.util.*;
 public class StudentProfileDAO {
     // ---------- CREATE ----------
     /** Insert a student + skills + optional comments in one transaction. Returns id or -1. */
-    public long insert(String name,
-                       String academicStatus,
-                       boolean employed,
-                       String jobDetails,
-                       String preferredRole,
-                       boolean whitelist,
-                       boolean isBlacklisted,
-                       List<String> languages,
-                       List<String> databases,
-                       List<String> comments) {
+    public static long insert(String name,
+                              String academicStatus,
+                              boolean employed,
+                              String jobDetails,
+                              String preferredRole,
+                              boolean whitelist,
+                              boolean isBlacklisted,
+                              List<String> languages,
+                              List<String> databases,
+                              List<String> comments) {
 
         if (name == null || name.isBlank()) return -1;
         if (academicStatus == null || academicStatus.isBlank()) academicStatus = "Freshman";

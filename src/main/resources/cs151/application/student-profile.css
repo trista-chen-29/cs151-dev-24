@@ -78,4 +78,9 @@
     -fx-background-color: #aaaaaa;
     -fx-text-fill: white;
 }
+.error-label {
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+}
+
 

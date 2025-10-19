@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import cs151.application.persistence.*;
 
 import java.util.ArrayList;
@@ -116,17 +117,19 @@ public class StudentProfileController {
     //instantiates StudentService/Validator and returns caught errors. if error free persist using DAO
     @FXML
     private void onSave(ActionEvent e) {
-        //StudentService val = new StudentService();
+        StudentService val = new StudentService();
+        Student inStudent = compileInput();
+        String error = val.validate(inStudent);
 
-      Student inStudent = compileInput();
-      //String error = val.validate(inStudent);
-
-        //check if error returned an error. false for now
-        if(false){
-            setError("Error");
+        if (!error.isEmpty()) {
+            setError(error);
+            return;
         }
 
-        printStudent(inStudent);
+        val.save(inStudent);
+
+        lbError.setText("Student saved successfully!");
+        lbError.setTextFill(Color.GREEN);
     }
 
     // HELPERS
@@ -173,5 +176,6 @@ public class StudentProfileController {
     }
     private void setError(String error){
         lbError.setText(error);
+        lbError.setTextFill(Color.RED);
     }
 }
