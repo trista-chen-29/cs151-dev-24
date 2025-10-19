@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public final class DatabaseConnector {
-    private static final String DEFAULT_DIR = System.getProperty("user.home") + "/.profsupport";
+    private static final String DEFAULT_DIR = ".";
     private static final String DB_FILE_NAME = "profsupport.db";
 
     private DatabaseConnector() {}
@@ -32,6 +32,7 @@ public final class DatabaseConnector {
 
         ensureDir(dir);
         return "jdbc:sqlite:" + dir + "/" + DB_FILE_NAME;
+
     }
 
     public static Connection getConnection() throws SQLException {
