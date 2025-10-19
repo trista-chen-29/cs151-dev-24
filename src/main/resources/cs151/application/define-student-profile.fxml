@@ -15,7 +15,7 @@
     <top>
         <HBox spacing="12" alignment="CENTER_LEFT" styleClass="topbar">
             <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
-            <Button text="Go Back To Homepage" fx:id="btnGoHome" onAction="#onGoBackHome"/>
+            <Button text="Go To Homepage" fx:id="btnGoHome" onAction="#onGoBackHome"/>
             <Pane HBox.hgrow="ALWAYS"/>
             <Label text="Prof-Support" styleClass="brand"/>
         </HBox>
