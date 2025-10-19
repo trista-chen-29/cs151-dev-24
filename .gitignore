@@ -7,7 +7,7 @@
 /dataSources.local.xml
 
 # Database
-/database/profsupport.db
+/database/*
 
 # IDE & build artifacts
 .idea/
