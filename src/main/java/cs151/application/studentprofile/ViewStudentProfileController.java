@@ -31,6 +31,7 @@ public class ViewStudentProfileController {
     @FXML private ListView<String> lvComments;
     @FXML private TextField tfNewComment;
 
+    private Long selectedStudentId = null;
     private final StudentProfileDAO repo = new StudentProfileDAO();
     private final CommentDAO commentDAO = new CommentDAO();
 
@@ -49,11 +50,14 @@ public class ViewStudentProfileController {
         // Center WL/BL/EMPL text
         center(colEmployed); center(colWL); center(colBL);
 
+        // Selection listener
+        tvStudents.getSelectionModel().selectedItemProperty().addListener((obs, old, row) -> {
+            showDetails(row);
+            selectedStudentId = row == null ? null : row.getId();
+        });
+
         // Load data
         refreshTable();
-
-        // Selection listener
-        tvStudents.getSelectionModel().selectedItemProperty().addListener((obs, old, row) -> showDetails(row));
 
         // Post on Ctrl/Cmd+Enter
         tfNewComment.setOnKeyPressed(e -> {
@@ -168,6 +172,14 @@ public class ViewStudentProfileController {
     @FXML
     private void onBackHome() {
         HomePageController.goHomeFrom((Node) tvStudents);
+    }
+
+    @FXML
+    public void onDelete() {
+        if(selectedStudentId == null){return;}
+
+        repo.delete(selectedStudentId);
+        refreshTable();
     }
 
     @FXML
