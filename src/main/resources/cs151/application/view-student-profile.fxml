@@ -55,7 +55,12 @@
             <VBox spacing="12" styleClass="detail-card">
                 <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
 
-                <Label fx:id="lbName" styleClass="detail-name"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label fx:id="lbName" styleClass="detail-name"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Delete student" onAction="#onDelete"/>
+                </HBox>
+
                 <HBox spacing="8">
                     <Label fx:id="badgeBlacklisted" text="Blacklisted" visible="false" managed="false" styleClass="badge-danger"/>
                     <Label fx:id="badgeWhitelist"   text="Whitelisted" visible="false" managed="false" styleClass="badge-success"/>
