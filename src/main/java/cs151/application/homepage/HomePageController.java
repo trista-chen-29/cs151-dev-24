@@ -1,6 +1,7 @@
 package cs151.application.homepage;
 
 import cs151.application.persistence.ProgrammingLanguagesDAO;
+import cs151.application.studentprofile.ViewStudentProfileController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,10 +85,21 @@ public class HomePageController {
     // ---------- Search / filters ----------
     @FXML
     private void onSearch(ActionEvent event) {
-        String q = searchField != null && searchField.getText() != null
-                ? searchField.getText().trim() : "";
-        System.out.println("Search: " + q);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cs151/application/view-student-profile.fxml"));
+            Parent root = loader.load(); // <-- after this, FXML fields exist
+            ViewStudentProfileController controller = loader.getController();
+            String query = searchField.getText().trim(); // your homepage TextField
+            controller.updateSearchQuery(query);          // sets it into the profile search bar
+            Scene scene = ((Node) event.getSource()).getScene();
+            scene.setRoot(root);
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            showError("Cannot open Student Directory", ex);
+        }
     }
+
 
     @FXML
     private void onRefresh(ActionEvent event) {

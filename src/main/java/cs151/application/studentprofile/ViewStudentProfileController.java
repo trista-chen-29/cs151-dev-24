@@ -16,17 +16,14 @@ public class ViewStudentProfileController {
 
     // Header
     @FXML private TextField tfSearch;
-    @FXML private ToggleGroup tgShow;
-    @FXML private ToggleButton tbAll, tbWhitelist, tbBlacklist;
 
     // Table
     @FXML private TableView<StudentRow> tvStudents;
     @FXML private TableColumn<StudentRow,String> colName, colStatus, colRole, colLanguages, colDatabases;
-    @FXML private TableColumn<StudentRow,String> colEmployed, colWL, colBL;
+    @FXML private TableColumn<StudentRow,String> colEmployed;
 
     // Detail
     @FXML private Label lbName, lbStatus, lbEmployment, lbJob, lbRole;
-    @FXML private Label badgeBlacklisted, badgeWhitelist;
     @FXML private FlowPane fpLangs, fpDbs;
     @FXML private ListView<String> lvComments;
     @FXML private TextField tfNewComment;
@@ -44,11 +41,8 @@ public class ViewStudentProfileController {
         colRole.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getPreferredRole())));
         colLanguages.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getLanguages())));
         colDatabases.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getDatabases())));
-        colWL.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isWhitelist() ? "YES" : "—"));
-        colBL.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isBlacklisted() ? "YES" : "—"));
 
-        // Center WL/BL/EMPL text
-        center(colEmployed); center(colWL); center(colBL);
+        colEmployed.setStyle("-fx-alignment: CENTER;");
 
         // Selection listener
         tvStudents.getSelectionModel().selectedItemProperty().addListener((obs, old, row) -> {
@@ -56,10 +50,7 @@ public class ViewStudentProfileController {
             selectedStudentId = row == null ? null : row.getId();
         });
 
-        // Load data
-        refreshTable();
-
-        // Post on Ctrl/Cmd+Enter
+        // Post comment shortcut
         tfNewComment.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case ENTER -> {
@@ -68,55 +59,35 @@ public class ViewStudentProfileController {
             }
         });
 
-        // re-run filtering whenever user types or flips the toggle
         if (tfSearch != null) {
             tfSearch.textProperty().addListener((o, ov, nv) -> refreshTable());
         }
-        if (tgShow != null) {
-            tgShow.selectedToggleProperty().addListener((o, ov, nv) -> refreshTable());
-        }
-        // ensure "All" is selected by default
-        if (tbAll != null) tbAll.setSelected(true);
     }
 
-    private void center(TableColumn<?,?> col) {
-        col.setStyle("-fx-alignment: CENTER;");
-    }
 
     private static String nonNull(String s) { return s == null ? "" : s; }
-
-    /* ---------- Data ---------- */
 
     private void refreshTable() {
         var all = repo.listAllForTable();
 
-        final String q = (tfSearch != null && tfSearch.getText() != null)
-                ? tfSearch.getText().trim().toLowerCase()
-                : "";
-
-        final FilterMode m = mode();
+        final String q = tfSearch.getText() != null ? tfSearch.getText().trim().toLowerCase() : "";
 
         var filtered = all.stream()
-                .filter(r -> {
-                    if (m == FilterMode.WL && !r.isWhitelist())   return false;
-                    if (m == FilterMode.BL && !r.isBlacklisted()) return false;
-                    if (q.isEmpty()) return true;
-                    return contains(r.getName(), q)
-                            || contains(r.getAcademicStatus(), q)
-                            || contains(r.getPreferredRole(), q)
-                            || contains(r.getLanguages(), q)
-                            || contains(r.getDatabases(), q);
-                })
-                .collect(java.util.stream.Collectors.toList());
+                .filter(r -> q.isEmpty() || contains(r.getName(), q)
+                        || contains(r.getAcademicStatus(), q)
+                        || contains(r.getPreferredRole(), q)
+                        || contains(r.getLanguages(), q)
+                        || contains(r.getDatabases(), q))
+                .collect(Collectors.toList());
 
-        // keep current selection
+        // Keep current selection
         Long tmp = null;
         var sel = tvStudents.getSelectionModel().getSelectedItem();
         if (sel != null) tmp = sel.getId();
 
         tvStudents.setItems(FXCollections.observableArrayList(filtered));
 
-        final Long selectedId = tmp; // <— final copy for lambda below
+        final Long selectedId = tmp;
 
         if (selectedId != null) {
             tvStudents.getItems().stream()
@@ -136,19 +107,12 @@ public class ViewStudentProfileController {
         lbName.setText(row.getName());
         lbStatus.setText(row.getAcademicStatus() == null ? "—" : row.getAcademicStatus());
         lbEmployment.setText(row.isEmployed() ? "Employed" : "Not employed");
-        lbJob.setText("—"); // Add DAO getter if/when you expose job_details in StudentRow / view
+        lbJob.setText("—");
         lbRole.setText(row.getPreferredRole() == null ? "—" : row.getPreferredRole());
 
-        boolean bl = row.isBlacklisted();
-        boolean wl = row.isWhitelist();
-        badgeBlacklisted.setVisible(bl); badgeBlacklisted.setManaged(bl);
-        badgeWhitelist.setVisible(wl);   badgeWhitelist.setManaged(wl);
-
-        // Chips
         fpLangs.getChildren().setAll(Tags.make(row.getLanguages()));
         fpDbs.getChildren().setAll(Tags.make(row.getDatabases()));
 
-        // ALL comments (newest first)
         lvComments.setItems(FXCollections.observableArrayList(
                 commentDAO.listByStudent(row.getId()).stream()
                         .map(c -> (c.getCreatedAt() == null ? "" : (c.getCreatedAt() + " — ")) + c.getBody())
@@ -162,8 +126,6 @@ public class ViewStudentProfileController {
         lbEmployment.setText("");
         lbJob.setText("");
         lbRole.setText("");
-        badgeBlacklisted.setVisible(false); badgeBlacklisted.setManaged(false);
-        badgeWhitelist.setVisible(false);   badgeWhitelist.setManaged(false);
         fpLangs.getChildren().clear();
         fpDbs.getChildren().clear();
         lvComments.setItems(FXCollections.observableArrayList());
@@ -176,11 +138,19 @@ public class ViewStudentProfileController {
 
     @FXML
     public void onDelete() {
-        if(selectedStudentId == null){return;}
+        if(selectedStudentId == null) return;
 
         repo.delete(selectedStudentId);
         refreshTable();
     }
+
+    public void updateSearchQuery(String query) {
+        if (tfSearch != null) {
+            tfSearch.setText(query);
+            refreshTable(); // immediately filter the table
+        }
+    }
+
 
     @FXML
     private void onRefresh() { refreshTable(); }
@@ -193,7 +163,6 @@ public class ViewStudentProfileController {
 
         if (commentDAO.add(row.getId(), body) > 0) {
             tfNewComment.clear();
-            // reload just to refresh last comment / counts
             refreshTable();
             tvStudents.getItems().stream()
                     .filter(r -> r.getId() == row.getId())
@@ -203,10 +172,11 @@ public class ViewStudentProfileController {
         }
     }
 
-    // small helpers
-    private static String ns(String s) { return (s == null || s.isBlank()) ? "—" : s; }
+    // Helper
+    private static boolean contains(String s, String q) {
+        return s != null && s.toLowerCase().contains(q);
+    }
 
-    /** tiny tag maker */
     static class Tags {
         static java.util.List<Label> make(String csv) {
             java.util.List<Label> out = new java.util.ArrayList<>();
@@ -220,17 +190,5 @@ public class ViewStudentProfileController {
             }
             return out;
         }
-    }
-
-    private enum FilterMode { ALL, WL, BL }
-
-    private FilterMode mode() {
-        if (tbWhitelist != null && tbWhitelist.isSelected()) return FilterMode.WL;
-        if (tbBlacklist != null && tbBlacklist.isSelected()) return FilterMode.BL;
-        return FilterMode.ALL;
-    }
-
-    private static boolean contains(String s, String q) {
-        return s != null && s.toLowerCase().contains(q);
     }
 }

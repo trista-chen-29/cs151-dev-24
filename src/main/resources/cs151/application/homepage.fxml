@@ -43,6 +43,16 @@
             <Label text="Welcome back, Professor!" styleClass="h1"/>
 
             <!-- Primary actions: two cards -->
+            <VBox styleClass="card" spacing="14" maxWidth="1000">
+                <!-- Search row -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="searchField"
+                               promptText="Search by name, language, database…"
+                               HBox.hgrow="ALWAYS"/>
+                    <Button text="Search" onAction="#onSearch"/>
+                </HBox>
+            </VBox>
+            <!-- Primary actions: two cards -->
             <HBox spacing="16" alignment="CENTER">
                 <!-- Card: Define Student Profile -->
                 <VBox styleClass="action-card" spacing="10" prefWidth="480">
@@ -63,61 +73,6 @@
                     </HBox>
                 </VBox>
             </HBox>
-
-            <!-- Search & Filters panel -->
-            <VBox styleClass="card" spacing="14" maxWidth="1000">
-                <!-- Search row -->
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="tfSearch"
-                               promptText="Search by name, language, database…"
-                               HBox.hgrow="ALWAYS"/>
-                    <Label text="Show:" styleClass="muted"/>
-                    <ToggleButton fx:id="tbAll" text="All" toggleGroup="$tgShow" selected="true" styleClass="seg"/>
-                    <ToggleButton fx:id="tbWhitelist" text="Whitelist" toggleGroup="$tgShow" styleClass="seg"/>
-                    <ToggleButton fx:id="tbBlacklist" text="Blacklist" toggleGroup="$tgShow" styleClass="seg"/>
-                    <Button text="Refresh" onAction="#onRefresh" styleClass="ghost"/>
-                </HBox>
-
-                <!-- Three filter columns -->
-                <GridPane hgap="40" vgap="6">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="33"/>
-                        <ColumnConstraints percentWidth="33"/>
-                        <ColumnConstraints percentWidth="34"/>
-                    </columnConstraints>
-
-                    <!-- Programming Languages (dynamic from DB) -->
-                    <VBox spacing="7" GridPane.columnIndex="0">
-                        <Label text="Programming Languages" styleClass="group-title"/>
-                        <Hyperlink text="Manage list" onAction="#onGoToLanguages"/>
-                        <VBox fx:id="boxLangFilters" spacing="6"/>
-                    </VBox>
-
-                    <!-- Databases -->
-                    <VBox spacing="6" GridPane.columnIndex="1">
-                        <Label text="Databases" styleClass="group-title"/>
-                        <CheckBox text="MySQL"       fx:id="dbMysql"/>
-                        <CheckBox text="PostgreSQL"  fx:id="dbPostgres"/>
-                        <CheckBox text="MongoDB"     fx:id="dbMongo"/>
-                    </VBox>
-
-                    <!-- Preferred Roles -->
-                    <VBox spacing="6" GridPane.columnIndex="2">
-                        <Label text="Preferred Roles" styleClass="group-title"/>
-                        <CheckBox text="Front-End"  fx:id="roleFE"/>
-                        <CheckBox text="Back-End"   fx:id="roleBE"/>
-                        <CheckBox text="Full-Stack" fx:id="roleFS"/>
-                        <CheckBox text="Data"       fx:id="roleData"/>
-                        <CheckBox text="Other"      fx:id="roleOther"/>
-                    </VBox>
-                </GridPane>
-
-                <!-- Panel footer -->
-                <HBox spacing="8" alignment="CENTER_RIGHT">
-                    <Button text="Clear" onAction="#onClearFilters" styleClass="ghost"/>
-                    <Button text="Apply Filters" onAction="#onApplyFilters" styleClass="primary"/>
-                </HBox>
-            </VBox>
         </VBox>
     </center>
 </BorderPane>
