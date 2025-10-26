@@ -1,4 +1,51 @@
 # Name of application: Prof-Support
+**Version: 0.6**
+
+---
+
+## Overview
+**Prof-Support** helps faculty (professors) manage students’ profile data, academic skills, preferred professional roles, and programming-language knowledge.
+
+This milestone (**v 0.6**) focuses on extending functionality introduced in v 0.5 by implementing **Search Students Profiles** and **Delete Students Profiles** features, improving data persistence, and polishing the user interface.
+
+---
+
+## New in v 0.6
+- Implemented **Search Students Profiles** page (using JavaFX TableView).  
+- Implemented **Delete Students Profiles** functionality (permanent removal from SQLite DB).  
+- Updated **Home Page** with integrated search bar and filter options (whitelist / blacklist).  
+- Added “Apply Filters” and “Clear” buttons for search refinement.  
+- Improved UI layout consistency and styling across pages.  
+- Updated ReadMe for version 0.6 and documented team contributions.
+
+---
+
+## Who did what
+| Member | Contribution |
+| --------- | ------------- |
+| **Chenying Wang** | Populated product with 3 programming languages (C++, Java, Python) and 5 students’ profiles as sample data. Updated README to v 0.6. |
+| **Vraj Mistry** | Implemented Search Students Profiles page (using TableView + SQLite integration). Added Delete functionality. Managed project zipping and cleanup. Performed test verification for search and delete features. |
+| **Jaime Gonzalez** | Implemented delete button and linked database deletion to UI TableView refresh. |
+| **Trista Chen** | Restructured project packages and controllers to maintain clean Maven hierarchy. Ensured FXML navigation works across all pages. |
+
+---
+
+## Tech Stack
+- **Java 23 (Zulu 23)**  
+- **JavaFX 23 with Maven** (`javafx-maven-plugin 0.0.8`)  
+- **SQLite JDBC 3.46.1.0**  
+- **Scene Builder / FXML**  
+- **CSS** for UI styling (theme.css)
+
+---
+
+## Build Instructions
+```bash
+# Run from project root
+mvn clean javafx:run
+
+
+# Name of application: Prof-Support
 
 **Version: 0.5**
 
