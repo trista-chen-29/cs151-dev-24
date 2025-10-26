@@ -11,7 +11,9 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         // Create tables if you're using SQLite (safe to call repeatedly)
         try {
+            DbInit.logDbLocation();
             DbInit.ensureSchema();
+            DbInit.seedIfEmpty();
         } catch (Throwable t) {
             // Don't crash the UI if DB init fails during early dev
             t.printStackTrace();

@@ -39,14 +39,15 @@
                 <Label text="All Students" styleClass="section-title"/>
                 <TableView fx:id="tvStudents" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colName"       text="NAME"       prefWidth="170"/>
-                        <TableColumn fx:id="colStatus"     text="STATUS"     prefWidth="110"/>
-                        <TableColumn fx:id="colEmployed"   text="EMPL."      prefWidth="70"/>
-                        <TableColumn fx:id="colRole"       text="ROLE"       prefWidth="180"/>
-                        <TableColumn fx:id="colLanguages"  text="LANGUAGES"  prefWidth="220"/>
-                        <TableColumn fx:id="colDatabases"  text="DATABASES"  prefWidth="190"/>
-                        <TableColumn fx:id="colWL"         text="WL"         prefWidth="60"/>
-                        <TableColumn fx:id="colBL"         text="BL"         prefWidth="60"/>
+                        <TableColumn fx:id="colName"       text="NAME"         prefWidth="170"/>
+                        <TableColumn fx:id="colStatus"     text="STATUS"       prefWidth="110"/>
+                        <TableColumn fx:id="colEmployed"   text="EMPL."        prefWidth="70"/>
+                        <TableColumn fx:id="colJob"        text="JOB DETAILS"  prefWidth="200"/>
+                        <TableColumn fx:id="colRole"       text="ROLE"         prefWidth="180"/>
+                        <TableColumn fx:id="colLanguages"  text="LANGUAGES"    prefWidth="220"/>
+                        <TableColumn fx:id="colDatabases"  text="DATABASES"    prefWidth="190"/>
+                        <TableColumn fx:id="colWL"         text="WL"           prefWidth="60"/>
+                        <TableColumn fx:id="colBL"         text="BL"           prefWidth="60"/>
                     </columns>
                 </TableView>
             </VBox>

@@ -10,66 +10,62 @@
             stylesheets="@homepage.css"
             prefWidth="1100" prefHeight="680">
 
-    <!-- ── Top bar ─────────────────────────────────────────────────────────── -->
+    <!-- Top bar -->
     <top>
         <HBox spacing="12" alignment="CENTER_LEFT" styleClass="topbar">
-            <padding>
-                <Insets top="10" right="16" bottom="10" left="16"/>
-            </padding>
+            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
 
-            <!-- keep this on the LEFT -->
-            <Button fx:id="btnGoLanguages"
-                    text="Define Programming Languages"
+            <Button text="Define Programming Languages"
                     onAction="#onGoToLanguages"
                     styleClass="pill"/>
 
             <Pane HBox.hgrow="ALWAYS"/>
-
-            <!-- keep the brand on the RIGHT -->
             <Label text="Prof-Support" styleClass="brand"/>
         </HBox>
     </top>
 
-    <fx:define>
-        <ToggleGroup fx:id="tgShow"/>
-    </fx:define>
-
-    <!-- ── Center content ──────────────────────────────────────────────────── -->
+    <!-- Center content -->
     <center>
         <VBox spacing="18" alignment="TOP_CENTER">
             <padding><Insets top="24" left="24" right="24" bottom="24"/></padding>
 
-            <!-- Centered page title -->
+            <!-- Title -->
             <Label text="Welcome back, Professor!" styleClass="h1"/>
 
-            <!-- Primary actions: two cards -->
-            <VBox styleClass="card" spacing="14" maxWidth="1000">
-                <!-- Search row -->
+            <!-- Search card -->
+            <VBox styleClass="card" spacing="12" maxWidth="1000">
                 <HBox spacing="10" alignment="CENTER_LEFT">
+                    <!-- NOTE: id matches controller field 'searchField' -->
                     <TextField fx:id="searchField"
                                promptText="Search by name, language, database…"
                                HBox.hgrow="ALWAYS"/>
-                    <Button text="Search" onAction="#onSearch"/>
+                    <Button text="Search" onAction="#onSearch" styleClass="primary"/>
                 </HBox>
             </VBox>
-            <!-- Primary actions: two cards -->
+
+            <!-- Primary actions -->
             <HBox spacing="16" alignment="CENTER">
-                <!-- Card: Define Student Profile -->
+                <!-- Define Student Profile -->
                 <VBox styleClass="action-card" spacing="10" prefWidth="480">
                     <Label text="Define Student Profile" styleClass="card-title"/>
                     <Label text="Create a new student profile or update an existing one."
                            styleClass="card-sub"/>
                     <HBox alignment="CENTER_LEFT">
-                        <Button text="Add / Edit Student" onAction="#onGoToStudentProfile" styleClass="primary"/>
+                        <Button text="Add / Edit Student"
+                                onAction="#onGoToStudentProfile"
+                                styleClass="primary"/>
                     </HBox>
                 </VBox>
 
-                <!-- Card: View Student Profiles -->
+                <!-- View Student Profiles -->
                 <VBox styleClass="action-card" spacing="10" prefWidth="480">
                     <Label text="View Student Profiles" styleClass="card-title"/>
-                    <Label text="Search, filter, and review saved profiles." styleClass="card-sub"/>
+                    <Label text="Search, filter, and review saved profiles."
+                           styleClass="card-sub"/>
                     <HBox alignment="CENTER_LEFT">
-                        <Button text="Open Directory" onAction="#onOpenDirectory" styleClass="primary"/>
+                        <Button text="Open Directory"
+                                onAction="#onOpenDirectory"
+                                styleClass="primary"/>
                     </HBox>
                 </VBox>
             </HBox>

@@ -8,7 +8,7 @@ import java.util.*;
 public class StudentProfileDAO {
     // ---------- CREATE ----------
     /** Insert a student + skills + optional comments in one transaction. Returns id or -1. */
-    public static long insert(String name,
+    public long insert(String name,
                               String academicStatus,
                               boolean employed,
                               String jobDetails,
@@ -18,16 +18,7 @@ public class StudentProfileDAO {
                               List<String> languages,
                               List<String> databases,
                               List<String> comments) {
-
-        if (name == null || name.isBlank()) return -1;
-        if (academicStatus == null || academicStatus.isBlank()) academicStatus = "Freshman";
-        if (preferredRole == null || preferredRole.isBlank()) preferredRole = "Other";
-
-        // Normalize + de-dup each list by case-insensitive, preserve first appearance order
-        List<String> langs = dedupCI(languages);
-        List<String> dbs   = dedupCI(databases);
-
-        List<String> cmts  = comments == null ? List.of() : comments;
+        if (name == null || name.isBlank()) return -1; // minimal guard
 
         String insertStudent =
                 "INSERT INTO student(name, academic_status, employed, job_details, preferred_role, whitelist, isBlacklisted) " +
@@ -42,9 +33,9 @@ public class StudentProfileDAO {
             long studentId;
             try (PreparedStatement ps = c.prepareStatement(insertStudent, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, name.trim());
-                ps.setString(2, academicStatus);
+                ps.setString(2, academicStatus); // assume normalized by service
                 ps.setInt(3, employed ? 1 : 0);
-                ps.setString(4, (jobDetails == null ? "" : jobDetails.trim()));
+                ps.setString(4, jobDetails == null ? "" : jobDetails.trim());
                 ps.setString(5, preferredRole);
                 ps.setInt(6, whitelist ? 1 : 0);
                 ps.setInt(7, isBlacklisted ? 1 : 0);
@@ -55,33 +46,42 @@ public class StudentProfileDAO {
                 }
             }
 
-            try (PreparedStatement ps = c.prepareStatement(insertLang)) {
-                for (String s : langs) {
-                    ps.setLong(1, studentId);
-                    ps.setString(2, s);
-                    ps.addBatch();
+            if (languages != null) {
+                try (PreparedStatement ps = c.prepareStatement(insertLang)) {
+                    for (String s : languages) {
+                        if (s == null || s.isBlank()) continue;
+                        ps.setLong(1, studentId);
+                        ps.setString(2, s);
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
                 }
-                ps.executeBatch();
             }
 
-            try (PreparedStatement ps = c.prepareStatement(insertDb)) {
-                for (String s : dbs) {
-                    ps.setLong(1, studentId);
-                    ps.setString(2, s);
-                    ps.addBatch();
+            if (databases != null) {
+                try (PreparedStatement ps = c.prepareStatement(insertDb)) {
+                    for (String s : databases) {
+                        if (s == null || s.isBlank()) continue;
+                        ps.setLong(1, studentId);
+                        ps.setString(2, s);
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
                 }
-                ps.executeBatch();
             }
 
-            try (PreparedStatement ps = c.prepareStatement(insertCmt)) {
-                for (String body : cmts) {
-                    String b = (body == null) ? "" : body.trim();
-                    if (b.isEmpty()) continue;
-                    ps.setLong(1, studentId);
-                    ps.setString(2, b);
-                    ps.addBatch();
+            if (comments != null) {
+                try (PreparedStatement ps = c.prepareStatement(insertCmt)) {
+                    for (String body : comments) {
+                        if (body == null) continue;
+                        String b = body.trim();
+                        if (b.isEmpty()) continue;
+                        ps.setLong(1, studentId);
+                        ps.setString(2, b);
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
                 }
-                ps.executeBatch();
             }
 
             c.commit();
@@ -102,18 +102,16 @@ public class StudentProfileDAO {
                           List<String> databases) {
         if (id <= 0 || name == null || name.isBlank()) return false;
 
-        List<String> langs = dedupCI(languages);
-        List<String> dbs   = dedupCI(databases);
-
-        String upd = "UPDATE student SET name=?, isBlacklisted=? WHERE id=?";
-        String delL = "DELETE FROM programming_languages WHERE student_id=?";
-        String delD = "DELETE FROM databases WHERE student_id=?";
-        String insL = "INSERT OR IGNORE INTO programming_languages(student_id, language) VALUES (?,?)";
-        String insD = "INSERT OR IGNORE INTO databases(student_id, database_name) VALUES (?,?)";
+        final String upd  = "UPDATE student SET name=?, isBlacklisted=? WHERE id=?";
+        final String delL = "DELETE FROM programming_languages WHERE student_id=?";
+        final String delD = "DELETE FROM databases WHERE student_id=?";
+        final String insL = "INSERT OR IGNORE INTO programming_languages(student_id, language) VALUES (?,?)";
+        final String insD = "INSERT OR IGNORE INTO databases(student_id, database_name) VALUES (?,?)";
 
         try (Connection c = DatabaseConnector.getConnection()) {
             c.setAutoCommit(false);
 
+            // update basic fields
             try (PreparedStatement ps = c.prepareStatement(upd)) {
                 ps.setString(1, name.trim());
                 ps.setInt(2, isBlacklisted ? 1 : 0);
@@ -121,21 +119,36 @@ public class StudentProfileDAO {
                 if (ps.executeUpdate() == 0) { c.rollback(); return false; }
             }
 
+            // reset skills
             try (PreparedStatement ps = c.prepareStatement(delL)) { ps.setLong(1, id); ps.executeUpdate(); }
             try (PreparedStatement ps = c.prepareStatement(delD)) { ps.setLong(1, id); ps.executeUpdate(); }
 
-            try (PreparedStatement ps = c.prepareStatement(insL)) {
-                for (String s : langs) { ps.setLong(1, id); ps.setString(2, s); ps.addBatch(); }
-                ps.executeBatch();
+            if (languages != null) {
+                try (PreparedStatement ps = c.prepareStatement(insL)) {
+                    for (String s : languages) {
+                        if (s == null || s.isBlank()) continue;
+                        ps.setLong(1, id);
+                        ps.setString(2, s.trim());
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
+                }
             }
-            try (PreparedStatement ps = c.prepareStatement(insD)) {
-                for (String s : dbs) { ps.setLong(1, id); ps.setString(2, s); ps.addBatch(); }
-                ps.executeBatch();
+
+            if (databases != null) {
+                try (PreparedStatement ps = c.prepareStatement(insD)) {
+                    for (String s : databases) {
+                        if (s == null || s.isBlank()) continue;
+                        ps.setLong(1, id);
+                        ps.setString(2, s.trim());
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
+                }
             }
 
             c.commit();
             return true;
-
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
@@ -159,7 +172,8 @@ public class StudentProfileDAO {
     /** Returns rows pre-shaped for the JavaFX TableView, sorted A→Z case-insensitive by name. */
     public List<StudentRow> listAllForTable() {
         String sql = """
-        SELECT id, name, academic_status, employed, preferred_role, whitelist, isBlacklisted,
+        SELECT id, name, academic_status, employed, job_details, 
+               preferred_role, whitelist, isBlacklisted,
                languages, databases, commentsCount, lastComment
         FROM student_profile_view
         ORDER BY name COLLATE NOCASE ASC, id ASC
@@ -174,6 +188,7 @@ public class StudentProfileDAO {
                         rs.getString("name"),
                         rs.getString("academic_status"),
                         rs.getInt("employed") == 1,
+                        rs.getString("job_details"),
                         rs.getString("preferred_role"),
                         rs.getInt("whitelist") == 1,
                         rs.getInt("isBlacklisted") == 1,
@@ -199,23 +214,22 @@ public class StudentProfileDAO {
             try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
         } catch (SQLException ex) {
             ex.printStackTrace();
+
             return false;
         }
     }
 
-    // ---------- Helpers ----------
-    private static String nvl(String s) { return s == null ? "" : s; }
-
-    private static List<String> dedupCI(List<String> in) {
-        if (in == null) return List.of();
-        LinkedHashMap<String,String> map = new LinkedHashMap<>();
-        for (String raw : in) {
-            if (raw == null) continue;
-            String t = raw.trim();
-            if (t.isEmpty()) continue;
-            String key = t.toLowerCase();
-            map.putIfAbsent(key, t);
+    public boolean existsByNameForOther(String name, long excludeId) {
+        if (name == null || name.isBlank() || excludeId <= 0) return false;
+        String sql = "SELECT 1 FROM student WHERE trim(name)=trim(?) COLLATE NOCASE AND id <> ? LIMIT 1";
+        try (Connection c = DatabaseConnector.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setLong(2, excludeId);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
         }
-        return new ArrayList<>(map.values());
     }
 }
