@@ -6,6 +6,7 @@ public class StudentRow {
 
     private final String academicStatus;
     private final boolean employed;
+    private final String jobDetails;
     private final String preferredRole;
 
     private final boolean whitelist;
@@ -18,14 +19,21 @@ public class StudentRow {
     private final String lastComment;
 
     public StudentRow(long id, String name,
-                      String academicStatus, boolean employed, String preferredRole,
-                      boolean whitelist, boolean blacklisted,
-                      String languages, String databases,
-                      int commentsCount, String lastComment) {
+                      String academicStatus,
+                      boolean employed,
+                      String jobDetails,
+                      String preferredRole,
+                      boolean whitelist,
+                      boolean blacklisted,
+                      String languages,
+                      String databases,
+                      int commentsCount,
+                      String lastComment) {
         this.id = id;
         this.name = name;
         this.academicStatus = academicStatus;
         this.employed = employed;
+        this.jobDetails = jobDetails;
         this.preferredRole = preferredRole;
         this.whitelist = whitelist;
         this.blacklisted = blacklisted;
@@ -39,6 +47,7 @@ public class StudentRow {
     public String getName() { return name; }
     public String getAcademicStatus() { return academicStatus; }
     public boolean isEmployed() { return employed; }
+    public String getJobDetails() { return jobDetails == null ? "" : jobDetails; }
     public String getPreferredRole() { return preferredRole; }
     public boolean isWhitelist() { return whitelist; }
     public boolean isBlacklisted() { return blacklisted; }

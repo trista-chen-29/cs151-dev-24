@@ -1,7 +1,5 @@
 /* Top bar */
-.topbar {
-    -fx-background-color: #2B9348;
-}
+.topbar { -fx-background-color: #2B9348; }
 .topbar .pill {
     -fx-background-color: white;
     -fx-text-fill: #2B9348;
@@ -10,18 +8,10 @@
     -fx-padding: 6 12;
 }
 .topbar .pill:hover { -fx-opacity: .9; }
-.topbar .brand {
-    -fx-text-fill: white;
-    -fx-font-weight: 800;
-    -fx-font-size: 16px;
-}
+.topbar .brand { -fx-text-fill: white; -fx-font-weight: 800; -fx-font-size: 16px; }
 
-/* Page title (centered by VBox alignment) */
-.h1 {
-    -fx-font-size: 24px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #2B9348;
-}
+/* Title */
+.h1 { -fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: #2B9348; }
 
 /* Cards */
 .card, .action-card {
@@ -44,34 +34,3 @@
     -fx-padding: 8 12;
 }
 .primary:hover { -fx-opacity: .92; }
-
-.ghost {
-    -fx-background-color: transparent;
-    -fx-text-fill: #2B9348;
-    -fx-font-weight: 700;
-    -fx-background-radius: 8;
-    -fx-padding: 8 12;
-}
-.ghost:hover { -fx-background-color: #E6EFE9; }
-
-/* Search + segmented control */
-.muted { -fx-text-fill: #6B7280; }
-.seg {
-    -fx-background-radius: 8;
-    -fx-background-color: #E6EFE9;
-    -fx-text-fill: #1F2937;
-    -fx-padding: 6 10;
-}
-.seg:selected {
-    -fx-background-color: white;
-    -fx-border-color: #CDE7D6;
-    -fx-border-radius: 8;
-}
-
-/* Groups */
-.group-title { -fx-font-weight: 700; }
-.link-small {
-    -fx-text-fill: #2B9348;
-    -fx-underline: true;
-    -fx-font-size: 12px;
-}

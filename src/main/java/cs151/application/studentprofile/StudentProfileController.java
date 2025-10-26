@@ -1,7 +1,6 @@
 package cs151.application.studentprofile;
 
 import cs151.application.homepage.HomePageController;
-import cs151.application.programminglanguages.Language;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -117,19 +116,16 @@ public class StudentProfileController {
     //instantiates StudentService/Validator and returns caught errors. if error free persist using DAO
     @FXML
     private void onSave(ActionEvent e) {
-        StudentService val = new StudentService();
+        StudentService service = new StudentService();
         Student inStudent = compileInput();
-        String error = val.validate(inStudent);
+        StudentService.Result r = service.create(inStudent);
 
-        if (!error.isEmpty()) {
-            setError(error);
+        if (!r.ok) {
+            setError(r.message); // shows red text
             return;
         }
-
-        val.save(inStudent);
-
         lbError.setText("Student saved successfully!");
-        lbError.setTextFill(Color.GREEN);
+        lbError.setTextFill(javafx.scene.paint.Color.GREEN);
     }
 
     // HELPERS

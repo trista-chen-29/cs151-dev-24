@@ -5,6 +5,16 @@ import java.sql.*;
 public class DbInit {
     private DbInit() {}
 
+    public static void logDbLocation() {
+        try (var c = DatabaseConnector.getConnection();
+             var s = c.createStatement();
+             var rs = s.executeQuery("PRAGMA database_list;")) {
+            while (rs.next()) {
+                System.out.println("[DB] " + rs.getString("name") + " => " + rs.getString("file"));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
     /** Create tables, constraints & indexes if missing. Safe to call every startup. */
     public static void ensureSchema() {
         try (Connection c = DatabaseConnector.getConnection()) {
@@ -114,6 +124,7 @@ public class DbInit {
                     s.name,
                     s.academic_status,
                     s.employed,
+                    s.job_details,
                     s.preferred_role,
                     s.whitelist,
                     s.isBlacklisted,
@@ -191,6 +202,35 @@ public class DbInit {
                     ps.setString(3, "C++");
                     ps.executeUpdate();
                 }
+            }
+        }
+    }
+
+    public static void seedIfEmpty() {
+        try (var c = DatabaseConnector.getConnection();
+             var s = c.createStatement();
+             var rs = s.executeQuery("SELECT COUNT(*) FROM student")) {
+
+            if (rs.next() && rs.getInt(1) == 0) {
+                runResource(c, "/cs151/application/database/seed-v06.sql");
+                System.out.println("[DB] Seed loaded.");
+            } else {
+                System.out.println("[DB] Seed skipped (data exists).");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void runResource(Connection c, String path) throws Exception {
+        try (var in = DbInit.class.getResourceAsStream(path)) {
+            if (in == null) throw new IllegalStateException("Seed not found on classpath: " + path);
+            String sql = new String(in.readAllBytes());
+            // very simple splitter; good enough for our seed file
+            for (String stmt : sql.split(";")) {
+                String trimmed = stmt.trim();
+                if (trimmed.isEmpty() || trimmed.startsWith("--")) continue;
+                try (var ps = c.prepareStatement(trimmed)) { ps.executeUpdate(); }
             }
         }
     }

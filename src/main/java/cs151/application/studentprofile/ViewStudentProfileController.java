@@ -1,8 +1,6 @@
 package cs151.application.studentprofile;
 
 import cs151.application.homepage.HomePageController;
-import cs151.application.persistence.CommentDAO;
-import cs151.application.persistence.StudentProfileDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -10,39 +8,46 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 
-import java.util.stream.Collectors;
+import cs151.application.AppState;
 
 public class ViewStudentProfileController {
 
     // Header
     @FXML private TextField tfSearch;
+    @FXML private ToggleGroup tgShow;
+    @FXML private ToggleButton tbAll, tbWhitelist, tbBlacklist;
 
     // Table
     @FXML private TableView<StudentRow> tvStudents;
     @FXML private TableColumn<StudentRow,String> colName, colStatus, colRole, colLanguages, colDatabases;
-    @FXML private TableColumn<StudentRow,String> colEmployed;
+    @FXML private TableColumn<StudentRow,String> colEmployed, colWL, colBL;
+    @FXML private TableColumn<StudentRow,String> colJob;
 
     // Detail
     @FXML private Label lbName, lbStatus, lbEmployment, lbJob, lbRole;
+    @FXML private Label badgeBlacklisted, badgeWhitelist;
     @FXML private FlowPane fpLangs, fpDbs;
     @FXML private ListView<String> lvComments;
     @FXML private TextField tfNewComment;
 
     private Long selectedStudentId = null;
-    private final StudentProfileDAO repo = new StudentProfileDAO();
-    private final CommentDAO commentDAO = new CommentDAO();
+    private final StudentDirectoryService svc = new StudentDirectoryService();
 
     @FXML
     private void initialize() {
         // Table columns
-        colName.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getName())));
-        colStatus.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getAcademicStatus())));
+        colName.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getName())));
+        colStatus.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getAcademicStatus())));
         colEmployed.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isEmployed() ? "✓" : "—"));
-        colRole.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getPreferredRole())));
-        colLanguages.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getLanguages())));
-        colDatabases.setCellValueFactory(c -> new SimpleStringProperty(nonNull(c.getValue().getDatabases())));
+        colJob.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isEmployed() ? nullToEmpty(c.getValue().getJobDetails()) : "—"));
+        colRole.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getPreferredRole())));
+        colLanguages.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getLanguages())));
+        colDatabases.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getDatabases())));
+        colWL.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isWhitelist() ? "YES" : "—"));
+        colBL.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isBlacklisted() ? "YES" : "—"));
 
-        colEmployed.setStyle("-fx-alignment: CENTER;");
+        // Center WL/BL/EMPL text
+        center(colEmployed); center(colWL); center(colBL);
 
         // Selection listener
         tvStudents.getSelectionModel().selectedItemProperty().addListener((obs, old, row) -> {
@@ -50,50 +55,55 @@ public class ViewStudentProfileController {
             selectedStudentId = row == null ? null : row.getId();
         });
 
+        if (tbAll != null) { // set mode first so refresh uses it
+            switch (AppState.directoryMode) {
+                case WL -> tbWhitelist.setSelected(true);
+                case BL -> tbBlacklist.setSelected(true);
+                default -> tbAll.setSelected(true);
+            }
+        }
 
-        refreshTable();
-        // Post comment shortcut
+        if (tfSearch != null && AppState.directoryQuery != null && !AppState.directoryQuery.isBlank()) {
+            tfSearch.setText(AppState.directoryQuery);
+        }
+
         tfNewComment.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case ENTER -> {
-                    if (e.isControlDown() || e.isMetaDown()) onPostComment();
-                }
+            if (e.getCode() == javafx.scene.input.KeyCode.ENTER && (e.isControlDown() || e.isMetaDown())) {
+                onPostComment();
             }
         });
 
-        if (tfSearch != null) {
-            tfSearch.textProperty().addListener((o, ov, nv) -> refreshTable());
-        }
+        // trigger first load
+        refreshTable();
+        // clear for the next navigation
+        AppState.clearDirectorySearch();
     }
 
+    private static String nullToEmpty(String s) { return s == null ? "" : s; }
+    private void center(TableColumn<?,?> col) { col.setStyle("-fx-alignment: CENTER;"); }
 
-    private static String nonNull(String s) { return s == null ? "" : s; }
+    /* ---------- Data ---------- */
+
+    private StudentDirectoryService.FilterMode mode() {
+        if (tbWhitelist != null && tbWhitelist.isSelected()) return StudentDirectoryService.FilterMode.WL;
+        if (tbBlacklist != null && tbBlacklist.isSelected()) return StudentDirectoryService.FilterMode.BL;
+        return StudentDirectoryService.FilterMode.ALL;
+    }
 
     private void refreshTable() {
-        var all = repo.listAllForTable();
+        // remember current selection
+        final Long keepId = selectedStudentId;
 
-        final String q = tfSearch.getText() != null ? tfSearch.getText().trim().toLowerCase() : "";
-
-        var filtered = all.stream()
-                .filter(r -> q.isEmpty() || contains(r.getName(), q)
-                        || contains(r.getAcademicStatus(), q)
-                        || contains(r.getPreferredRole(), q)
-                        || contains(r.getLanguages(), q)
-                        || contains(r.getDatabases(), q))
-                .collect(Collectors.toList());
-
-        // Keep current selection
-        Long tmp = null;
-        var sel = tvStudents.getSelectionModel().getSelectedItem();
-        if (sel != null) tmp = sel.getId();
+        var filtered = svc.find(
+                tfSearch != null ? tfSearch.getText() : "",
+                mode()
+        );
 
         tvStudents.setItems(FXCollections.observableArrayList(filtered));
 
-        final Long selectedId = tmp;
-
-        if (selectedId != null) {
+        if (keepId != null) {
             tvStudents.getItems().stream()
-                    .filter(r -> r.getId() == selectedId)
+                    .filter(r -> r.getId() == keepId)
                     .findFirst()
                     .ifPresent(r -> tvStudents.getSelectionModel().select(r));
         } else if (!tvStudents.getItems().isEmpty()) {
@@ -109,16 +119,23 @@ public class ViewStudentProfileController {
         lbName.setText(row.getName());
         lbStatus.setText(row.getAcademicStatus() == null ? "—" : row.getAcademicStatus());
         lbEmployment.setText(row.isEmployed() ? "Employed" : "Not employed");
-        lbJob.setText("—");
+        lbJob.setText(row.isEmployed() ? nullToEmpty(row.getJobDetails()) : "—");
         lbRole.setText(row.getPreferredRole() == null ? "—" : row.getPreferredRole());
 
+        boolean bl = row.isBlacklisted();
+        boolean wl = row.isWhitelist();
+        badgeBlacklisted.setVisible(bl); badgeBlacklisted.setManaged(bl);
+        badgeWhitelist.setVisible(wl);   badgeWhitelist.setManaged(wl);
+
+        // Chips
         fpLangs.getChildren().setAll(Tags.make(row.getLanguages()));
         fpDbs.getChildren().setAll(Tags.make(row.getDatabases()));
 
+        // ALL comments (newest first)
         lvComments.setItems(FXCollections.observableArrayList(
-                commentDAO.listByStudent(row.getId()).stream()
-                        .map(c -> (c.getCreatedAt() == null ? "" : (c.getCreatedAt() + " — ")) + c.getBody())
-                        .collect(Collectors.toList())
+                svc.listComments(row.getId()).stream()
+                        .map(c -> (c.getCreatedAt() == null ? "" : c.getCreatedAt() + " — ") + c.getBody())
+                        .toList()
         ));
     }
 
@@ -128,31 +145,26 @@ public class ViewStudentProfileController {
         lbEmployment.setText("");
         lbJob.setText("");
         lbRole.setText("");
+        badgeBlacklisted.setVisible(false); badgeBlacklisted.setManaged(false);
+        badgeWhitelist.setVisible(false);   badgeWhitelist.setManaged(false);
         fpLangs.getChildren().clear();
         fpDbs.getChildren().clear();
         lvComments.setItems(FXCollections.observableArrayList());
     }
 
-    @FXML
-    private void onBackHome() {
-        HomePageController.goHomeFrom((Node) tvStudents);
-    }
+    @FXML private void onBackHome() { HomePageController.goHomeFrom((Node) tvStudents); }
+
 
     @FXML
     public void onDelete() {
-        if(selectedStudentId == null) return;
-
-        repo.delete(selectedStudentId);
-        refreshTable();
-    }
-
-    public void updateSearchQuery(String query) {
-        if (tfSearch != null) {
-            tfSearch.setText(query);
-            refreshTable(); // immediately filter the table
+        if (selectedStudentId == null) return;
+        if (svc.deleteStudent(selectedStudentId)) {
+            selectedStudentId = null;
+            refreshTable();
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Delete failed.").showAndWait();
         }
     }
-
 
     @FXML
     private void onRefresh() { refreshTable(); }
@@ -162,8 +174,7 @@ public class ViewStudentProfileController {
         StudentRow row = tvStudents.getSelectionModel().getSelectedItem();
         String body = tfNewComment.getText() == null ? "" : tfNewComment.getText().trim();
         if (row == null || body.isEmpty()) return;
-
-        if (commentDAO.add(row.getId(), body) > 0) {
+        if (svc.addComment(row.getId(), body)) {
             tfNewComment.clear();
             refreshTable();
             tvStudents.getItems().stream()
@@ -172,11 +183,6 @@ public class ViewStudentProfileController {
         } else {
             new Alert(Alert.AlertType.ERROR, "Failed to post comment.").showAndWait();
         }
-    }
-
-    // Helper
-    private static boolean contains(String s, String q) {
-        return s != null && s.toLowerCase().contains(q);
     }
 
     static class Tags {
