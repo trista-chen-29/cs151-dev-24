@@ -50,6 +50,8 @@ public class ViewStudentProfileController {
             selectedStudentId = row == null ? null : row.getId();
         });
 
+
+        refreshTable();
         // Post comment shortcut
         tfNewComment.setOnKeyPressed(e -> {
             switch (e.getCode()) {
