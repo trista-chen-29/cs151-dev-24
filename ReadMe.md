@@ -1,93 +1,134 @@
-# Name of application: Prof-Support
+
+## Name of application: Prof-Support
+
 **Version: 0.6**
 
 ---
 
-## Overview
-**Prof-Support** helps faculty (professors) manage students’ profile data, academic skills, preferred professional roles, and programming-language knowledge.
+### Overview
 
-This milestone (**v 0.6**) focuses on extending functionality introduced in v 0.5 by implementing **Search Students Profiles** and **Delete Students Profiles** features, improving data persistence, and polishing the user interface.
-
----
-
-## New in v 0.6
-- Implemented **Search Students Profiles** page (using JavaFX TableView).  
-- Implemented **Delete Students Profiles** functionality (permanent removal from SQLite DB).  
-- Updated **Home Page** with integrated search bar and filter options (whitelist / blacklist).  
-- Added “Apply Filters” and “Clear” buttons for search refinement.  
-- Improved UI layout consistency and styling across pages.  
-- Updated ReadMe for version 0.6 and documented team contributions.
-
----
-
-## Who did what
-| Member | Contribution |
-| --------- | ------------- |
-| **Chenying Wang** | Populated product with 3 programming languages (C++, Java, Python) and 5 students’ profiles as sample data. Updated README to v 0.6. |
-| **Vraj Mistry** | Implemented Search Students Profiles page (using TableView + SQLite integration). Added Delete functionality. Managed project zipping and cleanup. Performed test verification for search and delete features. |
-| **Jaime Gonzalez** | Implemented delete button and linked database deletion to UI TableView refresh. |
-| **Trista Chen** | Restructured project packages and controllers to maintain clean Maven hierarchy. Ensured FXML navigation works across all pages. |
-
----
-
-## Tech Stack
-- **Java 23 (Zulu 23)**  
-- **JavaFX 23 with Maven** (`javafx-maven-plugin 0.0.8`)  
-- **SQLite JDBC 3.46.1.0**  
-- **Scene Builder / FXML**  
-- **CSS** for UI styling (theme.css)
-
----
-
-## Build Instructions
-```bash
-# Run from project root
-mvn clean javafx:run
-
-
-# Name of application: Prof-Support
-
-**Version: 0.5**
-
----
-
-## Overview
 Prof-Support helps faculty (professors) manage students’ profile data, academic skills, and programming-language knowledge.
 
-**This milestone (v0.5)** add "define student profile" and "View Student Profile" pages.
-
-### New in v0.5
-- Added "Define Student Profile" page
-- Added "View Student Profile" page (with tableview)
-- Added persistence for student profiles
-- Updated HomePage UI
+**This milestone (v0.6)** adds the **“Search Students Profiles”** page, allows deleting profiles from the database, and refines overall UI and structure based on previous milestones (v0.5 → v0.6).
 
 ---
 
-## Who did what
-| Member | Contribution |
-|---------|---------------|
-| **Trista Chen** | Created FXML and Controller for "View Student Profiles" page, created DAO for controllers |
-| **Jaime Gonzalez** | Implemented "StudentProfileController", verified ViewStudentProfileController, updated ReadMe |
-| **Vraj Mistry** | Implemented StudentService, changed location of database, cleaned and zipped files for submission |
-| **Chenying Wang** | Implemented and verified **Student Profile UI v2**, removed legacy *Other*, added CSS linking, and validated navigation functionality |
+### New in v0.6
+
+* Added **Search Students Profiles** page with filters (by name, language, database, and preferred roles)
+* Implemented **JavaFX TableView** to display all students in tabular format
+* Enabled **Delete Profile** feature – permanently removes selected student from SQLite DB
+* Refined **Home Page UI** with active search components and linked navigation
+* Verified 3 Programming Languages and 5 Student Profiles pre-loaded
+* Cleaned project folder (`dev-24-0.6`) and updated README
+* General restructuring and test verification
 
 ---
 
-## Tech Stack
-- Java 23 (Zulu 23)
-- JavaFX 23 with Maven (`javafx-maven-plugin 0.0.8`)
-- SQLite JDBC (3.46.1.0)
-- SceneBuilder / FXML
-- CSS for UI styling
+### Who did what
+
+| Member             | Contribution                                                                                                                                      |
+| :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Trista Chen**    | Restructured project folders and code organization; cleaned non-source files; verified Maven build and zipping process.                           |
+| **Jaime Gonzalez** | Implemented **Delete Student Profile** feature using TableView selection; ensured DB row removal and UI refresh after deletion.                   |
+| **Vraj Mistry**    | Implemented **Search Students Profiles page** (front-end and backend filter logic); added TableView bindings; managed testing and zipped release. |
+| **Chenying Wang**  | Populated 3 Programming Languages and 5 Student Profiles; updated README (v0.6); verified UI layout and navigation consistency.                   |
 
 ---
 
-## Build Instructions
+### Tech Stack
+
+* Java 23 (Zulu 23)
+* JavaFX 23 with Maven (`javafx-maven-plugin 0.0.8`)
+* SQLite JDBC (3.46.1.0)
+* SceneBuilder / FXML
+* CSS for UI styling
+
+---
+
+### Build Instructions
+
 ```bash
 # Run from project root
 mvn clean javafx:run
 ```
+
+---
+
+### Using the App (v0.6)
+
+#### Home Page
+
+* Provides quick navigation to **Define Programming Languages**, **Add/Edit Student**, and **Search Students Profiles**.
+* Includes filter panel (search by name, language, database, and preferred roles) with All / Whitelist / Blacklist toggle.
+
+#### Define Programming Languages
+
+* Add or update programming languages (e.g., C++, Java, Python) via JavaFX TableView.
+* Entries are stored in SQLite DB and sorted A → Z.
+
+#### Define Student Profile
+
+* Create or update student profiles with academic status, job status, and preferred roles.
+* Persist data to SQLite DB after validation.
+
+#### Search Students Profiles
+
+* Displays all stored profiles in a TableView with real-time filtering.
+* Clicking a row shows student details and skills.
+* Supports deletion of selected student profile.
+
+---
+
+### Known Limitations (v0.6)
+
+* Advanced filter combinations (e.g., multi-criteria queries) still in progress.
+* Photo upload feature not yet linked to storage.
+
+---
+
+### Where Data is Stored
+
+SQLite DB file location:
+`./dev-24-0.6/profsupport.db`
+
+To reset data: close the app and delete this file.
+
+---
+
+### Project Structure
+
+```
+src/main/java/cs151/application
+ ├─ Main.java
+ ├─ homepage/
+ │   ├─ HomePageController.java
+ │   ├─ HomePageService.java
+ │   ├─ SearchService.java
+ ├─ persistence/
+ │   ├─ DatabaseConnector.java
+ │   ├─ DbInit.java
+ ├─ programminglanguages/
+ │   ├─ PLController.java
+ │   ├─ ProgrammingLanguagesDAO.java
+ │   ├─ Language.java
+ └─ studentprofile/
+     ├─ Student.java
+
+src/main/resources/cs151/application
+ ├─ homepage.fxml
+ ├─ define-pl.fxml
+ ├─ define-student.fxml
+ ├─ view-student.fxml
+ ├─ homepage.css
+ ├─ define-pl.css
+ └─ theme.css
+```
+
+---
+
+
+
 ## Using the app (v0.5)
 - Define Students Profile:
   - Navigate to Define Students Profile page through HomePage
