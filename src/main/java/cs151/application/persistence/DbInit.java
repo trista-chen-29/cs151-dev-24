@@ -12,7 +12,9 @@ public class DbInit {
             while (rs.next()) {
                 System.out.println("[DB] " + rs.getString("name") + " => " + rs.getString("file"));
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /** Create tables, constraints & indexes if missing. Safe to call every startup. */
@@ -20,7 +22,6 @@ public class DbInit {
         try (Connection c = DatabaseConnector.getConnection()) {
             c.setAutoCommit(false);
             try (Statement s = c.createStatement()) {
-                // Always keep FKs on
                 s.execute("PRAGMA foreign_keys = ON");
 
                 // --- Core tables ---
@@ -44,7 +45,7 @@ public class DbInit {
                   )
                 """);
 
-                // Student's programming languages (case-insensitive + unique per student)
+                // Student's programming languages
                 s.execute("""
                     CREATE TABLE IF NOT EXISTS programming_languages(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +56,7 @@ public class DbInit {
                     )
                 """);
 
-                // Student's databases (case-insensitive + unique per student)
+                // Student's databases
                 s.execute("""
                     CREATE TABLE IF NOT EXISTS databases(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +78,7 @@ public class DbInit {
                     )
                 """);
 
-                // Define-PL master list — now directly NOCASE UNIQUE (no manual index needed)
+                // Language catalog for Define PL page
                 s.execute("""
                     CREATE TABLE IF NOT EXISTS language_catalog(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,7 +88,7 @@ public class DbInit {
                 seedDefaultLanguages(s);
                 seedLanguageCatalogIfEmpty(c);
 
-                // --- Upgrades for older DBs (no IF NOT EXISTS in ALTER) ---
+                // --- Upgrades for older DBs ---
                 ensureColumn(c, "student", "academic_status",
                         "academic_status TEXT NOT NULL DEFAULT 'Freshman'");
                 ensureColumn(c, "student", "employed",
@@ -101,21 +102,20 @@ public class DbInit {
                 ensureColumn(c, "student", "isBlacklisted",
                         "isBlacklisted INTEGER NOT NULL DEFAULT 0");
 
-                // --- Make full name unique, case-insensitive, ignoring extra spaces ---
-                // (Drop old non-unique index if it exists, then create the correct one.)
+                // Unique full name (trimmed, case-insensitive)
                 s.execute("DROP INDEX IF EXISTS idx_student_name_nocase");
                 s.execute("""
                    CREATE UNIQUE INDEX IF NOT EXISTS idx_student_name_unique
                    ON student( trim(name) COLLATE NOCASE )
                 """);
 
-                // --- Helpful FKs lookup indexes ---
+                // Helpful indexes
                 s.execute("CREATE INDEX IF NOT EXISTS idx_pl_sid ON programming_languages(student_id)");
                 s.execute("CREATE INDEX IF NOT EXISTS idx_db_sid ON databases(student_id)");
                 s.execute("CREATE INDEX IF NOT EXISTS idx_comments_sid ON comments(student_id)");
                 s.execute("CREATE INDEX IF NOT EXISTS idx_comments_sid_created ON comments(student_id, datetime(created_at) DESC)");
 
-                // --- View for TableView (one row per student, lists are comma-joined & A→Z) ---
+                // View used by the TableView
                 s.execute("DROP VIEW IF EXISTS student_profile_view");
                 s.execute("""
                   CREATE VIEW student_profile_view AS
@@ -160,7 +160,7 @@ public class DbInit {
         }
     }
 
-    /** Add a column only if it is missing. No constraints in ALTER (SQLite limitation). */
+    /** Add a column only if it is missing. */
     private static void ensureColumn(Connection c, String table, String column, String fullColumnDDL) throws SQLException {
         if (!hasColumn(c, table, column)) {
             try (Statement s = c.createStatement()) {
@@ -169,7 +169,7 @@ public class DbInit {
         }
     }
 
-    /** Checks PRAGMA table_info(table) for a column name. */
+    /** Check PRAGMA table_info(table) for a column name. */
     private static boolean hasColumn(Connection c, String table, String column) throws SQLException {
         String sql = "PRAGMA table_info(" + table + ")";
         try (Statement st = c.createStatement();
@@ -183,11 +183,10 @@ public class DbInit {
     }
 
     private static void seedDefaultLanguages(Statement s) throws SQLException {
-        // Will not duplicate thanks to UNIQUE NOCASE on name
         s.execute("""
-        INSERT OR IGNORE INTO language_catalog(name) VALUES
-        ('C++'), ('Java'), ('Python')
-    """);
+            INSERT OR IGNORE INTO language_catalog(name) VALUES
+            ('C++'), ('Java'), ('Python')
+        """);
     }
 
     private static void seedLanguageCatalogIfEmpty(Connection c) throws SQLException {
@@ -206,13 +205,14 @@ public class DbInit {
         }
     }
 
+    /** Seed initial data once when the database is empty. */
     public static void seedIfEmpty() {
         try (var c = DatabaseConnector.getConnection();
              var s = c.createStatement();
              var rs = s.executeQuery("SELECT COUNT(*) FROM student")) {
 
             if (rs.next() && rs.getInt(1) == 0) {
-                runResource(c, "/cs151/application/database/seed-v06.sql");
+                runResource(c, "/database/seed-v06.sql");
                 System.out.println("[DB] Seed loaded.");
             } else {
                 System.out.println("[DB] Seed skipped (data exists).");
@@ -222,15 +222,17 @@ public class DbInit {
         }
     }
 
+    /** Execute a SQL file available on the classpath. */
     private static void runResource(Connection c, String path) throws Exception {
         try (var in = DbInit.class.getResourceAsStream(path)) {
             if (in == null) throw new IllegalStateException("Seed not found on classpath: " + path);
             String sql = new String(in.readAllBytes());
-            // very simple splitter; good enough for our seed file
             for (String stmt : sql.split(";")) {
                 String trimmed = stmt.trim();
                 if (trimmed.isEmpty() || trimmed.startsWith("--")) continue;
-                try (var ps = c.prepareStatement(trimmed)) { ps.executeUpdate(); }
+                try (var ps = c.prepareStatement(trimmed)) {
+                    ps.executeUpdate();
+                }
             }
         }
     }

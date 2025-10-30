@@ -1,6 +1,7 @@
 package cs151.application;
 
 import cs151.application.persistence.DbInit;
+import cs151.application.persistence.DevSeeder;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,23 +10,25 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        // Create tables if you're using SQLite (safe to call repeatedly)
+        // Initialize and seed database (safe to call repeatedly)
         try {
             DbInit.logDbLocation();
             DbInit.ensureSchema();
             DbInit.seedIfEmpty();
+            DevSeeder.seedFiveIfEmpty();  // Add default 5 students only if DB is empty
         } catch (Throwable t) {
             // Don't crash the UI if DB init fails during early dev
             t.printStackTrace();
         }
-        // Load new home screen (match resource path)
+
+        // Load home screen (ensure path matches your FXML location)
         FXMLLoader fxml = new FXMLLoader(
                 getClass().getResource("/cs151/application/homepage.fxml")
         );
 
         Scene scene = new Scene(fxml.load(), 980, 620);
 
-        // Global theme once at the Scene level
+        // Global theme applied at Scene level
         scene.getStylesheets().add(
                 getClass().getResource("/cs151/application/theme.css").toExternalForm()
         );
