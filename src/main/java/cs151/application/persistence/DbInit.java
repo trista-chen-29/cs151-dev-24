@@ -15,17 +15,12 @@ public class DbInit {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    /** Create tables, constraints & indexes if missing. Safe to call every startup. */
     public static void ensureSchema() {
         try (Connection c = DatabaseConnector.getConnection()) {
             c.setAutoCommit(false);
             try (Statement s = c.createStatement()) {
-                // Always keep FKs on
                 s.execute("PRAGMA foreign_keys = ON");
 
-                // --- Core tables ---
-
-                // Students
                 s.execute("""
                   CREATE TABLE IF NOT EXISTS student(
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,7 +39,6 @@ public class DbInit {
                   )
                 """);
 
-                // Student's programming languages (case-insensitive + unique per student)
                 s.execute("""
                     CREATE TABLE IF NOT EXISTS programming_languages(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +49,6 @@ public class DbInit {
                     )
                 """);
 
-                // Student's databases (case-insensitive + unique per student)
                 s.execute("""
                     CREATE TABLE IF NOT EXISTS databases(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,7 +59,6 @@ public class DbInit {
                     )
                 """);
 
-                // Comments
                 s.execute("""
                     CREATE TABLE IF NOT EXISTS comments(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +69,6 @@ public class DbInit {
                     )
                 """);
 
-                // Define-PL master list — now directly NOCASE UNIQUE (no manual index needed)
                 s.execute("""
                     CREATE TABLE IF NOT EXISTS language_catalog(
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,7 +78,6 @@ public class DbInit {
                 seedDefaultLanguages(s);
                 seedLanguageCatalogIfEmpty(c);
 
-                // --- Upgrades for older DBs (no IF NOT EXISTS in ALTER) ---
                 ensureColumn(c, "student", "academic_status",
                         "academic_status TEXT NOT NULL DEFAULT 'Freshman'");
                 ensureColumn(c, "student", "employed",
@@ -101,21 +91,17 @@ public class DbInit {
                 ensureColumn(c, "student", "isBlacklisted",
                         "isBlacklisted INTEGER NOT NULL DEFAULT 0");
 
-                // --- Make full name unique, case-insensitive, ignoring extra spaces ---
-                // (Drop old non-unique index if it exists, then create the correct one.)
                 s.execute("DROP INDEX IF EXISTS idx_student_name_nocase");
                 s.execute("""
                    CREATE UNIQUE INDEX IF NOT EXISTS idx_student_name_unique
                    ON student( trim(name) COLLATE NOCASE )
                 """);
 
-                // --- Helpful FKs lookup indexes ---
                 s.execute("CREATE INDEX IF NOT EXISTS idx_pl_sid ON programming_languages(student_id)");
                 s.execute("CREATE INDEX IF NOT EXISTS idx_db_sid ON databases(student_id)");
                 s.execute("CREATE INDEX IF NOT EXISTS idx_comments_sid ON comments(student_id)");
                 s.execute("CREATE INDEX IF NOT EXISTS idx_comments_sid_created ON comments(student_id, datetime(created_at) DESC)");
 
-                // --- View for TableView (one row per student, lists are comma-joined & A→Z) ---
                 s.execute("DROP VIEW IF EXISTS student_profile_view");
                 s.execute("""
                   CREATE VIEW student_profile_view AS
@@ -160,7 +146,6 @@ public class DbInit {
         }
     }
 
-    /** Add a column only if it is missing. No constraints in ALTER (SQLite limitation). */
     private static void ensureColumn(Connection c, String table, String column, String fullColumnDDL) throws SQLException {
         if (!hasColumn(c, table, column)) {
             try (Statement s = c.createStatement()) {
@@ -169,7 +154,6 @@ public class DbInit {
         }
     }
 
-    /** Checks PRAGMA table_info(table) for a column name. */
     private static boolean hasColumn(Connection c, String table, String column) throws SQLException {
         String sql = "PRAGMA table_info(" + table + ")";
         try (Statement st = c.createStatement();
@@ -183,7 +167,6 @@ public class DbInit {
     }
 
     private static void seedDefaultLanguages(Statement s) throws SQLException {
-        // Will not duplicate thanks to UNIQUE NOCASE on name
         s.execute("""
         INSERT OR IGNORE INTO language_catalog(name) VALUES
         ('C++'), ('Java'), ('Python')
@@ -212,7 +195,8 @@ public class DbInit {
              var rs = s.executeQuery("SELECT COUNT(*) FROM student")) {
 
             if (rs.next() && rs.getInt(1) == 0) {
-                runResource(c, "/cs151/application/database/seed-v06.sql");
+                runResource(c, "/cs151/application/database/seed-v07.sql");
+
                 System.out.println("[DB] Seed loaded.");
             } else {
                 System.out.println("[DB] Seed skipped (data exists).");
@@ -226,7 +210,6 @@ public class DbInit {
         try (var in = DbInit.class.getResourceAsStream(path)) {
             if (in == null) throw new IllegalStateException("Seed not found on classpath: " + path);
             String sql = new String(in.readAllBytes());
-            // very simple splitter; good enough for our seed file
             for (String stmt : sql.split(";")) {
                 String trimmed = stmt.trim();
                 if (trimmed.isEmpty() || trimmed.startsWith("--")) continue;
@@ -234,4 +217,130 @@ public class DbInit {
             }
         }
     }
+
+    public static void seedOrCorrectToExactCounts() {
+        try (Connection c = DatabaseConnector.getConnection()) {
+            c.setAutoCommit(false);
+            try {
+                ensureExactlyThreeLanguages(c);
+                ensureExactlyFiveStudents(c);
+                c.commit();
+                System.out.println("[DB] Ensured exact counts.");
+            } catch (SQLException e) {
+                c.rollback();
+                throw e;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void ensureExactlyThreeLanguages(Connection c) throws SQLException {
+        String[] must = {"C++", "Java", "Python"};
+        int count = singleInt(c, "SELECT COUNT(*) FROM language_catalog");
+        if (count != 3) {
+            try (Statement s = c.createStatement()) {
+                s.execute("DELETE FROM language_catalog");
+            }
+            try (PreparedStatement ps = c.prepareStatement(
+                    "INSERT OR IGNORE INTO language_catalog(name) VALUES (?)")) {
+                for (String n : must) {
+                    ps.setString(1, n);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+        }
+    }
+
+    private static void ensureExactlyFiveStudents(Connection c) throws SQLException {
+        try (Statement s = c.createStatement()) {
+            s.execute("DELETE FROM comments");
+            s.execute("DELETE FROM programming_languages");
+            s.execute("DELETE FROM databases");
+            s.execute("DELETE FROM student");
+        }
+
+        Object[][] rows = new Object[][]{
+                {"Ava Chen",     "Junior",    0, "",               "Front-End", 0, 0},
+                {"Brian Lee",    "Junior",    1, "Intern @XYZ",    "Back-End",  1, 0},
+                {"Cam Nguyen",   "Graduate",  1, "Intern @ABC",    "Data",      1, 0},
+                {"Diego Torres", "Sophomore", 1, "Part-time @DEF", "Full-Stack",0, 0},
+                {"Eva Park",     "Senior",    1, "TA @SJSU",       "Other",     0, 1}
+        };
+
+        long[] ids = new long[rows.length];
+        try (PreparedStatement ps = c.prepareStatement("""
+            INSERT INTO student(name, academic_status, employed, job_details, preferred_role, whitelist, isBlacklisted)
+            VALUES (?,?,?,?,?,?,?)
+        """, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < rows.length; i++) {
+                Object[] r = rows[i];
+                ps.setString(1, (String) r[0]);
+                ps.setString(2, (String) r[1]);
+                ps.setInt(3, (Integer) r[2]);
+                ps.setString(4, (String) r[3]);
+                ps.setString(5, (String) r[4]);
+                ps.setInt(6, (Integer) r[5]);
+                ps.setInt(7, (Integer) r[6]);
+                ps.executeUpdate();
+                try (ResultSet k = ps.getGeneratedKeys()) {
+                    if (k.next()) ids[i] = k.getLong(1);
+                }
+            }
+        }
+
+        int cppId  = idForLang(c, "C++");
+        int javaId = idForLang(c, "Java");
+        int pyId   = idForLang(c, "Python");
+
+        linkLang(c, ids[0], javaId);
+
+        linkLang(c, ids[1], cppId);  linkLang(c, ids[1], javaId);
+        linkLang(c, ids[2], javaId); linkLang(c, ids[2], pyId);
+        linkLang(c, ids[3], cppId);  linkLang(c, ids[3], pyId);
+        linkLang(c, ids[4], javaId);
+
+        linkDb(c, ids[1], "MySQL");
+        linkDb(c, ids[2], "PostgreSQL");
+        linkDb(c, ids[3], "MongoDB");
+    }
+
+    private static int singleInt(Connection c, String sql) throws SQLException {
+        try (Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    private static int idForLang(Connection c, String name) throws SQLException {
+        try (PreparedStatement ps = c.prepareStatement("SELECT id FROM language_catalog WHERE name=? COLLATE NOCASE")) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        }
+        return -1;
+    }
+
+    private static void linkLang(Connection c, long studentId, int langId) throws SQLException {
+        if (langId <= 0) return;
+        try (PreparedStatement ps = c.prepareStatement(
+                "INSERT OR IGNORE INTO programming_languages(student_id, language) VALUES (?, (SELECT name FROM language_catalog WHERE id=?))")) {
+            ps.setLong(1, studentId);
+            ps.setInt(2, langId);
+            ps.executeUpdate();
+        }
+    }
+
+    private static void linkDb(Connection c, long studentId, String dbName) throws SQLException {
+        try (PreparedStatement ps = c.prepareStatement(
+                "INSERT OR IGNORE INTO databases(student_id, database_name) VALUES (?,?)")) {
+            ps.setLong(1, studentId);
+            ps.setString(2, dbName);
+            ps.executeUpdate();
+        }
+    }
 }
+
+
