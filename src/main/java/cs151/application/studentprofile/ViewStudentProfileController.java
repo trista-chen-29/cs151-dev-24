@@ -7,6 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import java.io.IOException;
 
 import cs151.application.AppState;
 
@@ -31,7 +35,7 @@ public class ViewStudentProfileController {
     @FXML private TextField tfNewComment;
 
     private Long selectedStudentId = null;
-    private final StudentDirectoryService svc = new StudentDirectoryService();
+    private final ViewStudentProfileService svc = new ViewStudentProfileService();
 
     @FXML
     private void initialize() {
@@ -84,10 +88,10 @@ public class ViewStudentProfileController {
 
     /* ---------- Data ---------- */
 
-    private StudentDirectoryService.FilterMode mode() {
-        if (tbWhitelist != null && tbWhitelist.isSelected()) return StudentDirectoryService.FilterMode.WL;
-        if (tbBlacklist != null && tbBlacklist.isSelected()) return StudentDirectoryService.FilterMode.BL;
-        return StudentDirectoryService.FilterMode.ALL;
+    private ViewStudentProfileService.FilterMode mode() {
+        if (tbWhitelist != null && tbWhitelist.isSelected()) return ViewStudentProfileService.FilterMode.WL;
+        if (tbBlacklist != null && tbBlacklist.isSelected()) return ViewStudentProfileService.FilterMode.BL;
+        return ViewStudentProfileService.FilterMode.ALL;
     }
 
     private void refreshTable() {
@@ -103,7 +107,7 @@ public class ViewStudentProfileController {
 
         if (keepId != null) {
             tvStudents.getItems().stream()
-                    .filter(r -> r.getId() == keepId)
+                    .filter(r -> java.util.Objects.equals(r.getId(), keepId))
                     .findFirst()
                     .ifPresent(r -> tvStudents.getSelectionModel().select(r));
         } else if (!tvStudents.getItems().isEmpty()) {
@@ -182,6 +186,32 @@ public class ViewStudentProfileController {
                     .findFirst().ifPresent(this::showDetails);
         } else {
             new Alert(Alert.AlertType.ERROR, "Failed to post comment.").showAndWait();
+        }
+    }
+
+    @FXML
+    private void onEditStudent(ActionEvent e) {
+        var row = tvStudents.getSelectionModel().getSelectedItem();
+        if (row == null) {
+            new Alert(Alert.AlertType.INFORMATION, "Select a student to edit.").showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/cs151/application/define-student-profile.fxml"));
+            Parent root = loader.load();
+
+            DefineStudentProfileController ctrl = loader.getController();
+            ctrl.loadForEdit(row.getId());
+
+            // switch scene
+            ((Node) e.getSource()).getScene().setRoot(root);
+        } catch (IOException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Cannot open Student Profile:\n" + ex.getMessage());
+            a.setHeaderText("Load failed");
+            a.showAndWait();
+            ex.printStackTrace();
         }
     }
 

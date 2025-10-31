@@ -7,8 +7,8 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="cs151.application.programminglanguages.PLController"
-            stylesheets="@define-pl.css"
+            fx:controller="cs151.application.programminglanguages.ProgrammingLanguageController"
+            stylesheets="@define-programming-language.css"
             styleClass="canvas pl-root"
             prefWidth="980" prefHeight="620">
 

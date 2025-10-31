@@ -6,7 +6,7 @@ import cs151.application.persistence.StudentProfileDAO;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StudentService {
+public class DefineStudentProfileService {
 
     private final StudentProfileDAO students = new StudentProfileDAO();
     private final ProgrammingLanguagesDAO langCatalog = new ProgrammingLanguagesDAO();

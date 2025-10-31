@@ -14,8 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class PLController {
-    // --- UI elements from define-pl.fxml ---
+public class ProgrammingLanguageController {
+    // --- UI elements from define-programming-language.fxml ---
     @FXML private TextField languageField;
     @FXML private Label errorLabel;
     @FXML private TableView<Language> languagesTable;
@@ -24,7 +24,7 @@ public class PLController {
     // --- Data access ---
     private final ProgrammingLanguagesDAO repo = new ProgrammingLanguagesDAO();
 
-    public PLController() {}
+    public ProgrammingLanguageController() {}
 
     // Called automatically after FXML loads
     @FXML

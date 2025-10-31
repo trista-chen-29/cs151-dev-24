@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StudentProfileController {
+public class DefineStudentProfileController {
 
     @FXML private TextField tfFullName;
     @FXML private ComboBox<String> cbAcademicStatus;
@@ -39,10 +39,16 @@ public class StudentProfileController {
 
     @FXML private ImageView ivPhoto;
 
+    @FXML private Button btnSave;
+    @FXML private Label  titleLabel;
 
     private final Map<String, BooleanProperty> progLangState = new HashMap<>();
     private final Map<String, BooleanProperty> Dbstate = new HashMap<>();
     private final ProgrammingLanguagesDAO languages = new ProgrammingLanguagesDAO();
+
+    private long editingId = -1;
+    private final DefineStudentProfileService service = new DefineStudentProfileService();
+
     @FXML
     private void initialize() {
         ObservableList<String> langs = FXCollections.observableArrayList(languages.listAll());
@@ -56,9 +62,8 @@ public class StudentProfileController {
             return Dbstate.computeIfAbsent(item, k -> new SimpleBooleanProperty(false));
         }));
 
-
         // Displays all DBs,preferred professional roles, and academic Status from problem statement.
-        //it would be best to persist these in SQLite on start up and call a listALL() method like in ProgrammingLanguagesDAO.
+        // it would be best to persist these in SQLite on start up and call a listALL() method like in ProgrammingLanguagesDAO.
         cbRole.getItems().setAll("Front-End","Back-End","Full-Stack","Data");
         cbAcademicStatus.getItems().setAll("Freshman", "Sophomore", "Junior", "Senior", "Graduate");
 
@@ -66,7 +71,8 @@ public class StudentProfileController {
         cbBlacklist.selectedProperty().addListener((o,ov,nv) -> {if(nv) cbWhitelist.setSelected(false);});
         // Job details enabled only when Employed
         rbEmployed.selectedProperty().addListener((o, ov, nv) -> taJobDetails.setDisable(!nv));
-        taJobDetails.setDisable(true); // default disabled
+
+        taJobDetails.setDisable(!rbEmployed.isSelected());
     }
 
     @FXML
@@ -95,7 +101,7 @@ public class StudentProfileController {
         cbAcademicStatus.getSelectionModel().clearSelection();
         rbEmployed.setSelected(false);
         rbUnemployed.setSelected(false);
-        taJobDetails.clear();
+        tgJob.selectToggle(null);
         taJobDetails.setDisable(true);
 
         lvDatabases.getSelectionModel().clearSelection();
@@ -113,19 +119,57 @@ public class StudentProfileController {
         lbError.setText("");
     }
 
-    //instantiates StudentService/Validator and returns caught errors. if error free persist using DAO
     @FXML
     private void onSave(ActionEvent e) {
-        StudentService service = new StudentService();
+        lbError.setText("");
+
         Student inStudent = compileInput();
-        StudentService.Result r = service.create(inStudent);
+        DefineStudentProfileService.Result r = (editingId > 0)
+                ? service.update(editingId, inStudent)
+                : service.create(inStudent);
 
         if (!r.ok) {
-            setError(r.message); // shows red text
+            setError(r.message);
             return;
         }
-        lbError.setText("Student saved successfully!");
-        lbError.setTextFill(javafx.scene.paint.Color.GREEN);
+
+        lbError.setTextFill(Color.GREEN);
+        lbError.setText(editingId > 0 ? "Changes saved!" : "Student saved!");
+    }
+
+    public void loadForEdit(long id) {
+        this.editingId = id;
+
+        // pull full student
+        Student s = service.findById(id);
+        if (s == null) {
+            new Alert(Alert.AlertType.ERROR, "Student not found (id=" + id + ")").showAndWait();
+            return;
+        }
+
+        // Populate the form controls
+        tfFullName.setText(s.getName());
+        cbAcademicStatus.getSelectionModel().select(s.getAcademicStatus());
+
+        // select the correct radio and toggle job details
+        if (tgJob != null) tgJob.selectToggle(s.getEmploymentStatus() ? rbEmployed : rbUnemployed);
+        taJobDetails.setDisable(!s.getEmploymentStatus());
+        taJobDetails.setText(s.getEmploymentStatus() ? (s.getJobDetails() == null ? "" : s.getJobDetails()) : "");
+
+        cbRole.getSelectionModel().select(s.getProfessionalRole());
+        cbWhitelist.setSelected(s.getWhiteList());
+        cbBlacklist.setSelected(s.getBlackList());
+
+        setLangCheckboxesFrom(s.getLanguages());
+        setDbCheckboxesFrom(s.getStudentDbs());
+
+        if (titleLabel != null) titleLabel.setText("Edit: " + s.getName());
+        if (btnSave != null)    btnSave.setText("Save changes");
+
+        // (Optional) show existing comments if load them with findById
+        if (s.getComments() != null && !s.getComments().isEmpty()) {
+            lvComments.getItems().setAll(s.getComments());
+        }
     }
 
     // HELPERS
@@ -155,6 +199,37 @@ public class StudentProfileController {
         return in;
     }
 
+    private void setDbCheckboxesFrom(List<String> dbs) {
+        var want = (dbs == null) ? java.util.Set.<String>of()
+                : dbs.stream()
+                .filter(java.util.Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(String::toLowerCase)
+                .collect(java.util.stream.Collectors.toSet());
+
+        for (String name : lvDatabases.getItems()) {
+            BooleanProperty p = Dbstate.computeIfAbsent(name, k -> new SimpleBooleanProperty(false));
+            p.set(want.contains(name.toLowerCase()));
+        }
+    }
+
+    private void setLangCheckboxesFrom(List<String> langs) {
+        var want = (langs == null) ? java.util.Set.<String>of()
+                : langs.stream()
+                .filter(java.util.Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(String::toLowerCase)
+                .collect(java.util.stream.Collectors.toSet());
+
+        // ensure properties exist and tick them
+        for (String name : lvProgLangs.getItems()) {
+            BooleanProperty p = progLangState.computeIfAbsent(name, k -> new SimpleBooleanProperty(false));
+            p.set(want.contains(name.toLowerCase()));
+        }
+    }
+
     //Testing Method to see if Student is stored properly.
     private void printStudent(Student s){
        System.out.println( "Student{" +
@@ -170,6 +245,7 @@ public class StudentProfileController {
                 " comments=" + s.getComments() + "\n"+
                 '}');
     }
+
     private void setError(String error){
         lbError.setText(error);
         lbError.setTextFill(Color.RED);

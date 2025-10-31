@@ -1,7 +1,7 @@
 package cs151.application.homepage;
 
 import cs151.application.AppState;
-import cs151.application.studentprofile.StudentDirectoryService;
+import cs151.application.studentprofile.ViewStudentProfileService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +23,8 @@ public class HomePageController {
     @FXML
     private void onGoToLanguages(ActionEvent event) {
         switchScene(event, new String[]{
-                "/cs151/application/define-pl.fxml",
-                "/cs151/application/programminglanguages/define-pl.fxml"
+                "/cs151/application/define-programming-language.fxml",
+                "/cs151/application/programminglanguages/define-programming-language.fxml"
         }, "Cannot open Programming Languages");
     }
 
@@ -47,7 +47,7 @@ public class HomePageController {
     private void onSearch(ActionEvent event) {
         AppState.directoryQuery = (searchField != null && searchField.getText() != null)
                 ? searchField.getText().trim() : "";
-        AppState.directoryMode = StudentDirectoryService.FilterMode.ALL; // no toggles on homepage
+        AppState.directoryMode = ViewStudentProfileService.FilterMode.ALL; // no toggles on homepage
         switchScene(event, new String[]{ "/cs151/application/view-student-profile.fxml" },
                 "Cannot open Student Directory");
     }

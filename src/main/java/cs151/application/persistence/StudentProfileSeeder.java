@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-public final class DevSeeder {
-    private DevSeeder() {}
+public final class StudentProfileSeeder {
+    private StudentProfileSeeder() {}
 
     public static void seedFiveIfEmpty() {
         try (Connection c = DatabaseConnector.getConnection();

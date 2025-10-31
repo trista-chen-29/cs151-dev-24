@@ -5,9 +5,8 @@ import cs151.application.persistence.StudentProfileDAO;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
-public class StudentDirectoryService {
+public class ViewStudentProfileService {
     private final StudentProfileDAO students = new StudentProfileDAO();
     private final CommentDAO comments = new CommentDAO();
 

@@ -1,7 +1,7 @@
 package cs151.application;
 
 import cs151.application.persistence.DbInit;
-import cs151.application.persistence.DevSeeder;
+import cs151.application.persistence.StudentProfileSeeder;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,7 +15,7 @@ public class Main extends Application {
             DbInit.logDbLocation();
             DbInit.ensureSchema();
             DbInit.seedIfEmpty();
-            DevSeeder.seedFiveIfEmpty();  // Add default 5 students only if DB is empty
+            StudentProfileSeeder.seedFiveIfEmpty();  // Add default 5 students only if DB is empty
         } catch (Throwable t) {
             // Don't crash the UI if DB init fails during early dev
             t.printStackTrace();

@@ -51,7 +51,7 @@
                     <Label text="Create a new student profile or update an existing one."
                            styleClass="card-sub"/>
                     <HBox alignment="CENTER_LEFT">
-                        <Button text="Add / Edit Student"
+                        <Button text="Add Student Profile"
                                 onAction="#onGoToStudentProfile"
                                 styleClass="primary"/>
                     </HBox>
@@ -63,7 +63,7 @@
                     <Label text="Search, filter, and review saved profiles."
                            styleClass="card-sub"/>
                     <HBox alignment="CENTER_LEFT">
-                        <Button text="Open Directory"
+                        <Button text="View Student Profiles"
                                 onAction="#onOpenDirectory"
                                 styleClass="primary"/>
                     </HBox>

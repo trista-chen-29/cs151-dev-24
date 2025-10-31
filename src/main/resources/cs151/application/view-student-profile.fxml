@@ -60,6 +60,7 @@
                     <Label fx:id="lbName" styleClass="detail-name"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button text="Delete student" onAction="#onDelete"/>
+                    <Button text="Edit student"   onAction="#onEditStudent" styleClass="primary"/>
                 </HBox>
 
                 <HBox spacing="8">
