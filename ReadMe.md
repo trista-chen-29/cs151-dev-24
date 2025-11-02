@@ -1,6 +1,165 @@
 
 ## Name of application: Prof-Support
 
+**Version: 0.7**
+
+---
+
+### Overview
+
+Prof-Support is a JavaFX application that helps faculty manage students’ academic profiles, programming-language knowledge, and professional data in a simple and persistent way using SQLite.
+
+**This milestone (v0.7)** focuses on the **Edit Students Profiles** implementation and required submission structure. It builds directly on v0.6, maintaining all previous features while introducing full profile editing and saving, refined search, and packaging cleanup.
+
+---
+
+### New in v0.7
+
+* Added **Edit Students Profiles** functionality
+  – From the Search page, users can open a profile, modify fields, and permanently save changes to SQLite.
+* Confirmed **5 student profiles** and **3 programming languages** pre-populated via `StudentSeeder.java`.
+* Added **Back navigation buttons** on all pages for consistent user flow.
+* Improved **Search Students Profiles** with case-insensitive match and smoother UI interaction.
+* Verified data persistence and SQLite foreign-key integrity.
+* Cleaned the project folder (`dev-24-0.7`) according to the rubric — removed `.idea`, `.mvn`, `target`, and other non-source files.
+* Updated **README** to document new version and “who did what.”
+
+---
+
+### Who did what
+
+| Member             | Contribution                                                                                                             |
+| :----------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| **Chenying Wang**  | Populated 3 Programming Languages and 5 Student Profiles; updated README (v0.7); verified UI and navigation consistency. |
+| **Trista Chen**    | Implemented **Edit Students Profiles** functionality and page logic; connected UI fields to DB update operations.        |
+| **Vraj Mistry**    | Assisted in implementing **Edit Students Profiles** backend (DAO update methods and validation).                         |
+| **Jaime Gonzalez** | Cleaned and packaged project (`dev-00-0.7`); verified folder structure and zipping; confirmed SQLite dependency in POM.  |
+
+---
+
+### Tech Stack
+
+* Java 23 (Zulu 23)
+* JavaFX 23 with Maven (`javafx-maven-plugin 0.0.8`)
+* SQLite JDBC (3.46.1.0)
+* SceneBuilder / FXML
+* CSS for UI styling
+
+---
+
+### Build Instructions
+
+```bash
+# Run from project root
+mvn clean javafx:run
+```
+
+---
+
+### Using the App (v0.7)
+
+#### Home Page
+
+* Launch screen that provides navigation to:
+
+  * **Search Students Profiles**
+  * **Define Programming Languages**
+  * **Add/Edit Student Profile**
+
+#### Search Students Profiles
+
+* Displays all stored profiles in a TableView.
+* Search by name, email, or major (case-insensitive).
+* Selecting a student opens the **Edit Profile** page for modifications.
+
+#### Edit Student Profile
+
+* Allows editing of any student information (except ID).
+* Saves changes permanently to SQLite using `StudentProfileDAO`.
+* Includes a **Back** button to return to the search list.
+
+#### Define Programming Languages
+
+* Manage 3 programming languages pre-populated by the seeder.
+* Add or modify entries using the JavaFX TableView interface.
+
+---
+
+### Known Limitations (v0.7)
+
+* Comment feature not implemented (per rubric note).
+* Advanced multi-criteria search still under development.
+* Profile pictures remain static (default image only).
+
+---
+
+### Where Data is Stored
+
+SQLite DB file:
+`./dev-24-0.7/profsupport.db`
+
+Seeder class:
+`StudentSeeder.java` (replaces old `DevSeeder.java`)
+
+---
+
+### Project Structure
+
+```
+src/main/java/cs151/application
+ ├─ AppState.java
+ ├─ Main.java
+ ├─ homepage/
+ │   ├─ HomePageController.java
+ │   ├─ HomePageService.java
+ ├─ persistence/
+ │   ├─ DatabaseConnector.java
+ │   ├─ DbInit.java
+ │   ├─ StudentSeeder.java
+ │   ├─ ProgrammingLanguagesDAO.java
+ │   ├─ StudentProfileDAO.java
+ ├─ programminglanguages/
+ │   ├─ Language.java
+ │   ├─ PLController.java
+ └─ studentprofile/
+     ├─ Student.java
+     ├─ StudentProfileController.java
+     ├─ ViewStudentProfileController.java
+     ├─ StudentDirectoryService.java
+     ├─ StudentService.java
+     ├─ Comment.java
+     ├─ StudentRow.java
+
+src/main/resources/cs151/application
+ ├─ homepage.fxml
+ ├─ define-pl.fxml
+ ├─ define-student-profile.fxml
+ ├─ view-student-profile.fxml
+ ├─ homepage.css
+ ├─ define-pl.css
+ ├─ define-student-profile.css
+ ├─ view-student-profile.css
+ └─ theme.css
+```
+
+---
+
+### Packaging (Rubric Compliance)
+
+* Project folder renamed to `dev-00-0.7` before submission.
+* All non-source files removed.
+* README updated per rubric item 6.
+* Verified inclusion of SQLite JDBC dependency in `pom.xml`.
+* Zipped as `dev-00-0.7.zip`, ensuring folder structure is preserved after extraction.
+
+---
+
+
+
+
+
+## Name of application: Prof-Support
+
 **Version: 0.6**
 
 ---
