@@ -48,6 +48,7 @@ public class DefineStudentProfileController {
 
     private long editingId = -1;
     private final DefineStudentProfileService service = new DefineStudentProfileService();
+    private final StudentProfileDAO profileDAO = new StudentProfileDAO();
 
     @FXML
     private void initialize() {
@@ -123,13 +124,35 @@ public class DefineStudentProfileController {
     private void onSave(ActionEvent e) {
         lbError.setText("");
 
+        // Compile input from form into Student object
         Student inStudent = compileInput();
-        DefineStudentProfileService.Result r = (editingId > 0)
-                ? service.update(editingId, inStudent)
-                : service.create(inStudent);
 
-        if (!r.ok) {
-            setError(r.message);
+        boolean ok;
+
+        if (editingId > 0) {
+            // UPDATE existing student using full DAO method
+            ok = profileDAO.update(
+                    editingId,
+                    inStudent.getName(),
+                    inStudent.getAcademicStatus(),
+                    inStudent.getEmploymentStatus(),
+                    inStudent.getJobDetails(),
+                    inStudent.getProfessionalRole(),
+                    inStudent.getWhiteList(),
+                    inStudent.getBlackList(),
+                    inStudent.getLanguages(),
+                    inStudent.getStudentDbs(),
+                    new ArrayList<>(lvComments.getItems()) // pass comments from ListView
+            );
+        } else {
+            // CREATE new student using service
+            DefineStudentProfileService.Result r = service.create(inStudent);
+            ok = r.ok;
+            if (ok) editingId = r.id; // store newly created id
+        }
+
+        if (!ok) {
+            setError("Failed to save changes. Please check your input or try again.");
             return;
         }
 
@@ -137,11 +160,12 @@ public class DefineStudentProfileController {
         lbError.setText(editingId > 0 ? "Changes saved!" : "Student saved!");
     }
 
+
     public void loadForEdit(long id) {
         this.editingId = id;
 
         // pull full student
-        Student s = service.findById(id);
+        Student s = profileDAO.findById(id);
         if (s == null) {
             new Alert(Alert.AlertType.ERROR, "Student not found (id=" + id + ")").showAndWait();
             return;

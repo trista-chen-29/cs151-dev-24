@@ -66,9 +66,15 @@ public class DefineStudentProfileService {
         boolean ok = students.update(
                 id,
                 s.getName(),
+                s.getAcademicStatus(),
+                s.getEmploymentStatus(),
+                s.getJobDetails(),
+                s.getProfessionalRole(),
+                s.getWhiteList(),
                 s.getBlackList(),
                 s.getLanguages(),
-                s.getStudentDbs()
+                s.getStudentDbs(),
+                s.getComments()
         );
         return ok ? Result.ok(id) : Result.fail("Update failed.");
     }

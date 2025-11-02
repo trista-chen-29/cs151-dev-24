@@ -1,5 +1,6 @@
 package cs151.application.persistence;
 
+import cs151.application.studentprofile.Student;
 import cs151.application.studentprofile.StudentRow;
 
 import java.sql.*;
@@ -9,15 +10,15 @@ public class StudentProfileDAO {
     // ---------- CREATE ----------
     /** Insert a student + skills + optional comments in one transaction. Returns id or -1. */
     public long insert(String name,
-                              String academicStatus,
-                              boolean employed,
-                              String jobDetails,
-                              String preferredRole,
-                              boolean whitelist,
-                              boolean isBlacklisted,
-                              List<String> languages,
-                              List<String> databases,
-                              List<String> comments) {
+                       String academicStatus,
+                       boolean employed,
+                       String jobDetails,
+                       String preferredRole,
+                       boolean whitelist,
+                       boolean isBlacklisted,
+                       List<String> languages,
+                       List<String> databases,
+                       List<String> comments) {
         if (name == null || name.isBlank()) return -1; // minimal guard
 
         String insertStudent =
@@ -97,34 +98,52 @@ public class StudentProfileDAO {
     /** Replace student’s basic fields and reset their lists (simple approach for v0.5). */
     public boolean update(long id,
                           String name,
+                          String academicStatus,
+                          boolean employed,
+                          String jobDetails,
+                          String preferredRole,
+                          boolean whitelist,
                           boolean isBlacklisted,
                           List<String> languages,
-                          List<String> databases) {
+                          List<String> databases,
+                          List<String> comments) {
         if (id <= 0 || name == null || name.isBlank()) return false;
 
-        final String upd  = "UPDATE student SET name=?, isBlacklisted=? WHERE id=?";
-        final String delL = "DELETE FROM programming_languages WHERE student_id=?";
-        final String delD = "DELETE FROM databases WHERE student_id=?";
-        final String insL = "INSERT OR IGNORE INTO programming_languages(student_id, language) VALUES (?,?)";
-        final String insD = "INSERT OR IGNORE INTO databases(student_id, database_name) VALUES (?,?)";
+        final String updStudent = """
+        UPDATE student 
+        SET name=?, academic_status=?, employed=?, job_details=?, preferred_role=?, whitelist=?, isBlacklisted=?
+        WHERE id=?
+    """;
+
+        final String delLangs = "DELETE FROM programming_languages WHERE student_id=?";
+        final String delDbs   = "DELETE FROM databases WHERE student_id=?";
+        final String delCmts  = "DELETE FROM comments WHERE student_id=?"; // optional, if you want to reset comments
+
+        final String insLang  = "INSERT OR IGNORE INTO programming_languages(student_id, language) VALUES (?,?)";
+        final String insDb    = "INSERT OR IGNORE INTO databases(student_id, database_name) VALUES (?,?)";
+        final String insCmt   = "INSERT INTO comments(student_id, body, created_at) VALUES (?, ?, datetime('now'))";
 
         try (Connection c = DatabaseConnector.getConnection()) {
             c.setAutoCommit(false);
 
-            // update basic fields
-            try (PreparedStatement ps = c.prepareStatement(upd)) {
+            // Update student basic info
+            try (PreparedStatement ps = c.prepareStatement(updStudent)) {
                 ps.setString(1, name.trim());
-                ps.setInt(2, isBlacklisted ? 1 : 0);
-                ps.setLong(3, id);
+                ps.setString(2, academicStatus);
+                ps.setInt(3, employed ? 1 : 0);
+                ps.setString(4, jobDetails == null ? "" : jobDetails.trim());
+                ps.setString(5, preferredRole);
+                ps.setInt(6, whitelist ? 1 : 0);
+                ps.setInt(7, isBlacklisted ? 1 : 0);
+                ps.setLong(8, id);
+
                 if (ps.executeUpdate() == 0) { c.rollback(); return false; }
             }
 
-            // reset skills
-            try (PreparedStatement ps = c.prepareStatement(delL)) { ps.setLong(1, id); ps.executeUpdate(); }
-            try (PreparedStatement ps = c.prepareStatement(delD)) { ps.setLong(1, id); ps.executeUpdate(); }
-
+            // Reset and update languages
+            try (PreparedStatement ps = c.prepareStatement(delLangs)) { ps.setLong(1, id); ps.executeUpdate(); }
             if (languages != null) {
-                try (PreparedStatement ps = c.prepareStatement(insL)) {
+                try (PreparedStatement ps = c.prepareStatement(insLang)) {
                     for (String s : languages) {
                         if (s == null || s.isBlank()) continue;
                         ps.setLong(1, id);
@@ -135,12 +154,28 @@ public class StudentProfileDAO {
                 }
             }
 
+            // Reset and update databases
+            try (PreparedStatement ps = c.prepareStatement(delDbs)) { ps.setLong(1, id); ps.executeUpdate(); }
             if (databases != null) {
-                try (PreparedStatement ps = c.prepareStatement(insD)) {
+                try (PreparedStatement ps = c.prepareStatement(insDb)) {
                     for (String s : databases) {
                         if (s == null || s.isBlank()) continue;
                         ps.setLong(1, id);
                         ps.setString(2, s.trim());
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
+                }
+            }
+
+            // Optionally reset/add comments
+            if (comments != null && !comments.isEmpty()) {
+                // If you want to keep old comments and only add new ones, skip deletion
+                try (PreparedStatement ps = c.prepareStatement(insCmt)) {
+                    for (String cmt : comments) {
+                        if (cmt == null || cmt.isBlank()) continue;
+                        ps.setLong(1, id);
+                        ps.setString(2, cmt.trim());
                         ps.addBatch();
                     }
                     ps.executeBatch();
@@ -154,6 +189,7 @@ public class StudentProfileDAO {
             return false;
         }
     }
+
 
     // ---------- DELETE ----------
     public boolean delete(long id) {
@@ -214,7 +250,6 @@ public class StudentProfileDAO {
             try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
         } catch (SQLException ex) {
             ex.printStackTrace();
-
             return false;
         }
     }
@@ -230,6 +265,83 @@ public class StudentProfileDAO {
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
+        }
+    }
+
+    // ---------- FIND BY EDIT ----------
+    public Student findById(long id) {
+        if (id <= 0) return null;
+
+        String sqlStudent = """
+            SELECT id, name, academic_status, employed, job_details,
+                   preferred_role, whitelist, isBlacklisted
+            FROM student
+            WHERE id = ?
+        """;
+
+        String sqlLangs = "SELECT language FROM programming_languages WHERE student_id = ?";
+        String sqlDbs   = "SELECT database_name FROM databases WHERE student_id = ?";
+        String sqlCmts  = "SELECT body FROM comments WHERE student_id = ? ORDER BY created_at ASC";
+
+        try (Connection c = DatabaseConnector.getConnection()) {
+
+            Student s = null;
+            try (PreparedStatement ps = c.prepareStatement(sqlStudent)) {
+                ps.setLong(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String name = rs.getString("name");
+                        String academicStatus = rs.getString("academic_status");
+                        boolean employed = rs.getInt("employed") == 1;
+                        String jobDetails = rs.getString("job_details");
+                        String role = rs.getString("preferred_role");
+                        boolean whitelist = rs.getInt("whitelist") == 1;
+                        boolean isBlacklisted = rs.getInt("isBlacklisted") == 1;
+
+                        s = new Student(
+                                name,
+                                role,
+                                academicStatus,
+                                jobDetails,
+                                isBlacklisted,
+                                whitelist,
+                                employed,
+                                new ArrayList<>(),
+                                new ArrayList<>(),
+                                new ArrayList<>()
+                        );
+                    }
+                }
+            }
+
+            if (s == null) return null;
+
+            try (PreparedStatement ps = c.prepareStatement(sqlLangs)) {
+                ps.setLong(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) s.getLanguages().add(rs.getString("language"));
+                }
+            }
+
+            try (PreparedStatement ps = c.prepareStatement(sqlDbs)) {
+                ps.setLong(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) s.getStudentDbs().add(rs.getString("database_name"));
+                }
+            }
+
+            try (PreparedStatement ps = c.prepareStatement(sqlCmts)) {
+                ps.setLong(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) s.getComments().add(rs.getString("body"));
+                }
+            }
+
+            return s;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 }
