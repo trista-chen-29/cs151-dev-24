@@ -27,7 +27,7 @@
                 <ToggleButton fx:id="tbBlacklist"  text="Blacklisted only" toggleGroup="$tgShow"/>
             </HBox>
 
-            <Button text="Refresh" onAction="#onRefresh"/>
+            <Button text="Search" onAction="#onRefresh"/>
         </HBox>
     </top>
 
