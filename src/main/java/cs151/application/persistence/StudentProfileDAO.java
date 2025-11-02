@@ -117,7 +117,7 @@ public class StudentProfileDAO {
 
         final String delLangs = "DELETE FROM programming_languages WHERE student_id=?";
         final String delDbs   = "DELETE FROM databases WHERE student_id=?";
-        final String delCmts  = "DELETE FROM comments WHERE student_id=?"; // optional, if you want to reset comments
+        final String delComments = "DELETE FROM comments WHERE student_id=?";
 
         final String insLang  = "INSERT OR IGNORE INTO programming_languages(student_id, language) VALUES (?,?)";
         final String insDb    = "INSERT OR IGNORE INTO databases(student_id, database_name) VALUES (?,?)";
@@ -169,18 +169,23 @@ public class StudentProfileDAO {
             }
 
             // Optionally reset/add comments
-            if (comments != null && !comments.isEmpty()) {
-                // If you want to keep old comments and only add new ones, skip deletion
+            try (PreparedStatement psDel = c.prepareStatement(delComments)) {
+                psDel.setLong(1, id);
+                psDel.executeUpdate();
+            }
+
+            if (comments != null) {
                 try (PreparedStatement ps = c.prepareStatement(insCmt)) {
-                    for (String cmt : comments) {
-                        if (cmt == null || cmt.isBlank()) continue;
+                    for (String body : comments) {
+                        if (body == null || body.isBlank()) continue;
                         ps.setLong(1, id);
-                        ps.setString(2, cmt.trim());
+                        ps.setString(2, body.trim());
                         ps.addBatch();
                     }
                     ps.executeBatch();
                 }
             }
+
 
             c.commit();
             return true;
