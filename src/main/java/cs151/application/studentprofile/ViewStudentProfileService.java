@@ -33,11 +33,6 @@ public class ViewStudentProfileService {
         return comments.listByStudent(studentId);
     }
 
-    public boolean addComment(long studentId, String body) {
-        if (body == null || body.trim().isEmpty()) return false;
-        return comments.add(studentId, body.trim()) > 0;
-    }
-
     public boolean deleteStudent(long id) {
         return students.delete(id);
     }

@@ -6,7 +6,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cs151.application.studentprofile.ViewStudentProfileController"
-            stylesheets="@view-student-profile.css">
+            stylesheets="@/cs151/application/view-student-profile.css">
 
     <!-- TOP BAR (Back button, search, segmented filter, refresh) -->
     <top>
@@ -108,11 +108,7 @@
                     <VBox spacing="8" VBox.vgrow="ALWAYS">
                         <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
                         <ListView fx:id="lvComments" VBox.vgrow="ALWAYS"/>
-                        <HBox spacing="8" alignment="CENTER_RIGHT">
-                            <TextField fx:id="tfNewComment" promptText="Add a comment..." HBox.hgrow="ALWAYS"/>
-                            <Button text="Post" onAction="#onPostComment"/>
-                        </HBox>
-                        <Label text="Tip: Press Cmd/Ctrl + Enter to post" styleClass="tip"/>
+                        <Button text="Edit comments…" onAction="#onOpenComments"/>
                     </VBox>
                 </TitledPane>
             </VBox>

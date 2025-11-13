@@ -32,10 +32,10 @@ public class ViewStudentProfileController {
     @FXML private Label badgeBlacklisted, badgeWhitelist;
     @FXML private FlowPane fpLangs, fpDbs;
     @FXML private ListView<String> lvComments;
-    @FXML private TextField tfNewComment;
 
     private Long selectedStudentId = null;
     private final ViewStudentProfileService svc = new ViewStudentProfileService();
+    private final CommentsService commentsSvc = new CommentsService();
 
     @FXML
     private void initialize() {
@@ -71,12 +71,6 @@ public class ViewStudentProfileController {
             tfSearch.setText(AppState.directoryQuery);
         }
 
-        tfNewComment.setOnKeyPressed(e -> {
-            if (e.getCode() == javafx.scene.input.KeyCode.ENTER && (e.isControlDown() || e.isMetaDown())) {
-                onPostComment();
-            }
-        });
-
         // trigger first load
         refreshTable();
         // clear for the next navigation
@@ -105,9 +99,13 @@ public class ViewStudentProfileController {
 
         tvStudents.setItems(FXCollections.observableArrayList(filtered));
 
-        if (keepId != null) {
+        Long targetId = (selectedStudentId != null)
+                ? selectedStudentId
+                : AppState.consumePreselectStudent(); // <- from the comments page
+
+        if (targetId != null) {
             tvStudents.getItems().stream()
-                    .filter(r -> java.util.Objects.equals(r.getId(), keepId))
+                    .filter(r -> java.util.Objects.equals(r.getId(), targetId))
                     .findFirst()
                     .ifPresent(r -> tvStudents.getSelectionModel().select(r));
         } else if (!tvStudents.getItems().isEmpty()) {
@@ -136,11 +134,12 @@ public class ViewStudentProfileController {
         fpDbs.getChildren().setAll(Tags.make(row.getDatabases()));
 
         // ALL comments (newest first)
-        lvComments.setItems(FXCollections.observableArrayList(
-                svc.listComments(row.getId()).stream()
-                        .map(c -> (c.getCreatedAt() == null ? "" : c.getCreatedAt() + " — ") + c.getBody())
-                        .toList()
-        ));
+        var lines = commentsSvc.listComments(row.getId()).stream()
+                .map((cs151.application.studentprofile.Comment c) ->
+                        (c.getCreatedAt() == null ? "" : c.getCreatedAt() + " — ") + c.getBody())
+                .toList();
+
+        lvComments.setItems(FXCollections.observableList(new java.util.ArrayList<>(lines)));
     }
 
     private void clearDetails() {
@@ -171,22 +170,8 @@ public class ViewStudentProfileController {
     }
 
     @FXML
-    private void onRefresh() { refreshTable(); }
-
-    @FXML
-    private void onPostComment() {
-        StudentRow row = tvStudents.getSelectionModel().getSelectedItem();
-        String body = tfNewComment.getText() == null ? "" : tfNewComment.getText().trim();
-        if (row == null || body.isEmpty()) return;
-        if (svc.addComment(row.getId(), body)) {
-            tfNewComment.clear();
-            refreshTable();
-            tvStudents.getItems().stream()
-                    .filter(r -> r.getId() == row.getId())
-                    .findFirst().ifPresent(this::showDetails);
-        } else {
-            new Alert(Alert.AlertType.ERROR, "Failed to post comment.").showAndWait();
-        }
+    private void onRefresh() {
+        refreshTable();
     }
 
     @FXML
@@ -211,6 +196,27 @@ public class ViewStudentProfileController {
             Alert a = new Alert(Alert.AlertType.ERROR, "Cannot open Student Profile:\n" + ex.getMessage());
             a.setHeaderText("Load failed");
             a.showAndWait();
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onOpenComments(javafx.event.ActionEvent e) {
+        var row = tvStudents.getSelectionModel().getSelectedItem();
+        if (row == null) {
+            new Alert(Alert.AlertType.INFORMATION, "Select a student first.").showAndWait();
+            return;
+        }
+        try {
+            FXMLLoader fx = new FXMLLoader(getClass().getResource("/cs151/application/comments.fxml"));
+            Parent root = fx.load(); // <-- Parent, not var/Object
+
+            CommentsController ctrl = fx.getController();
+            ctrl.loadStudent(row.getId(), row.getName());
+
+            ((Node) e.getSource()).getScene().setRoot(root);
+        } catch (Exception ex) {
+            new Alert(Alert.AlertType.ERROR, "Cannot open Comments page:\n" + ex.getMessage()).showAndWait();
             ex.printStackTrace();
         }
     }
