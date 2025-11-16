@@ -26,7 +26,7 @@ This milestone (v0.8) adds the Add Comments feature, enabling faculty to view an
 
 ## Who did what
 
-1. Chenying Wang – Updated README for v0.8; verified UI against rubric requirements; ensured correct comment formatting and project consistency.
+1. Chenying Wang – Updated README for v0.8; 
 2. Trista Chen – Implemented Add Comments UI (FXML + Controller); designed interface for comment entry and comment history display.
 3. Jaime Gonzalez – Implemented backend Comment Service & Comment DAO; added permanent SQLite persistence for comments.
 4. Vraj Mistry – Performed full-system testing; cleaned project folder; verified package structure; prepared final submission (`dev-24-0.8`).
