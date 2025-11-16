@@ -135,8 +135,11 @@ public class ViewStudentProfileController {
 
         // ALL comments (newest first)
         var lines = commentsSvc.listComments(row.getId()).stream()
-                .map((cs151.application.studentprofile.Comment c) ->
-                        (c.getCreatedAt() == null ? "" : c.getCreatedAt() + " — ") + c.getBody())
+                .map((cs151.application.studentprofile.Comment c) -> {
+                    String ts = c.getCreatedAt();
+                    String dateOnly = (ts == null || ts.isBlank()) ? "" : ts.split(" ")[0];
+                    return dateOnly + " — " + c.getBody();
+                })
                 .toList();
 
         lvComments.setItems(FXCollections.observableList(new java.util.ArrayList<>(lines)));

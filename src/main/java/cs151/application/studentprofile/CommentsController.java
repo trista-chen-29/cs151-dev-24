@@ -25,8 +25,12 @@ public class CommentsController {
     @FXML
     private void initialize() {
         // table bindings
-        colWhen.setCellValueFactory(c ->
-                new SimpleStringProperty(c.getValue().createdAt == null ? "" : c.getValue().createdAt));
+        colWhen.setCellValueFactory(c -> {
+            String ts = c.getValue().createdAt;
+            String dateOnly = (ts == null || ts.isBlank()) ? "" : ts.split(" ")[0];
+            return new SimpleStringProperty(dateOnly);
+        });
+
         colBody.setCellValueFactory(c ->
                 new SimpleStringProperty(Objects.toString(c.getValue().body, "")));
 
