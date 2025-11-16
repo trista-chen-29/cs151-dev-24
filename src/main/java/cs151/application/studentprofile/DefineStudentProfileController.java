@@ -7,6 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.image.ImageView;
@@ -89,10 +92,24 @@ public class DefineStudentProfileController {
 
     @FXML
     private void onAddComment(ActionEvent e) {
-        String text = taNewComment.getText();
-        if (text != null && !text.trim().isEmpty()) {
-            lvComments.getItems().add(text.trim());
-            taNewComment.clear();
+        if (editingId <= 0) {
+            new Alert(Alert.AlertType.INFORMATION, "Save the student profile before adding comments.").showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader fx = new FXMLLoader(getClass().getResource("/cs151/application/comments.fxml"));
+            Parent root = fx.load();
+
+            // Pass student ID + name to comments page
+            CommentsController ctrl = fx.getController();
+            ctrl.loadStudent(editingId, tfFullName.getText());
+
+            ((Node) e.getSource()).getScene().setRoot(root);
+
+        } catch (Exception ex) {
+            new Alert(Alert.AlertType.ERROR, "Cannot open Comments page:\n" + ex.getMessage()).showAndWait();
+            ex.printStackTrace();
         }
     }
 
@@ -192,7 +209,19 @@ public class DefineStudentProfileController {
 
         // (Optional) show existing comments if load them with findById
         if (s.getComments() != null && !s.getComments().isEmpty()) {
-            lvComments.getItems().setAll(s.getComments());
+            var formatted = s.getComments().stream()
+                    .map(c -> {
+                        // If c already starts with a date, leave it
+                        if (c.matches("\\d{4}-\\d{2}-\\d{2} — .*")) {
+                            return c;
+                        }
+                        // Otherwise prepend today's date
+                        String dateOnly = java.time.LocalDate.now().toString();
+                        return dateOnly + " — " + c;
+                    })
+                    .toList();
+
+            lvComments.getItems().setAll(formatted);
         }
     }
 

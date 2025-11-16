@@ -100,13 +100,10 @@
                         <ColumnConstraints minWidth="140"/>
                     </columnConstraints>
 
-                    <Label text="New Comment" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="taNewComment" GridPane.rowIndex="0" GridPane.columnIndex="1" prefRowCount="3"/>
+                    <Label text="Comments"/>
                     <Button fx:id="btnAddComment" text="Add Comment" onAction="#onAddComment"
                             GridPane.rowIndex="0" GridPane.columnIndex="2" minWidth="120"/>
                 </GridPane>
-
-                <Label text="Comments"/>
                 <ListView fx:id="lvComments" prefHeight="160"/>
 
                 <!-- Footer actions -->
