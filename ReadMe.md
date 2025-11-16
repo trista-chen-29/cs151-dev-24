@@ -1,3 +1,131 @@
+Here is the **clean, paste-ready README version** — **no Chinese, no explanation text**, only FINAL content.
+You can copy and paste this **directly into your README.md**.
+
+---
+
+# Name of application: Students' Knowledgebase for Faculties
+
+---
+
+# Version: 0.8
+
+## Overview
+
+Prof-Support helps faculty manage students’ academic profiles, programming-language knowledge, and professional information.
+This milestone (v0.8) adds the Add Comments feature, enabling faculty to view and store comments for each student with an auto-generated date stamp (date only).
+
+## New in v0.8
+
+* Added Add Comments functionality (new comment input + display pane).
+* Implemented permanent comment storage using SQLite via new Comment DAO and Service layers.
+* Updated View Student Profiles page to include a Comments section showing all stored comments.
+* Added comments panel integration in the student profile detail view.
+* Ensured all comments follow the required format: `YYYY-MM-DD — comment text`.
+* Verified all 3 programming languages and 5 student profiles remain intact.
+* Cleaned and packaged the project folder (`dev-24-0.8`) according to rubric.
+
+## Who did what
+
+1. Chenying Wang – Updated README for v0.8; verified UI against rubric requirements; ensured correct comment formatting and project consistency.
+2. Trista Chen – Implemented Add Comments UI (FXML + Controller); designed interface for comment entry and comment history display.
+3. Jaime Gonzalez – Implemented backend Comment Service & Comment DAO; added permanent SQLite persistence for comments.
+4. Vraj Mistry – Performed full-system testing; cleaned project folder; verified package structure; prepared final submission (`dev-24-0.8`).
+
+---
+
+# Version History (v0.7 → v0.1)
+
+## Version 0.7
+
+* Added Edit Student Profile functionality.
+* Improved Search Students Profiles with case-insensitive filters.
+* Added whitelist/blacklist filters.
+* Added Back navigation buttons.
+* Verified SQLite persistence for profile updates.
+
+## Version 0.6
+
+* Added Search Students Profiles page.
+* Added Delete Student Profile functionality.
+* Implemented TableView to display students.
+* Refined Home Page UI.
+* Verified 3 programming languages and 5 student profiles.
+
+## Version 0.5
+
+* Added Define Student Profile page.
+* Added View Student Profiles page (TableView).
+* Implemented profile persistence using SQLite.
+* Updated Home Page navigation.
+
+## Version 0.4
+
+* Completed Functional Specification Draft.
+* Created 3 mockups (Define PL, Home, Define Student Profile).
+* Completed Technical Specification Draft.
+* Added data model, UML class diagram, and sequence diagram.
+
+## Version 0.3
+
+* Implemented Define Programming Languages page.
+* Added permanent storage for programming languages.
+* Displayed languages in an A–Z sorted TableView.
+* Cleaned project folder and added README.
+
+## Version 0.2
+
+* Imported starter project template (dev-00-0.2).
+* Added navigation to Define Programming Languages page.
+* Allowed entering programming language names.
+* Ensured project compiles with Zulu 23.
+
+## Version 0.1
+
+* Wrote first Functional Specification Draft.
+* Created required mockups (Define PL, Home, Define Student Profile).
+* Wrote Technical Specification Draft (data model + UML diagrams).
+* Defined initial system architecture.
+
+---
+
+# Technical-Spec
+
+1. Application Architecture: JavaFX + SQLite; Maven build; Zulu JDK 23.
+2. Data Persistence: SQLite database for languages, student profiles, and comments.
+3. Navigation: All pages include a Back or Home button.
+4. Main Class: `cs151.application.Main`.
+5. Tools: JavaFX, FXML, DAO/Service structure.
+
+---
+
+# Functional-Spec
+
+1. Version 0.8:
+
+   * View and add comments with date-only timestamps.
+   * Permanent comment storage.
+
+2. Version 0.6:
+
+   * Search and filter profiles.
+   * Delete student profiles.
+
+3. Earlier versions:
+
+   * Define programming languages.
+   * Define and update student profiles.
+   * Store academic status, job status, roles, and skills.
+
+---
+
+# Any other instruction that users need to know
+
+* Ensure the project folder contains only source code before zipping (no `.idea`, `.git`, `.mvn`, `target`, etc.).
+* After submission, re-download and verify that the project runs as expected.
+* All comments must use date-only format (`YYYY-MM-DD`).
+* SQLite database must be included or generated automatically on first run.
+
+
 
 ## Name of application: Prof-Support
 
