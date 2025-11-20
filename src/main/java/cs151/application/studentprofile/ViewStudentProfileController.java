@@ -1,18 +1,18 @@
 package cs151.application.studentprofile;
 
+import cs151.application.AppState;
 import cs151.application.homepage.HomePageController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import java.io.IOException;
 
-import cs151.application.AppState;
+import java.io.IOException;
+import java.util.Locale;
 
 public class ViewStudentProfileController {
 
@@ -31,7 +31,9 @@ public class ViewStudentProfileController {
     @FXML private Label lbName, lbStatus, lbEmployment, lbJob, lbRole;
     @FXML private Label badgeBlacklisted, badgeWhitelist;
     @FXML private FlowPane fpLangs, fpDbs;
-    @FXML private ListView<String> lvComments;
+
+    // ↓↓↓ 改成 Label，讓每筆 comment 可以換行
+    @FXML private ListView<Label> lvComments;
 
     private Long selectedStudentId = null;
     private final ViewStudentProfileService svc = new ViewStudentProfileService();
@@ -43,7 +45,11 @@ public class ViewStudentProfileController {
         colName.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getName())));
         colStatus.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getAcademicStatus())));
         colEmployed.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isEmployed() ? "✓" : "—"));
-        colJob.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isEmployed() ? nullToEmpty(c.getValue().getJobDetails()) : "—"));
+        colJob.setCellValueFactory(c -> new SimpleStringProperty(
+                c.getValue().isEmployed()
+                        ? nullToEmpty(c.getValue().getJobDetails())
+                        : "—"
+        ));
         colRole.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getPreferredRole())));
         colLanguages.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getLanguages())));
         colDatabases.setCellValueFactory(c -> new SimpleStringProperty(nullToEmpty(c.getValue().getDatabases())));
@@ -51,15 +57,18 @@ public class ViewStudentProfileController {
         colBL.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().isBlacklisted() ? "YES" : "—"));
 
         // Center WL/BL/EMPL text
-        center(colEmployed); center(colWL); center(colBL);
+        center(colEmployed);
+        center(colWL);
+        center(colBL);
 
         // Selection listener
         tvStudents.getSelectionModel().selectedItemProperty().addListener((obs, old, row) -> {
             showDetails(row);
-            selectedStudentId = row == null ? null : row.getId();
+            selectedStudentId = (row == null) ? null : row.getId();
         });
 
-        if (tbAll != null) { // set mode first so refresh uses it
+        // Restore directory mode from AppState
+        if (tbAll != null) {
             switch (AppState.directoryMode) {
                 case WL -> tbWhitelist.setSelected(true);
                 case BL -> tbBlacklist.setSelected(true);
@@ -70,6 +79,14 @@ public class ViewStudentProfileController {
         if (tfSearch != null && AppState.directoryQuery != null && !AppState.directoryQuery.isBlank()) {
             tfSearch.setText(AppState.directoryQuery);
         }
+
+        // 讓 ListView 變寬 / 變窄時，自動調整每個 Label 的最大寬度，保持換行自然
+        lvComments.widthProperty().addListener((obs, oldW, newW) -> {
+            double max = newW.doubleValue() - 20;
+            for (Label lbl : lvComments.getItems()) {
+                lbl.setMaxWidth(max);
+            }
+        });
 
         // trigger first load
         refreshTable();
@@ -101,7 +118,7 @@ public class ViewStudentProfileController {
 
         Long targetId = (selectedStudentId != null)
                 ? selectedStudentId
-                : AppState.consumePreselectStudent(); // <- from the comments page
+                : AppState.consumePreselectStudent(); // from the comments page
 
         if (targetId != null) {
             tvStudents.getItems().stream()
@@ -116,7 +133,10 @@ public class ViewStudentProfileController {
     }
 
     private void showDetails(StudentRow row) {
-        if (row == null) { clearDetails(); return; }
+        if (row == null) {
+            clearDetails();
+            return;
+        }
 
         lbName.setText(row.getName());
         lbStatus.setText(row.getAcademicStatus() == null ? "—" : row.getAcademicStatus());
@@ -133,16 +153,22 @@ public class ViewStudentProfileController {
         fpLangs.getChildren().setAll(Tags.make(row.getLanguages()));
         fpDbs.getChildren().setAll(Tags.make(row.getDatabases()));
 
-        // ALL comments (newest first)
-        var lines = commentsSvc.listComments(row.getId()).stream()
+        // Build wrapped Labels for ALL comments (newest first)
+        var labels = commentsSvc.listComments(row.getId()).stream()
                 .map((cs151.application.studentprofile.Comment c) -> {
                     String ts = c.getCreatedAt();
                     String dateOnly = (ts == null || ts.isBlank()) ? "" : ts.split(" ")[0];
-                    return dateOnly + " — " + c.getBody();
+                    Label lbl = new Label(dateOnly + " — " + c.getBody());
+                    lbl.setWrapText(true);
+                    // Initial max width based on current ListView width
+                    lbl.setMaxWidth(lvComments.getWidth() - 20);
+                    // Optional style class if you want to customize in CSS
+                    // lbl.getStyleClass().add("comment-line");
+                    return lbl;
                 })
                 .toList();
 
-        lvComments.setItems(FXCollections.observableList(new java.util.ArrayList<>(lines)));
+        lvComments.setItems(FXCollections.observableArrayList(labels));
     }
 
     private void clearDetails() {
@@ -158,8 +184,10 @@ public class ViewStudentProfileController {
         lvComments.setItems(FXCollections.observableArrayList());
     }
 
-    @FXML private void onBackHome() { HomePageController.goHomeFrom((Node) tvStudents); }
-
+    @FXML
+    private void onBackHome() {
+        HomePageController.goHomeFrom((Node) tvStudents);
+    }
 
     @FXML
     public void onDelete() {
@@ -178,7 +206,7 @@ public class ViewStudentProfileController {
     }
 
     @FXML
-    private void onEditStudent(ActionEvent e) {
+    private void onEditStudent(javafx.event.ActionEvent e) {
         var row = tvStudents.getSelectionModel().getSelectedItem();
         if (row == null) {
             new Alert(Alert.AlertType.INFORMATION, "Select a student to edit.").showAndWait();
@@ -193,7 +221,6 @@ public class ViewStudentProfileController {
             DefineStudentProfileController ctrl = loader.getController();
             ctrl.loadForEdit(row.getId());
 
-            // switch scene
             ((Node) e.getSource()).getScene().setRoot(root);
         } catch (IOException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR, "Cannot open Student Profile:\n" + ex.getMessage());
@@ -212,7 +239,7 @@ public class ViewStudentProfileController {
         }
         try {
             FXMLLoader fx = new FXMLLoader(getClass().getResource("/cs151/application/comments.fxml"));
-            Parent root = fx.load(); // <-- Parent, not var/Object
+            Parent root = fx.load();
 
             CommentsController ctrl = fx.getController();
             ctrl.loadStudent(row.getId(), row.getName());
