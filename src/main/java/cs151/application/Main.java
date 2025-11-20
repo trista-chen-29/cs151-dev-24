@@ -15,7 +15,7 @@ public class Main extends Application {
             DbInit.logDbLocation();
             DbInit.ensureSchema();
             DbInit.seedIfEmpty();
-            StudentProfileSeeder.seedFiveIfEmpty();  // Add default 5 students only if DB is empty
+            
         } catch (Throwable t) {
             // Don't crash the UI if DB init fails during early dev
             t.printStackTrace();

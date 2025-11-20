@@ -207,33 +207,216 @@ public class DbInit {
 
     /** Seed initial data once when the database is empty. */
     public static void seedIfEmpty() {
-        try (var c = DatabaseConnector.getConnection();
-             var s = c.createStatement();
-             var rs = s.executeQuery("SELECT COUNT(*) FROM student")) {
+        try (Connection c = DatabaseConnector.getConnection()) {
+            c.setAutoCommit(false);
 
-            if (rs.next() && rs.getInt(1) == 0) {
-                runResource(c, "/database/seed-v06.sql");
-                System.out.println("[DB] Seed loaded.");
-            } else {
-                System.out.println("[DB] Seed skipped (data exists).");
+            try (Statement s = c.createStatement();
+                 ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM student")) {
+
+                int count = rs.next() ? rs.getInt(1) : 0;
+                System.out.println("[DB] student count before seed = " + count);
+
+                if (count > 0) {
+                    System.out.println("[DB] Seed skipped (data exists).");
+                    return;
+                }
+
+                // Ensure catalog has core languages
+                seedLanguageCatalogIfEmpty(c);
+
+                // ---------- Insert 6 students ----------
+                long aliceId = insertStudent(
+                        c,
+                        "Alice Chen",
+                        "Senior",
+                        true,
+                        "Intern @ Acme",
+                        "Front-End",
+                        true,
+                        false
+                );
+
+                long brianId = insertStudent(
+                        c,
+                        "Brian Lee",
+                        "Junior",
+                        false,
+                        null,
+                        "Back-End",
+                        false,
+                        true
+                );
+
+                long camId = insertStudent(
+                        c,
+                        "Cam Nguyen",
+                        "Graduate",
+                        true,
+                        "TA - CS Dept.",
+                        "Data",
+                        true,
+                        false
+                );
+
+                long diegoId = insertStudent(
+                        c,
+                        "Diego Torres",
+                        "Sophomore",
+                        false,
+                        "Full-stack project helper",
+                        "Full-Stack",
+                        false,
+                        true
+                );
+
+                long evaId = insertStudent(
+                        c,
+                        "Eva Park",
+                        "Senior",
+                        true,
+                        "Open-source contributor",
+                        "Other",
+                        true,
+                        false
+                );
+
+                long farahId = insertStudent(
+                        c,
+                        "Farah Ali",
+                        "Junior",
+                        true,
+                        "Part-time QA assistant",
+                        "QA",
+                        false,
+                        true
+                );
+
+                // ---------- Programming languages ----------
+                addLanguage(c, aliceId, "Java");
+                addLanguage(c, aliceId, "Python");
+                addLanguage(c, aliceId, "C++");
+
+                addLanguage(c, brianId, "C++");
+                addLanguage(c, brianId, "Java");
+
+                addLanguage(c, camId, "Python");
+                addLanguage(c, camId, "Java");
+
+                addLanguage(c, diegoId, "C++");
+                addLanguage(c, diegoId, "Python");
+
+                addLanguage(c, evaId, "Python");
+                addLanguage(c, evaId, "Java");
+
+                addLanguage(c, farahId, "Java");
+                addLanguage(c, farahId, "C++");
+
+                // ---------- Databases ----------
+                addDatabase(c, aliceId, "MySQL");
+                addDatabase(c, aliceId, "SQLite");
+
+                addDatabase(c, brianId, "Postgres");
+                addDatabase(c, brianId, "MySQL");
+
+                addDatabase(c, camId, "MongoDB");
+                addDatabase(c, camId, "Postgres");
+
+                addDatabase(c, diegoId, "MySQL");
+                addDatabase(c, diegoId, "SQL Server");
+
+                addDatabase(c, evaId, "SQLite");
+                addDatabase(c, evaId, "MongoDB");
+
+                addDatabase(c, farahId, "MySQL");
+                addDatabase(c, farahId, "SQLite");
+
+                // ---------- Comments: at least 30 words each ----------
+                addComment(c, aliceId,
+                        "Alice consistently writes well-structured front-end components, actively discusses UI changes during team meetings, and updates her pull requests promptly after feedback. She explains her design decisions clearly and helps maintain consistent styling across the entire interface.");
+                addComment(c, brianId,
+                        "Brian often misses internal deadlines and sometimes pushes unfinished backend modules to the repository without testing, which causes frequent merge conflicts. He rarely responds to messages in the group chat, and his team members often have to redo his tasks or wait for last-minute updates, making collaboration difficult.");
+                addComment(c, camId,
+                        "Cam demonstrates strong understanding of data modeling and enjoys experimenting with database query optimization. He often helps classmates troubleshoot SQL mistakes and prepares simple diagrams to explain concepts like indexing and normalization.");
+                addComment(c, diegoId,
+                        "Although Diego has strong technical skills, he frequently ignores agreed-upon coding standards and refuses to document his work properly. His teammates have mentioned that he tends to work alone without communicating, which causes integration issues and delays during project milestones.");
+                addComment(c, evaId,
+                        "Eva documents meeting discussions clearly and reminds teammates about upcoming deadlines. She recently became interested in DevOps and successfully set up a basic CI pipeline that runs database migrations and triggers build testing on every pull request.");
+                addComment(c, farahId,
+                        "Farah has QA experience, but she sometimes submits incomplete bug reports without clear reproduction steps or severity levels, which slows down developers. She also occasionally skips team meetings without informing others, making it hard to plan sprint testing tasks.");
+
+                c.commit();
+                System.out.println("[DB] Seed inserted (6 students).");
+            } catch (SQLException e) {
+                c.rollback();
+                throw e;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /** Execute a SQL file available on the classpath. */
-    private static void runResource(Connection c, String path) throws Exception {
-        try (var in = DbInit.class.getResourceAsStream(path)) {
-            if (in == null) throw new IllegalStateException("Seed not found on classpath: " + path);
-            String sql = new String(in.readAllBytes());
-            for (String stmt : sql.split(";")) {
-                String trimmed = stmt.trim();
-                if (trimmed.isEmpty() || trimmed.startsWith("--")) continue;
-                try (var ps = c.prepareStatement(trimmed)) {
-                    ps.executeUpdate();
+    // ---- helper methods for seeding ----
+
+    private static long insertStudent(Connection c,
+                                      String name,
+                                      String academicStatus,
+                                      boolean employed,
+                                      String jobDetails,
+                                      String preferredRole,
+                                      boolean whitelist,
+                                      boolean blacklisted) throws SQLException {
+        String sql = """
+            INSERT INTO student
+              (name, academic_status, employed, job_details, preferred_role, whitelist, isBlacklisted)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """;
+        try (PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, name);
+            ps.setString(2, academicStatus);
+            ps.setInt(3, employed ? 1 : 0);
+            if (jobDetails == null) {
+                ps.setNull(4, Types.VARCHAR);
+            } else {
+                ps.setString(4, jobDetails);
+            }
+            ps.setString(5, preferredRole);
+            ps.setInt(6, whitelist ? 1 : 0);
+            ps.setInt(7, blacklisted ? 1 : 0);
+            ps.executeUpdate();
+
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getLong(1);
                 }
             }
+        }
+        throw new SQLException("Failed to insert student " + name);
+    }
+
+    private static void addLanguage(Connection c, long studentId, String language) throws SQLException {
+        String sql = "INSERT OR IGNORE INTO programming_languages(student_id, language) VALUES (?, ?)";
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, studentId);
+            ps.setString(2, language);
+            ps.executeUpdate();
+        }
+    }
+
+    private static void addDatabase(Connection c, long studentId, String dbName) throws SQLException {
+        String sql = "INSERT OR IGNORE INTO databases(student_id, database_name) VALUES (?, ?)";
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, studentId);
+            ps.setString(2, dbName);
+            ps.executeUpdate();
+        }
+    }
+
+    private static void addComment(Connection c, long studentId, String body) throws SQLException {
+        String sql = "INSERT INTO comments(student_id, body, created_at) VALUES (?, ?, date('now'))";
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setLong(1, studentId);
+            ps.setString(2, body);
+            ps.executeUpdate();
         }
     }
 }
