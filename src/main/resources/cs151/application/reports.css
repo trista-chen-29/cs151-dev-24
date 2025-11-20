@@ -1,0 +1,47 @@
+.topbar {
+    -fx-background-color: #2b9348;
+}
+.brand {
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-opacity: .95;
+}
+
+.back-btn {
+    -fx-background-color: #1e7a37;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 6 12;
+}
+
+.report-title {
+    -fx-text-fill: #111;
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+}
+
+.primary {
+    -fx-background-color: #2b9348;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-background-radius: 8;
+}
+.primary:hover { -fx-opacity: .92; }
+
+.ghost-label {
+    -fx-background-color: transparent;
+    -fx-text-fill: #555;
+    -fx-padding: 0 6 0 0;
+}
+
+.card {
+    -fx-padding: 14;
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,.08), 12, 0.18, 0, 2);
+}
+
+.card-title { -fx-font-weight: 700; }
+.muted { -fx-text-fill: #666; }

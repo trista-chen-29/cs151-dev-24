@@ -15,9 +15,6 @@ public class StudentRow {
     private final String languages;
     private final String databases;
 
-    private final int commentsCount;
-    private final String lastComment;
-
     public StudentRow(long id, String name,
                       String academicStatus,
                       boolean employed,
@@ -26,9 +23,7 @@ public class StudentRow {
                       boolean whitelist,
                       boolean blacklisted,
                       String languages,
-                      String databases,
-                      int commentsCount,
-                      String lastComment) {
+                      String databases) {
         this.id = id;
         this.name = name;
         this.academicStatus = academicStatus;
@@ -39,8 +34,6 @@ public class StudentRow {
         this.blacklisted = blacklisted;
         this.languages = languages;
         this.databases = databases;
-        this.commentsCount = commentsCount;
-        this.lastComment = lastComment;
     }
 
     public long getId() { return id; }
@@ -53,6 +46,17 @@ public class StudentRow {
     public boolean isBlacklisted() { return blacklisted; }
     public String getLanguages() { return languages == null ? "" : languages; }
     public String getDatabases() { return databases == null ? "" : databases; }
-    public int getCommentsCount() { return commentsCount; }
-    public String getLastComment() { return lastComment == null ? "" : lastComment; }
+
+    // lightweight constructor
+    public StudentRow(long id, String name) {
+        this(id, name,
+                null,          // academicStatus
+                false,         // employed
+                null,          // jobDetails
+                null,          // preferredRole
+                false,         // whitelist
+                false,         // blacklisted
+                null,          // languages
+                null);          // databases
+    }
 }

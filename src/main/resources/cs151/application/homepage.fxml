@@ -7,8 +7,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cs151.application.homepage.HomePageController"
-            stylesheets="@homepage.css"
-            prefWidth="1100" prefHeight="680">
+            stylesheets="@homepage.css">
 
     <!-- Top bar -->
     <top>
@@ -35,7 +34,6 @@
             <!-- Search card -->
             <VBox styleClass="card" spacing="12" maxWidth="1000">
                 <HBox spacing="10" alignment="CENTER_LEFT">
-                    <!-- NOTE: id matches controller field 'searchField' -->
                     <TextField fx:id="searchField"
                                promptText="Search by name, language, database…"
                                HBox.hgrow="ALWAYS"/>
@@ -44,12 +42,16 @@
             </VBox>
 
             <!-- Primary actions -->
-            <HBox spacing="16" alignment="CENTER">
+            <HBox spacing="16" alignment="CENTER" maxWidth="1100" fillHeight="true">
                 <!-- Define Student Profile -->
-                <VBox styleClass="action-card" spacing="10" prefWidth="480">
+                <VBox styleClass="action-card" spacing="10"
+                      prefWidth="340" minHeight="200"
+                      alignment="TOP_LEFT" maxWidth="Infinity"
+                      HBox.hgrow="ALWAYS">
                     <Label text="Define Student Profile" styleClass="card-title"/>
                     <Label text="Create a new student profile or update an existing one."
-                           styleClass="card-sub"/>
+                           styleClass="card-sub" wrapText="true" maxWidth="Infinity"/>
+                    <Region VBox.vgrow="ALWAYS"/>
                     <HBox alignment="CENTER_LEFT">
                         <Button text="Add Student Profile"
                                 onAction="#onGoToStudentProfile"
@@ -58,13 +60,33 @@
                 </VBox>
 
                 <!-- View Student Profiles -->
-                <VBox styleClass="action-card" spacing="10" prefWidth="480">
+                <VBox styleClass="action-card" spacing="10"
+                      prefWidth="340" minHeight="200"
+                      alignment="TOP_LEFT" maxWidth="Infinity"
+                      HBox.hgrow="ALWAYS">
                     <Label text="View Student Profiles" styleClass="card-title"/>
                     <Label text="Search, filter, and review saved profiles."
-                           styleClass="card-sub"/>
+                           styleClass="card-sub" wrapText="true" maxWidth="Infinity"/>
+                    <Region VBox.vgrow="ALWAYS"/>
                     <HBox alignment="CENTER_LEFT">
                         <Button text="View Student Profiles"
                                 onAction="#onOpenDirectory"
+                                styleClass="primary"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Show Reports -->
+                <VBox styleClass="action-card" spacing="10"
+                      prefWidth="340" minHeight="200"
+                      alignment="TOP_LEFT" maxWidth="Infinity"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="Show Reports" styleClass="card-title"/>
+                    <Label text="View reports of blacklisted and whitelisted students."
+                           styleClass="card-sub" wrapText="true" maxWidth="Infinity"/>
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <HBox alignment="CENTER_LEFT">
+                        <Button text="View Reports"
+                                onAction="#onOpenReports"
                                 styleClass="primary"/>
                     </HBox>
                 </VBox>

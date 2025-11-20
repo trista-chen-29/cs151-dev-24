@@ -26,7 +26,7 @@ public class Main extends Application {
                 getClass().getResource("/cs151/application/homepage.fxml")
         );
 
-        Scene scene = new Scene(fxml.load(), 980, 620);
+        Scene scene = new Scene(fxml.load(), 1200, 720);
 
         // Global theme applied at Scene level
         scene.getStylesheets().add(

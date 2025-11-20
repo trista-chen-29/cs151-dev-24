@@ -42,6 +42,12 @@ public class HomePageController {
                 "Cannot open Student Directory");
     }
 
+    // ---- Show reports ----
+    @FXML
+    private void onOpenReports(ActionEvent e) {
+        switchScene(e, new String[]{ "/cs151/application/reports.fxml" }, "Cannot open Reports");
+    }
+
     // ---------- Search ----------
     @FXML
     private void onSearch(ActionEvent event) {

@@ -1,36 +1,30 @@
-/* Top bar */
-.topbar { -fx-background-color: #2B9348; }
-.topbar .pill {
+/* top bar */
+.topbar { -fx-background-color: #2b9348; }
+.brand  { -fx-text-fill: white; -fx-font-weight: 700; -fx-opacity: .95; }
+.pill   { -fx-background-radius: 999; -fx-text-fill: white; -fx-background-color: rgba(255,255,255,.16); }
+
+/* layout bits */
+.h1 { -fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #2b9348; }
+.card {
+    -fx-padding: 12;
     -fx-background-color: white;
-    -fx-text-fill: #2B9348;
-    -fx-font-weight: 700;
-    -fx-background-radius: 999;
-    -fx-padding: 6 12;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,.08), 12, 0.2, 0, 2);
 }
-.topbar .pill:hover { -fx-opacity: .9; }
-.topbar .brand { -fx-text-fill: white; -fx-font-weight: 800; -fx-font-size: 16px; }
-
-/* Title */
-.h1 { -fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: #2B9348; }
-
-/* Cards */
-.card, .action-card {
+.action-card {
     -fx-background-color: white;
     -fx-background-radius: 12;
-    -fx-border-color: #EAECEF;
-    -fx-border-radius: 12;
     -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,.08), 12, 0.18, 0, 2);
 }
-.action-card { -fx-pref-height: 140; }
-.card-title { -fx-font-weight: 700; -fx-font-size: 16px; }
-.card-sub   { -fx-text-fill: #6B7280; }
+.card-title { -fx-font-size: 16px; -fx-font-weight: 700; }
+.card-sub   { -fx-text-fill: #555; }
 
-/* Buttons */
+/* buttons */
 .primary {
-    -fx-background-color: #2B9348;
+    -fx-background-color: #2b9348;
     -fx-text-fill: white;
     -fx-font-weight: 700;
     -fx-background-radius: 8;
-    -fx-padding: 8 12;
 }
 .primary:hover { -fx-opacity: .92; }

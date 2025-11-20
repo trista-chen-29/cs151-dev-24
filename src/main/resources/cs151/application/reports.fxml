@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs151.application.reports.ReportsController"
+            stylesheets="@reports.css">
+
+    <!-- Top bar -->
+    <top>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="topbar">
+            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+
+            <Button text="Go To Homepage" onAction="#onBackHome" styleClass="back-btn"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label text="Prof-Support" styleClass="brand"/>
+        </HBox>
+    </top>
+
+    <!-- Header + filters + export -->
+    <center>
+        <VBox spacing="16" alignment="TOP_LEFT">
+            <padding><Insets top="20" left="20" right="20" bottom="20"/></padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="Student Reports" styleClass="report-title"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="Export CSV" onAction="#onExportCsv" styleClass="primary"/>
+            </HBox>
+
+            <!-- Filter chips -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <fx:define>
+                    <ToggleGroup fx:id="tgFilter"/>
+                </fx:define>
+
+                <Button text="Filter by:" disable="true" styleClass="ghost-label"/>
+                <ToggleButton fx:id="tbAll"       text="All"             toggleGroup="$tgFilter" selected="true" onAction="#onFilterChange"/>
+                <ToggleButton fx:id="tbWhitelist" text="Whitelist only"  toggleGroup="$tgFilter"                   onAction="#onFilterChange"/>
+                <ToggleButton fx:id="tbBlacklist" text="Blacklist only"  toggleGroup="$tgFilter"                   onAction="#onFilterChange"/>
+            </HBox>
+
+            <!-- Table card -->
+            <VBox styleClass="card" spacing="8" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <Label text="Student List" styleClass="card-title"/>
+                    <Label fx:id="lbCount" text="(0 students)" styleClass="muted"/>
+                </HBox>
+
+                <TableView fx:id="tvStudents" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colName" text="NAME"/>
+                    </columns>
+                </TableView>
+
+                <Label text="Tip: Double-click a name to open the student profile (read-only)."
+                       styleClass="muted"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

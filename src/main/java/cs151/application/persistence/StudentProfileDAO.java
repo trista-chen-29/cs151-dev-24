@@ -215,7 +215,7 @@ public class StudentProfileDAO {
         String sql = """
         SELECT id, name, academic_status, employed, job_details, 
                preferred_role, whitelist, isBlacklisted,
-               languages, databases, commentsCount, lastComment
+               languages, databases
         FROM student_profile_view
         ORDER BY name COLLATE NOCASE ASC, id ASC
     """;
@@ -234,10 +234,8 @@ public class StudentProfileDAO {
                         rs.getInt("whitelist") == 1,
                         rs.getInt("isBlacklisted") == 1,
                         rs.getString("languages"),
-                        rs.getString("databases"),
-                        rs.getInt("commentsCount"),
-                        rs.getString("lastComment")
-                ));
+                        rs.getString("databases")
+                        ));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
