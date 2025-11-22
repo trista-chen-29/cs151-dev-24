@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs151.application.reports.ReportCommentController"
+            stylesheets="@/cs151/application/report-comment.css">
+
+    <top>
+        <HBox spacing="12" styleClass="appbar">
+            <Button text="Back" onAction="#onBackToProfile" styleClass="btn-secondary"/>
+            <Label fx:id="lbTitle" text="Student Comment" styleClass="appbar-title"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label text="Prof-Support" styleClass="appbar-brand"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="16" styleClass="page">
+            <VBox maxWidth="960" spacing="16" styleClass="card">
+
+                <Label text="Comment Details" styleClass="card-title"/>
+
+                <GridPane hgap="12" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" minWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+
+                    <Label text="Created:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfCreated"
+                               GridPane.rowIndex="0"
+                               GridPane.columnIndex="1"
+                               editable="false"
+                               focusTraversable="false"/>
+
+                    <Label text="Full Text:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="taBody"
+                              GridPane.rowIndex="1"
+                              GridPane.columnIndex="1"
+                              prefRowCount="10"
+                              wrapText="true"
+                              editable="false"
+                              focusTraversable="false"/>
+                </GridPane>
+
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

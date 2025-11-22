@@ -95,26 +95,14 @@ public class ReportsController {
     }
 
     /** Navigation NOTE:
-     *  When finishing the read-only detail page, just swap the 'target' FXML path.
+     *  When finishing the read-only detail page, just swap the 'target' FXML path in ReportNav class.
      */
     private void openDetail(StudentRow item) {
         if (item == null) return;
         AppState.preselectStudent(item.getId());
 
-        // TODO: replace with final read-only page when available
-        String target = "/cs151/application/view-student-profile.fxml";
+        Node from = tvStudents.getScene().getRoot();
+        ReportNav.openStudentDetail(from, item.getId(), item.getName());
 
-        try {
-            var url = getClass().getResource(target);
-            if (url == null) throw new IllegalStateException("Detail FXML not found: " + target);
-            Parent root = FXMLLoader.load(url);
-            tvStudents.getScene().setRoot(root);
-        } catch (Exception ex) {
-            new Alert(Alert.AlertType.INFORMATION,
-                    "Detail page not implemented yet.\n" +
-                            "Open ReportsController.openDetail(...) and change the 'target' path when ready.")
-                    .showAndWait();
-            ex.printStackTrace();
-        }
     }
 }

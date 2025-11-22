@@ -2,6 +2,7 @@ package cs151.application.studentprofile;
 
 import cs151.application.AppState;
 import cs151.application.homepage.HomePageController;
+import cs151.application.reports.ReportNav;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -9,8 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
-
 import java.io.IOException;
 import java.util.Locale;
 
@@ -86,6 +87,22 @@ public class ViewStudentProfileController {
             for (Label lbl : lvComments.getItems()) {
                 lbl.setMaxWidth(max);
             }
+        });
+
+        //TODO: For demo purposes. Should be removed/moved when reportstudentdetail page is implemented.
+        lvComments.setOnMouseClicked(e-> {
+            Label cmmnt = null;
+            if (e.getClickCount() == 1) {
+                cmmnt = lvComments.getSelectionModel().getSelectedItem();
+            }
+            if (cmmnt != null) {
+                String[] parts = cmmnt.getText().split("—", 2);
+
+                String date = parts[0].trim();
+                String text = parts[1].trim();
+                ReportNav.openCommentViewer(lvComments.getScene().getRoot(),date, text);
+            }
+
         });
 
         // trigger first load
