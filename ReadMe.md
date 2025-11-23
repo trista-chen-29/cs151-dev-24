@@ -3,10 +3,24 @@
 # Who did What
 
 # Version: 0.9
-1. Chenying Wang: Populated 6 student profiles (3 whitelisted, 3 blacklisted) with full academic/job/role data, completed all required comments (≥30 words each), verified correct database persistence, and prepared screenshots of final UI pages.
-2. Trista Chen: Designed and implemented Reports main page (reports.fxml), including filtering (All / Whitelist / Blacklist), table display, and CSV export integration.
-3. Jaime Gonzalez: Developed Student Report (Read-Only) and Comment Viewer pages (FXML + Controllers), implemented double-click navigation and full comment display.
-4. Vraj Mistry: Integrated report navigation across pages, ensured read-only mode display, completed UI consistency fixes, and performed end-to-end functional testing.
+# Version: 0.9
+
+1. Chenying Wang:
+   • Populated 6 student profiles (3 whitelist, 3 blacklist)  
+   • Added all required comments (≥30 words)  
+   • Cleaned project folder, prepared final zip, and updated README  
+
+2. Trista Chen:
+   • Designed and implemented Reports main page (filter + table + CSV export)
+
+3. brrrrrr:
+   • Implemented double-click student → Student Report (profile + comments table)
+
+4. Jaime Gonzalez:
+   • Implemented double-click comment → Full Comment Viewer page
+
+5. Vraj Mistry:
+   • Integrated report navigation and performed end-to-end functional testing
 
 # Version: 0.8
 1. Chenying Wang – Updated README for v0.8
