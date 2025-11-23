@@ -1,111 +1,159 @@
-Name of application: Prof-Support  
-Version: 0.9  
+# Name of application: Prof-Support
 
-Overview  
-Prof-Support helps faculty manage students’ academic profiles, programming-language knowledge, and professional information.  
-Version 0.9 introduces the complete Reports feature, enabling faculty to filter students by whitelist, blacklist, or all; view a read-only Student Report page displaying profile information and comments; and open a dedicated Full Comment Viewer page to display complete comment text. This version completes the entire reporting workflow required for the term project.
+# Version: 0.9
 
-New in v0.9  
-Added Reports main page with filtering options (All, Whitelist, Blacklist).  
-Implemented tabular display of students in the Reports page, with support for CSV export.  
-Enabled double-click on a student row to open a read-only Student Report page (student profile + comments table).  
-Configured the comments table to show excerpted (truncated) text if a comment is too long to fully display in a row.  
-Enabled clicking on a comment row to open a new page that shows the full contents of that comment.  
-Integrated Back navigation among Home, Reports, Student Report, and Full Comment Viewer pages.  
-Populated exactly 6 student profiles (3 whitelisted and 3 blacklisted), each with meaningful comments (minimum 30 words).  
-Cleaned and packaged the project folder (dev-24-0.9) according to rubric requirements.
+## Overview
 
-Who did what  
-Chenying Wang – Populated 6 student profiles and added required comments; cleaned project folder; prepared final ZIP; updated README for v0.9.  
-Trista Chen – Designed and built the Reports main page (filter controls, table layout, CSV export).  
-Vraj Mistry – Implemented double-click student → Student Report page (profile + comments table with excerpts); integrated navigation between all report-related pages; performed full-system testing.  
-Jaime Gonzalez – Implemented click comment → Full Comment Viewer page (display full comment content).  
+Prof-Support helps faculty manage students’ academic profiles, programming-language knowledge, and professional information.
+Version 0.9 introduces the full **Show Reports** functionality, including tabular filtering (Whitelist / Blacklist), read-only Student Report page, and complete Full Comment Viewer page. This release completes all major reporting requirements of the project.
 
-Version History (v0.8 → v0.1)  
-Version 0.8  
-Added Add Comments functionality (new comment entry + comments display section).  
-Implemented permanent comment storage using SQLite through new Comment DAO and Service classes.  
-Updated View Student Profiles page to include a structured comments section.  
-Ensured all comments follow the format: YYYY-MM-DD — comment text.  
-Cleaned and packaged the project folder (dev-24-0.8) per rubric requirements.
+---
 
-Version 0.7  
-Added full Edit Student Profile functionality.  
-Improved Search Students Profiles with case-insensitive filters.  
-Added whitelist/blacklist filters.  
-Added Back buttons across all pages.  
-Verified SQLite persistence for profile changes.
+## New in v0.9
 
-Version 0.6  
-Added Search Students Profiles page.  
-Added Delete Student Profile feature.  
-Implemented TableView for listing student profiles.  
-Updated Home Page layout.  
-Verified 3 programming languages and 5 student profiles.
+* Implemented **Reports main page** with filtering options (All / Whitelist / Blacklist) and student list in tabular format.
+* Enabled **double-click on student** to open a **read-only Student Report page** (profile at top, comments table at bottom).
+* Implemented **double-click on a comment row** to open a **Full Comment Viewer page** showing the entire comment contents.
+* Enabled **CSV export** for reports table.
+* Populated system with **6 student profiles (3 whitelisted, 3 blacklisted)** and ensured each student has **at least one meaningful comment (≥30 words)**.
+* Cleaned and packaged the project folder (**dev-24-0.9**) per rubric requirements.
 
-Version 0.5  
-Added Define Student Profile page.  
-Added View Student Profiles page (TableView).  
-Added persistence support for student profiles.  
-Updated Home Page navigation.
+---
 
-Version 0.4  
-Completed Functional Specification Draft.  
-Created 3 required mockups (Define PL, Home, Define Student Profile).  
-Completed Technical Specification Draft (data model, class diagram, sequence diagram).
+## Who did What
 
-Version 0.3  
-Implemented Define Programming Languages page.  
-Added optional data persistence.  
-Displayed languages using a sorted TableView (A–Z).  
-Cleaned project folder and included README.
+**Version: 0.9**
 
-Version 0.2  
-Imported starter project template.  
-Added navigation to Define Programming Languages page.  
-Allowed entering programming language names.  
-Ensured successful compilation with Zulu 23.
+1. **Chenying Wang**: Populated 6 student profiles (3 whitelist, 3 blacklist), added all required comments (≥30 words), cleaned project folder, prepared final ZIP, and updated README.
+2. **Trista Chen**: Designed and implemented Reports main page (filtering + table display + CSV export).
+3. **Jaime Gonzalez**: Implemented double-click comment → Full Comment Viewer page (FXML + controller).
+4. **Brandon Mistry (brrrrrr)**: Implemented double-click student → Student Report (profile + comments table, read-only).
+5. **Vraj Mistry**: Integrated report navigation across pages, ensured UI consistency, and performed end-to-end testing.
 
-Version 0.1  
-Created first Functional Specification Draft.  
-Created mockups for required pages.  
-Completed first Technical Specification Draft (data model + UML diagrams).  
-Established initial architecture plan.
+---
 
-Technical-Spec  
-Architecture: JavaFX + SQLite using Maven; Zulu JDK 23 compatible.  
-Persistence: SQLite database for programming languages, student profiles, and comments.  
-Navigation: All pages include a Back or Home button.  
-Main Class: cs151.application.Main.  
-Tools: JavaFX, FXML, DAO/Service structure.
+# Version History (v0.8 → v0.1)
 
-Functional-Spec  
-Version 0.9  
-Show Reports page with filtering options (All, Whitelist, Blacklist).  
-Double-click on a student row to open a read-only Student Report page (profile + comments table).  
-Click a comment row to open a Full Comment Viewer page (complete comment text).  
-Support CSV export for the student report table.
+## Version: 0.8
 
-Version 0.8  
-View and add comments with date-only timestamps.  
-Permanent comment storage in SQLite.
+* Added Add Comments functionality (new comment entry + comments display section).
+* Implemented permanent comment storage using SQLite through new Comment DAO and Service classes.
+* Updated View Student Profiles page to include a structured comments section.
+* Ensured all comments follow format: `YYYY-MM-DD — comment text`.
+* Verified that 3 programming languages and 5 student profiles remain intact.
+* Cleaned and packaged the project folder (dev-24-0.8).
 
-Version 0.6  
-Search and filter profiles.  
-Delete student profiles.
+---
 
-Earlier versions  
-Define programming languages.  
-Define and update student profiles.  
-Store academic status, job status, preferred roles, and skills.
+## Version: 0.7
 
-Any other instruction that users need to know  
-Ensure the project folder contains only source code before zipping (no .idea, .git, .mvn, mvnw, target, etc.).  
-The submission folder name must be exactly: dev-24-0.9  
-The SQLite database (profsupport.db) must be included and already contain the 6 student profiles with all comments.  
-The application must run directly using IntelliJ with Zulu JDK 23 and Maven, without regenerating data.  
-After zipping, re-download and test the project before submitting to Canvas.  
-Only Maven build tool is accepted.
+* Added full Edit Student Profile functionality.
+* Improved Search Students Profiles with case-insensitive filters.
+* Added whitelist/blacklist filters.
+* Added Back buttons across all pages.
+* Verified SQLite persistence for updated profiles.
+
+---
+
+## Version: 0.6
+
+* Added Search Students Profiles page.
+* Added Delete Student Profile feature.
+* Implemented TableView for listing student profiles.
+* Updated Home Page layout.
+* Verified 3 programming languages and 5 student profiles.
+
+---
+
+## Version: 0.5
+
+* Added Define Student Profile page with input form.
+* Added View Student Profiles page (TableView).
+* Added persistence support for student profiles.
+* Updated Home Page navigation links.
+
+---
+
+## Version: 0.4
+
+* Completed Functional Specification Draft.
+* Created 3 required mockups (Define PL, Home, Define Student Profile).
+* Completed Technical Specification Draft (data model, class diagram, sequence diagram).
+
+---
+
+## Version: 0.3
+
+* Implemented Define Programming Languages page.
+* Added optional data persistence.
+* Displayed languages using a sorted TableView (A–Z).
+* Cleaned project folder and included README.
+
+---
+
+## Version: 0.2
+
+* Imported starter project template.
+* Added navigation to Define Programming Languages page.
+* Allowed entering programming language names.
+* Successfully compiled with Zulu 23.
+
+---
+
+## Version: 0.1
+
+* Created first Functional Specification Draft.
+* Designed required mockups.
+* Completed initial Technical Specification Draft (UML + data model).
+* Established initial architecture plan.
+
+---
+
+# Technical-Spec
+
+1. Architecture: JavaFX + SQLite using Maven (Zulu JDK 23 compatible).
+2. Persistence: SQLite database for programming languages, student profiles, reports, and comments.
+3. Navigation: All pages include **Back** or **Home** button.
+4. Main Class: `cs151.application.Main`
+5. Tools: JavaFX, FXML, DAO/Service structure, SQLite.
+
+---
+
+# Functional-Spec
+
+### Version 0.9
+
+1. Show Reports page with tabular filtering (All / Whitelist / Blacklist).
+2. Double-click student → open Read-Only Student Report (profile + comments table).
+3. Double-click comment → open Full Comment Viewer page.
+4. CSV export for student report table.
+
+### Version 0.8
+
+* Add and view comments with timestamps (YYYY-MM-DD).
+* Permanent SQLite storage.
+
+### Earlier Versions
+
+* Define programming languages.
+* Define and update student profiles.
+* Store academic status, job status, roles, and skills.
+* Search / filter / delete profiles.
+
+---
+
+# Any other instruction that users need to know
+
+* Ensure the folder `dev-24-0.9` contains **only source code** before zipping (no `.idea`, `.git`, `.mvn`, `target`, `mvnw`, etc.).
+* After submitting, download the ZIP from Canvas, unzip it, and verify that:
+  ✓ Folder name is **dev-24-0.9**
+  ✓ Project compiles and runs correctly in IntelliJ with Zulu JDK 23
+  ✓ SQLite database is included or auto-generated on first run
+* Only **Maven build tool** is accepted.
+* Comments must follow date-only format: `YYYY-MM-DD`.
+
+---
+
 
 
 
