@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="cs151.application.programminglanguages.ProgrammingLanguageController"
@@ -12,7 +11,7 @@
             styleClass="canvas pl-root"
             prefWidth="980" prefHeight="620">
 
-    <!-- Top bar -->
+    <!-- Top Bar -->
     <top>
         <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar">
             <Button text="Go to Homepage" onAction="#onGoHome" styleClass="brand"/>
@@ -21,7 +20,7 @@
         </HBox>
     </top>
 
-    <!-- CONTENT -->
+    <!-- Main Content -->
     <center>
         <VBox alignment="TOP_CENTER" spacing="18">
             <padding>
@@ -30,16 +29,16 @@
 
             <Label text="Programming Languages" styleClass="h1"/>
 
-            <!-- Card with form + list -->
+            <!-- Card Container -->
             <VBox spacing="12" styleClass="card" maxWidth="640">
 
-                <!-- Input -->
+                <!-- Input Section -->
                 <VBox spacing="6">
                     <Label text="Enter Language name *" styleClass="field-label"/>
                     <TextField fx:id="languageField" promptText="e.g., Java"/>
                 </VBox>
 
-                <!-- Button -->
+                <!-- Button Row -->
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Button text="Save" onAction="#onSave" defaultButton="true"/>
                     <Label fx:id="errorLabel" styleClass="error"/>
@@ -52,10 +51,12 @@
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
+
                     <columns>
                         <TableColumn fx:id="nameColumn" text="Name"/>
                     </columns>
                 </TableView>
+
             </VBox>
         </VBox>
     </center>

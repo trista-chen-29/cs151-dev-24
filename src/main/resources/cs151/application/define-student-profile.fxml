@@ -11,10 +11,12 @@
             prefWidth="1100" prefHeight="680"
             styleClass="sp-root">
 
-    <!-- Keep page header -->
+    <!-- Top Bar -->
     <top>
         <HBox spacing="12" alignment="CENTER_LEFT" styleClass="topbar">
-            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+            <padding>
+                <Insets top="10" right="16" bottom="10" left="16"/>
+            </padding>
             <Button text="Go To Homepage" fx:id="btnGoHome" onAction="#onGoBackHome"/>
             <Pane HBox.hgrow="ALWAYS"/>
             <Label text="Prof-Support" styleClass="brand"/>
@@ -25,17 +27,22 @@
         <ToggleGroup fx:id="tgJob"/>
     </fx:define>
 
+    <!-- Main Content -->
     <center>
         <GridPane hgap="16" vgap="14">
-            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+
             <columnConstraints>
                 <ColumnConstraints percentWidth="32"/>
                 <ColumnConstraints percentWidth="68"/>
             </columnConstraints>
 
-            <!-- Left column: photo + basic info -->
+            <!-- Left Column: Basic Info -->
             <VBox spacing="12" GridPane.columnIndex="0" GridPane.rowIndex="0">
 
+                <!-- Optional Photo Section -->
                 <VBox spacing="8" alignment="TOP_LEFT">
                     <Label text="Student Profile" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
                     <ImageView fx:id="ivPhoto" fitWidth="140" fitHeight="140" preserveRatio="true"
@@ -43,56 +50,58 @@
                     <Button fx:id="btnUpdatePhoto" text="Update Photo" onAction="#onUpdatePhoto"/>
                 </VBox>
 
+                <!-- Personal Info Grid -->
                 <GridPane hgap="10" vgap="10">
                     <columnConstraints>
                         <ColumnConstraints minWidth="120"/>
                         <ColumnConstraints hgrow="ALWAYS"/>
                     </columnConstraints>
 
-                    <Label text="Full Name"                       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <TextField fx:id="tfFullName"                 GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Full Name" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfFullName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                    <Label text="Academic Status"                 GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <ComboBox fx:id="cbAcademicStatus"            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <Label text="Academic Status" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="cbAcademicStatus" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                    <Label text="Current Job Status"              GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <HBox spacing="12"                            GridPane.rowIndex="2" GridPane.columnIndex="1">
-                        <RadioButton fx:id="rbEmployed"   text="Employed"      toggleGroup="$tgJob"/>
-                        <RadioButton fx:id="rbUnemployed" text="Not Employed"  toggleGroup="$tgJob"/>
+                    <Label text="Current Job Status" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <HBox spacing="12" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                        <RadioButton fx:id="rbEmployed" text="Employed" toggleGroup="$tgJob"/>
+                        <RadioButton fx:id="rbUnemployed" text="Not Employed" toggleGroup="$tgJob"/>
                     </HBox>
 
-                    <Label text="Job Details"                     GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="taJobDetails"                GridPane.rowIndex="3" GridPane.columnIndex="1" prefRowCount="5"/>
+                    <Label text="Job Details" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="taJobDetails" GridPane.rowIndex="3" GridPane.columnIndex="1" prefRowCount="5"/>
                 </GridPane>
 
                 <HBox spacing="20">
                     <CheckBox fx:id="cbWhitelist" text="Whitelist"/>
                     <CheckBox fx:id="cbBlacklist" text="Blacklist"/>
                 </HBox>
+
             </VBox>
 
-            <!-- Right column: skills, role, comments, actions -->
+            <!-- Right Column: Skills, Roles, Comments -->
             <VBox spacing="14" GridPane.columnIndex="1" GridPane.rowIndex="0">
 
-                <!-- Programming Languages (no add) -->
+                <!-- Programming Languages -->
                 <VBox spacing="8">
                     <Label text="Programming Languages Known"/>
                     <ListView fx:id="lvProgLangs" prefHeight="140"/>
                 </VBox>
 
-                <!-- Databases (no add) -->
+                <!-- Databases -->
                 <VBox spacing="8">
                     <Label text="Databases Known"/>
                     <ListView fx:id="lvDatabases" prefHeight="140"/>
                 </VBox>
 
-                <!-- Preferred role (no add) -->
+                <!-- Preferred Role -->
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <Label text="Preferred Professional Role:"/>
                     <ComboBox fx:id="cbRole" prefWidth="280" promptText="Select a role"/>
                 </HBox>
 
-                <!-- Comment entry + list -->
+                <!-- Comments -->
                 <GridPane hgap="10" vgap="10">
                     <columnConstraints>
                         <ColumnConstraints minWidth="120"/>
@@ -106,15 +115,16 @@
                 </GridPane>
                 <ListView fx:id="lvComments" prefHeight="160"/>
 
-                <!-- Footer actions -->
+                <!-- Footer Actions -->
                 <HBox spacing="12" alignment="CENTER_RIGHT">
                     <Label fx:id="lbError" styleClass="error-label" HBox.hgrow="ALWAYS"/>
                     <Button fx:id="btnClear" text="Clear" onAction="#onClear" minWidth="96"/>
                     <Button fx:id="btnSave"  text="Save"  onAction="#onSave"  minWidth="96"/>
                 </HBox>
+
             </VBox>
+
         </GridPane>
     </center>
+
 </BorderPane>
-
-

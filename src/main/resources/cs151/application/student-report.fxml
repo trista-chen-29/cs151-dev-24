@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cs151.application.reports.ViewStudentReportController"
+            stylesheets="@/cs151/application/view-student-profile.css">
+
+    <!-- TOP BAR (Back button and title) -->
+    <top>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="toolbar">
+            <Button text="← Back to Reports" onAction="#onBackToReports" />
+            <Label text="Student Report (Read-Only)" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <!-- SINGLE STUDENT DETAILS -->
+        <VBox spacing="12" styleClass="detail-card">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label fx:id="lbName" styleClass="detail-name"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="READ ONLY" styleClass="badge-info" style="-fx-font-weight: bold;"/>
+            </HBox>
+
+            <HBox spacing="8">
+                <Label fx:id="badgeBlacklisted" text="Blacklisted" visible="false" managed="false" styleClass="badge-danger"/>
+                <Label fx:id="badgeWhitelist"   text="Whitelisted" visible="false" managed="false" styleClass="badge-success"/>
+            </HBox>
+
+            <TitledPane text="Profile" expanded="true">
+                <GridPane hgap="12" vgap="6">
+                    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="130"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+
+                    <Label text="Academic Status:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <Label fx:id="lbStatus"        GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Employment:"      GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <Label fx:id="lbEmployment"    GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Job Details:"      GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <Label fx:id="lbJob"            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Preferred Role:"   GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <Label fx:id="lbRole"           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                </GridPane>
+            </TitledPane>
+
+            <TitledPane text="Skills" expanded="true">
+                <VBox spacing="8">
+                    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                    <HBox spacing="8" alignment="TOP_LEFT">
+                        <Label text="Programming Languages:"/>
+                        <FlowPane fx:id="fpLangs" hgap="6" vgap="6"/>
+                    </HBox>
+                    <HBox spacing="8" alignment="TOP_LEFT">
+                        <Label text="Databases:"/>
+                        <FlowPane fx:id="fpDbs" hgap="6" vgap="6"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+
+            <TitledPane text="Comments" expanded="true" VBox.vgrow="ALWAYS">
+                <VBox spacing="8" VBox.vgrow="ALWAYS">
+                    <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+                    <ListView fx:id="lvComments" VBox.vgrow="ALWAYS"/>
+                    <Label text="Comments are read-only in report view" style="-fx-text-fill: gray; -fx-font-style: italic;"/>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </center>
+</BorderPane>
