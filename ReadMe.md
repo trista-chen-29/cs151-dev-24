@@ -1,3 +1,101 @@
+# Name of application: Prof-Support
+
+# Who did What
+
+# Version: 0.9
+1. Chenying Wang: Populated 6 student profiles (3 whitelisted, 3 blacklisted) with full academic/job/role data, completed all required comments (≥30 words each), verified correct database persistence, and prepared screenshots of final UI pages.
+2. Trista Chen: Designed and implemented Reports main page (reports.fxml), including filtering (All / Whitelist / Blacklist), table display, and CSV export integration.
+3. Jaime Gonzalez: Developed Student Report (Read-Only) and Comment Viewer pages (FXML + Controllers), implemented double-click navigation and full comment display.
+4. Vraj Mistry: Integrated report navigation across pages, ensured read-only mode display, completed UI consistency fixes, and performed end-to-end functional testing.
+
+# Version: 0.8
+1. Chenying Wang – Updated README for v0.8
+2. Trista Chen – Implemented Add Comments UI (FXML + Controller); designed layout for comment input and comment history.
+3. Jaime Gonzalez – Developed backend Comment Service and Comment DAO; implemented permanent SQLite persistence for comments.
+4. Vraj Mistry – Performed full-system testing; cleaned project folder; validated structure; prepared final submission (dev-24-0.8).
+
+# Version: 0.7
+1. Trista Chen – Added full Edit Student Profile page and controller.
+2. Chenying Wang – Implemented whitelist/blacklist logic and UI toggle.
+3. Vraj Mistry – Improved search filters (case-insensitive and multi-field).
+4. Jaime Gonzalez – Implemented database persistence for updated profiles.
+
+# Version: 0.6
+1. Chenying Wang – Designed Search Student Profiles page and Delete Profile feature.
+2. Trista Chen – Created TableView layout for displaying profiles.
+3. Jaime Gonzalez – Updated Home Page layout and navigation structure.
+4. Vraj Mistry – Verified SQLite persistence and tested filtering functions.
+
+# Version: 0.5
+1. Chenying Wang – Designed Define Student Profile page and form structure.
+2. Trista Chen – Built View Student Profiles page using TableView.
+3. Jaime Gonzalez – Implemented persistence support for student profiles.
+4. Vraj Mistry – Created navigation links across pages.
+
+# Version: 0.4
+1. Ross Guller: Completed Functional Specification Draft.
+2. Chandler Bing: Created mockups for Define PL, Home, and Define Student Profile pages.
+3. Monica Fox: Completed Technical Specification Draft (data model, class diagram, sequence diagram).
+
+# Version: 0.3
+1. Chandler Bing: Implemented Define Programming Languages page.
+2. Ross Guller: Added optional data persistence and sorted TableView display.
+3. Monica Fox: Cleaned project folder and enhanced UI formatting.
+
+# Version: 0.2
+1. Chandler Bing: Imported starter project template.
+2. Ross Guller: Added navigation to Define Programming Languages page.
+3. Monica Fox: Ensured successful compilation with Zulu 23.
+
+# Version: 0.1
+1. Chandler Bing: Created first Functional Specification Draft.
+2. Ross Guller: Designed initial mockups.
+3. Monica Fox: Completed first Technical Specification Draft and UML diagrams.
+
+---
+
+# Technical-Spec
+1. Architecture: JavaFX + SQLite using Maven; Zulu JDK 23 compatible.
+2. Persistence: SQLite database for programming languages, student profiles, reports, and comments.
+3. Navigation: All pages include Back or Home button for navigation.
+4. Main Class: cs151.application.Main.
+5. Tools: JavaFX, FXML, DAO/Service structure, SQLite.
+
+---
+
+# Functional-Spec
+1. Version 0.9:
+   - Show Reports with filtering options (All, Whitelist, Blacklist).
+   - Double-click a student → open Read-Only Student Report page.
+   - Click a comment → open Full Comment Viewer page.
+   - Support CSV export for student report table.
+
+2. Version 0.8:
+   - Add and view comments with date-only timestamps.
+   - Permanent comment storage using SQLite.
+
+3. Version 0.6:
+   - Search and filter profiles.
+   - Delete student profiles.
+
+4. Earlier versions:
+   - Define programming languages.
+   - Define and update student profiles.
+   - Store academic status, job status, roles, and skills.
+
+---
+
+# Any other instruction that users need to know
+1. Ensure the project folder contains only source code before zipping (no .idea, .git, .mvn, target, mvnw, etc.).
+2. After submission, re-download the uploaded ZIP file from Canvas, unzip it, and verify that:
+   - Folder name is exactly: `dev-24-0.9`
+   - Project compiles and runs correctly in IntelliJ using Zulu JDK 23.
+3. All comments must use date-only format: YYYY-MM-DD.
+4. SQLite database should be included or auto-generated on first run.
+5. Only Maven build tool is accepted.
+
+
+
 
 ## Name of application: Prof-Support
 ---
