@@ -27,8 +27,7 @@ Version 0.9 introduces the full **Show Reports** functionality, including tabula
 1. **Chenying Wang**: Populated 6 student profiles (3 whitelist, 3 blacklist), added all required comments (≥30 words), cleaned project folder, prepared final ZIP, and updated README.
 2. **Trista Chen**: Designed and implemented Reports main page (filtering + table display + CSV export).
 3. **Jaime Gonzalez**: Implemented double-click comment → Full Comment Viewer page (FXML + controller).
-4. **Brandon Mistry (brrrrrr)**: Implemented double-click student → Student Report (profile + comments table, read-only).
-5. **Vraj Mistry**: Integrated report navigation across pages, ensured UI consistency, and performed end-to-end testing.
+4. **Vraj Mistry**: Integrated report navigation across pages, ensured UI consistency, and performed end-to-end testing. Implemented double-click student → Student Report (profile + comments table, read-only).
 
 ---
 
